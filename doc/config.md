@@ -1,0 +1,3 @@
+- colors: Integer: 6: number of colors
+- holes: Integer: 4: number of holes
+- guesses: Integer: 12: number of guesses
