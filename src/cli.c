@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <libintl.h>
+#include <locale.h>
+
+#include "../config.h"
 #include "core.h"
 
 void printPanel(mm_session *session) {
@@ -15,7 +19,7 @@ void printPanel(mm_session *session) {
 			else
 				printf("   |");
 		if(i < session->guessed)
-			printf("  InPlace: %2d, InSecret: %2d, OutSecret: %2d\n",
+			printf(_("  InPlace: %2d, InSecret: %2d, OutSecret: %2d\n"),
 			      session->panel[i].inplace,
 			      session->panel[i].insecret - session->panel[i].inplace,
 			      session->config->holes - session->panel[i].insecret);
@@ -51,32 +55,38 @@ unsigned char *getCombination(mm_session *session) {
 }
 int main() {
 	unsigned char *T = NULL, firstInput;
+	setlocale(LC_ALL,"");
+	bindtextdomain(PACKAGE, LOCALEDIR);
+	textdomain(PACKAGE);
+#ifdef DEBUG
+	printf("LOCALDIR: %s\n", LOCALEDIR);
+#endif
 	mm_session *session = mm_session_new();
-	printf("Current Config:\n\tguesses: %d\n\tcolors: %d\n\tholes: %d\n",
+	printf(_("Current Config:\n\tguesses: %d\n\tcolors: %d\n\tholes: %d\n"),
 			session->config->guesses, session->config->colors,
 			session->config->holes);
 	do {
-		printf("Current State:\n\tGuessed: %d\n", session->guessed);
+		printf(_("Current State:\n\tGuessed: %d\n"), session->guessed);
 		printPanel(session);
 		firstInput = 1;
 		do {
 			if(!firstInput && T != NULL) {
-				printf("You Guesse is not valid!!\n");
+				printf(_("You Guesse is not valid!!\n"));
 				free(T);
 				T = NULL;
 			} else if(!firstInput) {
-				printf("Illigal char on you guesse!!\n");
+				printf(_("Illigal char on you guesse!!\n"));
 			}
-			printf("Enter you guesse: (%d of [0..%d] nbre) ",
+			printf(_("Enter you guesse: (%d of [0..%d] nbre) "),
 					session->config->holes,
 					session->config->colors - 1);
 			firstInput = 0;
 		} while ((T = getCombination(session)) == NULL ||
 				mm_play(session, T) != 0);
 	} while (session->state == MM_PLAYING);
-	printf("Final State:\n");
+	printf(_("Final State:\n"));
 	printPanel(session);
 	printf("%s\n", (session->state == MM_SUCCESS) ?
-			"You successed :)" : "You Failed :(");
+			_("You successed :)") : _("You Failed :("));
 	return 0;
 }

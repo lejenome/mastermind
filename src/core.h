@@ -1,7 +1,6 @@
-#define MM_COLORS 6
+#include "../config.h"
+
 #define MM_COLORS_MAX 10
-#define MM_HOLES 4
-#define MM_GUESSES 6
 
 #define MM_NEW 0
 #define MM_PLAYING 1
@@ -14,10 +13,10 @@ typedef struct {
 	unsigned char holes;	// nbre of holes (items) in a combination
 } mm_config;
 typedef struct {
-	unsigned char *combination;	// given combination (guesse)
+	unsigned char *combination;	// given combination (guess)
 	unsigned char inplace;		// nbre of items on right place
 	unsigned char insecret;		// nbre of items on secret but not inplace
-} mm_guesse;
+} mm_guess;
 typedef struct {
 	unsigned char *val;
 	unsigned char *freq;
@@ -25,9 +24,9 @@ typedef struct {
 typedef struct {
 	unsigned char guessed;	// nbre of user guessed combination
 	unsigned char state;	// current state of session
-	mm_secret *secret;	// secret combination to guesse
+	mm_secret *secret;	// secret combination to guess
 	mm_config *config;	// session config
-	mm_guesse *panel;	// session panel
+	mm_guess *panel;	// session panel
 } mm_session;
 
 mm_session *mm_session_new();

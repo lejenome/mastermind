@@ -1,5 +1,8 @@
 /mastermindcli
 /mastermind
+/mastermind.pot
+/intl
+*~
 # Object files
 *.o
 *.ko

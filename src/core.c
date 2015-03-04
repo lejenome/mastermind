@@ -9,7 +9,7 @@ mm_session *mm_session_new() {
 	session->guessed = 0;
 	session->secret = mm_secret_new(session->config);
 	session->state = MM_NEW;
-	session->panel = (mm_guesse *)malloc(sizeof(mm_guesse) *
+	session->panel = (mm_guess *)malloc(sizeof(mm_guess) *
 			session->config->guesses);
 	return session;
 }
@@ -39,7 +39,7 @@ unsigned mm_play(mm_session *session, unsigned char *T) {
 	if(session->guessed >= session->config->guesses ||
 			session->state == MM_SUCCESS)
 		return 1;
-	mm_guesse *G = session->panel + session->guessed;
+	mm_guess *G = session->panel + session->guessed;
 	unsigned char *freq = (unsigned char*)malloc(sizeof(unsigned char) *
 			session->config->colors);
 	for(i=0; i < session->config->colors; i++)
@@ -68,7 +68,7 @@ unsigned mm_play(mm_session *session, unsigned char *T) {
 	free(freq);
 	return 0;
 }
-mm_guesse mm_play_last(mm_session *session) {
+mm_guess mm_play_last(mm_session *session) {
 	assert(session->guessed == 0);
 	return session->panel[session->guessed - 1];
 }
