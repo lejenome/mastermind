@@ -9,7 +9,8 @@ PACKAGE = mastermind
 locales = fr
 
 DEFINES=-DLOCALEDIR=\"$(localedir)\"
-CFLAGS += $(DEFINES) -Wall
+CFLAGS += $(DEFINES) -Wall -I/usr/local/include
+LDFLAGS+= -L/usr/local/lib -lreadline
 
 MKDIR = mkdir -p
 ifdef DEBUG
@@ -17,7 +18,6 @@ ifdef DEBUG
 endif
 ifeq (, $(filter Linux GNU GNU/%, $(shell uname -s)))
 	LDFLAGS +=-liconv -lintl
-	LDFLAGS+=-liconv -lintl
 endif
 
 all: $(PACKAGE)cli intl
