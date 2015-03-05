@@ -7,3 +7,6 @@
 - cli interface
 - build for linux/Mac/Win/Android/iOS/...
 
+- package it for ubuntu/archlinux/windows/android
+- account support
+- multiplayer support

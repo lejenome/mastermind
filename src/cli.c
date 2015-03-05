@@ -10,6 +10,8 @@
 #include "core.h"
 
 mm_session *session;
+char *cmds[] = {"quit", "set", "restart", "savegame", "score", "reset", "help",
+	"account", NULL}; // "onnect", "server", "disconnect"
 
 void printPanel() {
 	unsigned i, j;
@@ -37,25 +39,53 @@ void printPanel() {
 	putchar('\n');
 }
 static char **completeCombination(const char *txt, int start, int end) {
-	unsigned i =0, j;
-	char quit[] = "quit";
-	char **T = (char**)malloc(sizeof(char*) * (session->config->colors + 3));
-	unsigned p_quit = (strstr(quit, rl_line_buffer) == quit);
-	if(!p_quit || !rl_line_buffer[0]) {
-		T[i] = (char*)malloc(sizeof(char) *2);
-		strcpy(T[i], "");
-		i++;
-		for(j=0; j < session->config->colors; j++, i++) {
-			T[i] = (char*)malloc(sizeof(char) * 2);
-			sprintf(T[i], "%u", j);
+	unsigned l =0, j, i;
+	char **T = (char **)malloc(sizeof(char*) * (sizeof(cmds) +
+				session->config->colors));
+	char * output = NULL;
+	while(*txt == ' ')
+		txt++;
+	T[l] = (char*)malloc(sizeof(char) * 20);
+	strcpy(T[l], "");
+	l++;
+	if(*txt == '\0') {
+		i = 0;
+		while(cmds[i]) {
+			T[l] = (char*)malloc(sizeof(char) * strlen(cmds[i]));
+			strcpy(T[l], cmds[i]);
+			i++;
+			l++;
 		}
 	}
-	if(p_quit) {
-		T[i] = (char*)malloc(sizeof(quit) + 1);
-		strcpy(T[i], quit);
-		i++;
+	if(*txt == '\0' || (*txt >= '0' && *txt <= ('0' + session->config->colors))) {
+		for(j=0; j < session->config->colors; j++, l++) {
+			T[l] = (char*)malloc(sizeof(char) * 2);
+			sprintf(T[l], "%u", j);
+		}
 	}
-	T[i++] = NULL;
+	if(*txt >= 'a' && *txt <= 'z') {
+		j = l;
+		i=0;
+		while(cmds[i]) {
+			if(strstr(cmds[i], txt) == cmds[i]) {
+				T[l] = (char*)malloc(sizeof(char) *
+						strlen(cmds[i]));
+				strcpy(T[l], cmds[i]);
+				l++;
+			}
+			i++;
+		}
+		if (l == j+1)
+			output = T[j];
+	}
+	if(output) {
+		T[0] = (char*)malloc(sizeof(char) * strlen(output));
+		strcpy(T[0], output);
+		for(i=1; i < l; i++)
+			free(T[i]);
+		l =1;
+	}
+	T[l++] = NULL;
 	return T;
 }
 unsigned char *getCombination() {
@@ -73,12 +103,25 @@ unsigned char *getCombination() {
 	}
 	while(*input == ' ')
 		input++;
-	if(strstr(input, "quit")) {
-		printf(_("Bye!\n"));
-		exit(0);
+	if(*input >= 'a' && *input <= 'z') {
+		i = 0;
+		while(cmds[i] && strstr(input, cmds[i]) != input)
+			i++;
+		if(cmds[i]) {
+			printf(_("Command '%s' excuted\n"), cmds[i]);
+		} else {
+			printf(_("Command unsupported '%s'\n"), input);
+			return NULL;
+		}
+		if(strstr(input, "quit")) {
+			printf(_("Bye!\n"));
+			exit(0);
+		}
+		return NULL;
 	}
 	unsigned char *T = (unsigned char*)malloc(sizeof(unsigned char) *
 			session->config->holes);
+	i = 0;
 	while(i < session->config->holes) {
 		c = input[j++];
 		if(c >= '0' && c <= '9') {
@@ -86,6 +129,7 @@ unsigned char *getCombination() {
 		} else if(c == ' ' || c == ',' || c == ';' || c == '\n') {
 			continue;
 		} else {
+			printf(_("Illigal char on you guesse!!\n"));
 			free(T);
 			T = NULL;
 			break;
@@ -118,8 +162,6 @@ int main() {
 				printf(_("You Guesse is not valid!!\n"));
 				free(T);
 				T = NULL;
-			} else{
-				printf(_("Illigal char on you guesse!!\n"));
 			}
 		}
 	} while (session->state == MM_PLAYING);
