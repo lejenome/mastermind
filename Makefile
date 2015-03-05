@@ -9,7 +9,7 @@ PACKAGE = mastermind
 locales = fr
 
 DEFINES=-DLOCALEDIR=\"$(localedir)\"
-CFLAGS += $(DEFINES) -Wall -I/usr/local/include
+CFLAGS += $(DEFINES) -Wall -I/usr/local/include -Wno-char-subscripts
 LDFLAGS+= -L/usr/local/lib -lreadline
 
 MKDIR = mkdir -p
@@ -27,6 +27,7 @@ $(PACKAGE)cli: core.o cli.o
 %.o: src/%.c
 	$(CC) -c $^ $(CFLAGS)
 intl: $(locales)
+.NOTPARALLEL: $(locales)
 $(locales): % : $(PACKAGE).pot po/%.po
 	msgmerge -U po/$@.po $(PACKAGE).pot
 	$(MKDIR) intl/$@/LC_MESSAGES

@@ -166,7 +166,7 @@ int main() {
 		}
 	} while (session->state == MM_PLAYING);
 	printf(_("Final State:\n"));
-	printPanel(session);
+	printPanel();
 	printf("%s\n", (session->state == MM_SUCCESS) ?
 			_("You successed :)") : _("You Failed :("));
 	return 0;
