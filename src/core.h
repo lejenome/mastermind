@@ -18,8 +18,8 @@ typedef struct {
 	unsigned char insecret;		// nbre of items on secret but not inplace
 } mm_guess;
 typedef struct {
-	unsigned char *val;
-	unsigned char *freq;
+	unsigned char *val;		// len: config->holes
+	unsigned char *freq;		// len: config->colors
 } mm_secret;
 typedef struct {
 	unsigned char guessed;	// nbre of user guessed combination
@@ -31,7 +31,8 @@ typedef struct {
 
 mm_session *mm_session_new();
 mm_session *mm_session_restore();
-unsigned int mm_session_fix(mm_session*);
+unsigned int mm_session_save(mm_session*);
 mm_config *mm_config_load();
 mm_secret *mm_secret_new(mm_config*);
 unsigned mm_play(mm_session *, unsigned char *);
+void mm_init();

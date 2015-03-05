@@ -116,6 +116,9 @@ unsigned char *getCombination() {
 		if(strstr(input, "quit")) {
 			printf(_("Bye!\n"));
 			exit(0);
+		} else if(strstr(input, "savegame")) {
+			printf("Saving session\n");
+			mm_session_save(session);
 		}
 		return NULL;
 	}
@@ -149,7 +152,8 @@ int main() {
 #ifdef DEBUG
 	printf("LOCALDIR: %s\n", LOCALEDIR);
 #endif
-	session = mm_session_new();
+	if(!(session = mm_session_restore()))
+		session = mm_session_new();
 	printf(_("Current Config:\n\tguesses: %d\n\tcolors: %d\n\tholes: %d\n"),
 			session->config->guesses, session->config->colors,
 			session->config->holes);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mastermind\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-05 16:53+0100\n"
+"POT-Creation-Date: 2015-03-05 21:46+0100\n"
 "PO-Revision-Date: 2015-03-04 22:58+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -42,12 +42,12 @@ msgstr ""
 msgid "Bye!\n"
 msgstr ""
 
-#: src/cli.c:132
+#: src/cli.c:135
 #, c-format
 msgid "Illigal char on you guesse!!\n"
 msgstr ""
 
-#: src/cli.c:153
+#: src/cli.c:157
 #, c-format
 msgid ""
 "Current Config:\n"
@@ -60,7 +60,7 @@ msgstr ""
 "\tcolors: %d\n"
 "\tholes: %d\n"
 
-#: src/cli.c:157
+#: src/cli.c:161
 #, c-format
 msgid ""
 "Current State:\n"
@@ -69,20 +69,20 @@ msgstr ""
 "Etat Current:\n"
 "\tGuessed: %d\n"
 
-#: src/cli.c:162
+#: src/cli.c:166
 #, c-format
 msgid "You Guesse is not valid!!\n"
 msgstr ""
 
-#: src/cli.c:168
+#: src/cli.c:172
 #, c-format
 msgid "Final State:\n"
 msgstr ""
 
-#: src/cli.c:171
+#: src/cli.c:175
 msgid "You successed :)"
 msgstr ""
 
-#: src/cli.c:171
+#: src/cli.c:175
 msgid "You Failed :("
 msgstr ""
