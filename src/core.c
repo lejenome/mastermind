@@ -103,6 +103,16 @@ void mm_init() {
 	strcat(mm_data_path, "/data.txt");
 	free(cmd);
 }
+void mm_session_free(mm_session *session) {
+	while(session->guessed--)
+		free(session->panel[session->guessed].combination);
+	free(session->panel);
+	free(session->secret->freq);
+	free(session->secret->val);
+	free(session->secret);
+	free(session->config);
+	free(session);
+}
 unsigned int mm_session_save(mm_session *session) {
 	/* [...mm_session...]
 	 * [...mm_config...]

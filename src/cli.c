@@ -89,34 +89,55 @@ static char **completeCombination(const char *txt, int start, int end) {
 	return T;
 }
 unsigned char *getCombination() {
-	char prmpt[200], *input;
-	unsigned i =0, j =0;
+	char prmpt[200], *input, *inputorig;
+	unsigned i =0, j =0, k;
 	unsigned char c;
 	snprintf(prmpt, 200, _("Enter you guesse: (%d of [0..%d] nbre) > "),
 		session->config->holes,
 		session->config->colors - 1);
 	rl_attempted_completion_function = completeCombination;
-	input = readline(prmpt);
-	if(!input || !input[0]) {
-		free(input);
+	while((input = readline(prmpt)) == NULL) {};
+	inputorig = input;
+	char **args = (char**)malloc(sizeof(char*) * (20<session->config->holes?
+			(session->config->holes +2): 20));
+	unsigned argc = 0, prvSpace = 1;
+	while(*input != '\0') {
+		if(*input == ' ' || *input == '\t' || *input == ',') {
+			if(!prvSpace)
+				*input = '\0';
+			prvSpace = 1;
+		} else if((*input >='0' && *input <= '9') ||
+				(*input >='a' && *input <= 'z')) {
+			if(prvSpace)
+				args[argc++] = input;
+			prvSpace = 0;
+		} else {
+			printf("Error: illegal charater on the command '%c'\n",
+					*input);
+			argc=0;
+			break;
+		}
+		input++;
+	}
+	if(argc == 0) {
+		free(inputorig);
+		free(args);
 		return NULL;
 	}
-	while(*input == ' ')
-		input++;
-	if(*input >= 'a' && *input <= 'z') {
+	if(args[0][0] >= 'a' && args[0][0] <= 'z') {
 		i = 0;
-		while(cmds[i] && strstr(input, cmds[i]) != input)
+		while(cmds[i] && strstr(cmds[i], args[0]) != cmds[i])
 			i++;
 		if(cmds[i]) {
 			printf(_("Command '%s' excuted\n"), cmds[i]);
 		} else {
-			printf(_("Command unsupported '%s'\n"), input);
+			printf(_("Command unsupported '%s'\n"), args[0]);
 			return NULL;
 		}
-		if(strstr(input, "quit")) {
+		if(strstr("quit", args[0])) {
 			printf(_("Bye!\n"));
 			exit(0);
-		} else if(strstr(input, "savegame")) {
+		} else if(strstr("savegame", args[0])) {
 			printf("Saving session\n");
 			mm_session_save(session);
 		}
@@ -125,8 +146,11 @@ unsigned char *getCombination() {
 	unsigned char *T = (unsigned char*)malloc(sizeof(unsigned char) *
 			session->config->holes);
 	i = 0;
-	while(i < session->config->holes) {
-		c = input[j++];
+	j = 0;
+	k = 0;
+	while((i < session->config->holes) && (args[j][k] != '\0' ||
+				(++j < argc && !(k=0)))) {
+		c = args[j][k++];
 		if(c >= '0' && c <= '9') {
 			T[i++] = c - '0';
 		} else if(c == ' ' || c == ',' || c == ';' || c == '\n') {
@@ -139,9 +163,9 @@ unsigned char *getCombination() {
 		}
 	}
 	if(T)
-		add_history(input);
+		add_history(inputorig);
 	else
-		free(input);
+		free(inputorig);
 	return T;
 }
 int main() {

@@ -32,6 +32,7 @@ typedef struct {
 mm_session *mm_session_new();
 mm_session *mm_session_restore();
 unsigned int mm_session_save(mm_session*);
+void mm_session_free(mm_session*);
 mm_config *mm_config_load();
 mm_secret *mm_secret_new(mm_config*);
 unsigned mm_play(mm_session *, unsigned char *);

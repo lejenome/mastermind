@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mastermind\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-05 21:46+0100\n"
+"POT-Creation-Date: 2015-03-06 08:25+0100\n"
 "PO-Revision-Date: 2015-03-04 22:58+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -27,27 +27,27 @@ msgstr ""
 msgid "Enter you guesse: (%d of [0..%d] nbre) > "
 msgstr ""
 
-#: src/cli.c:111
+#: src/cli.c:132
 #, c-format
 msgid "Command '%s' excuted\n"
 msgstr ""
 
-#: src/cli.c:113
+#: src/cli.c:134
 #, c-format
 msgid "Command unsupported '%s'\n"
 msgstr ""
 
-#: src/cli.c:117
+#: src/cli.c:138
 #, c-format
 msgid "Bye!\n"
 msgstr ""
 
-#: src/cli.c:135
+#: src/cli.c:159
 #, c-format
 msgid "Illigal char on you guesse!!\n"
 msgstr ""
 
-#: src/cli.c:157
+#: src/cli.c:181
 #, c-format
 msgid ""
 "Current Config:\n"
@@ -60,7 +60,7 @@ msgstr ""
 "\tcolors: %d\n"
 "\tholes: %d\n"
 
-#: src/cli.c:161
+#: src/cli.c:185
 #, c-format
 msgid ""
 "Current State:\n"
@@ -69,20 +69,20 @@ msgstr ""
 "Etat Current:\n"
 "\tGuessed: %d\n"
 
-#: src/cli.c:166
+#: src/cli.c:190
 #, c-format
 msgid "You Guesse is not valid!!\n"
 msgstr ""
 
-#: src/cli.c:172
+#: src/cli.c:196
 #, c-format
 msgid "Final State:\n"
 msgstr ""
 
-#: src/cli.c:175
+#: src/cli.c:199
 msgid "You successed :)"
 msgstr ""
 
-#: src/cli.c:175
+#: src/cli.c:199
 msgid "You Failed :("
 msgstr ""
