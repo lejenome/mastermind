@@ -1,5 +1,5 @@
-#ifndef MASTERMIND_CONFIG_H
-#define MASTERMIND_CONFIG_H
+#ifndef __MASTERMIND_CONFIG_H
+#define __MASTERMIND_CONFIG_H
 
 #define PACKAGE		"mastermind"
 #define PROGRAM_NAME	PACKAGE
@@ -20,4 +20,4 @@
 #define LOCALEDIR	"intl"
 #endif//LOCALEDIR
 
-#endif//MASTERMIN_CONFIG_H
+#endif//__MASTERMIN_CONFIG_H

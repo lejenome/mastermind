@@ -1,5 +1,8 @@
 #include "../config.h"
 
+#ifndef __MM_CORE_H
+#define __MM_CORE_H
+
 #define MM_COLORS_MAX 10
 
 #define MM_NEW 0
@@ -41,3 +44,4 @@ mm_config *mm_config_load();
 mm_secret *mm_secret_new(mm_config *);
 unsigned mm_play(mm_session *, unsigned char *);
 void mm_init();
+#endif
