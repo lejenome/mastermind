@@ -14,15 +14,14 @@ LDFLAGS+= -L/usr/local/lib -lreadline
 
 MKDIR = mkdir -p
 ifdef DEBUG
-	CFLAGS += -DDEBUG -g -p
-	LDFLAGS += -p
+	CFLAGS += -DDEBUG -g
 endif
 ifeq (, $(filter Linux GNU GNU/%, $(shell uname -s)))
 	LDFLAGS +=-liconv -lintl
 endif
 
 all: $(PACKAGE)cli intl
-$(PACKAGE)cli: core.o cli.o cli-cmd.o
+$(PACKAGE)cli: cli.o cli-cmd.o core.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 	-@chmod +x $@
 %.o: src/%.c

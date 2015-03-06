@@ -35,12 +35,23 @@ typedef struct
 	mm_config *config;     // session config
 	mm_guess *panel;       // session panel
 } mm_session;
+typedef struct
+{
+	char *n; // config name
+	int d; // value (number)
+} mm_conf_t;
+
+extern mm_conf_t mm_confs[3];
 
 mm_session *mm_session_new();
 mm_session *mm_session_restore();
 unsigned int mm_session_save(mm_session *);
 void mm_session_free(mm_session *);
+
 mm_config *mm_config_load();
+void mm_config_save();
+unsigned mm_config_set(const char *, const int);
+
 mm_secret *mm_secret_new(mm_config *);
 unsigned mm_play(mm_session *, unsigned char *);
 void mm_init();

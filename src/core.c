@@ -5,9 +5,17 @@
 #include <assert.h>
 #include "core.h"
 
+#define LEN(a) (sizeof(a) / sizeof(a[0]))
 char *mm_config_path = NULL;
 char *mm_data_path = NULL;
 char *mm_store_path = NULL;
+
+mm_conf_t mm_confs[3] = {
+    {.n = "guesses", .d = MM_GUESSES},
+    {.n = "colors", .d = MM_COLORS},
+    {.n = "holes", .d = MM_HOLES},
+};
+
 mm_session *mm_session_new()
 {
 	mm_session *session = (mm_session *)malloc(sizeof(mm_session));
@@ -21,13 +29,51 @@ mm_session *mm_session_new()
 }
 mm_config *mm_config_load()
 {
+	mm_config *config;
+	mm_conf_t *conf;
+	char *n;
+	int d;
+	FILE *f;
 	if (!mm_config_path)
 		mm_init();
-	mm_config *config = (mm_config *)malloc(sizeof(mm_config));
-	config->guesses = MM_GUESSES;
-	config->colors = MM_COLORS;
-	config->holes = MM_HOLES;
+	config = (mm_config *)malloc(sizeof(mm_config));
+	if ((f = fopen(mm_config_path, "r"))) {
+		n = (char *)malloc(sizeof(char) * 40);
+		while (fscanf(f, "%s %d", n, &d) != EOF) {
+			for (conf = mm_confs; conf < mm_confs + LEN(mm_confs);
+			     conf++) {
+				if (!strcmp(n, conf->n))
+					conf->d = d;
+			}
+		}
+		free(n);
+		fclose(f);
+	}
+	config->guesses = (unsigned char)mm_confs[0].d;
+	config->colors = (unsigned char)mm_confs[1].d;
+	config->holes = (unsigned char)mm_confs[2].d;
 	return config;
+}
+void mm_config_save()
+{
+	FILE *f = fopen(mm_config_path, "w");
+	mm_conf_t *conf;
+	if (f) {
+		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++)
+			fprintf(f, "%s %d\n", conf->n, conf->d);
+		fclose(f);
+	}
+}
+unsigned mm_config_set(const char *name, const int value)
+{
+	mm_conf_t *conf = mm_confs;
+	while (conf < mm_confs + LEN(mm_confs) && strcmp(conf->n, name) != 0)
+		conf++;
+	if (conf == mm_confs + LEN(mm_confs))
+		return -1;
+	conf->d = value;
+	mm_config_save();
+	return 0;
 }
 mm_secret *mm_secret_new(mm_config *conf)
 {

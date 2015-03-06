@@ -7,13 +7,21 @@
 #include <readline/history.h>
 
 #include "../config.h"
+#include "cli-cmd.h"
 #include "core.h"
 
+#define LEN(a) (sizeof(a) / sizeof(a[0]))
 mm_session *session;
-char *cmds[] = {
-    "quit",  "set",  "restart", "savegame", "score",
-    "reset", "help", "account", NULL}; // "onnect", "server", "disconnect"
-
+cmd_t cmds[] = {
+    {.n = "quit", .e = cmd_quit},
+    {.n = "set", .e = cmd_set},
+    {.n = "restart", .e = cmd_restart},
+    {.n = "savegame", .e = cmd_savegame},
+    {.n = "score", .e = cmd_score},
+    {.n = "reset", .e = cmd_reset},
+    {.n = "help", .e = cmd_help},
+    {.n = "account", .e = cmd_account},
+}; // "connect", "server", "disconnect", "version"
 void printPanel()
 {
 	unsigned i, j;
@@ -47,21 +55,21 @@ void printPanel()
 static char **completeCombination(const char *txt, int start, int end)
 {
 	unsigned l = 0, j, i;
+	cmd_t *cmd;
 	char **T = (char **)malloc(sizeof(char *) *
-				   (sizeof(cmds) + session->config->colors));
+				   (LEN(cmds) + session->config->colors));
 	char *output = NULL;
 	while (*txt == ' ')
 		txt++;
-	T[l] = (char *)malloc(sizeof(char) * 20);
+	T[l] = (char *)malloc(sizeof(char) *
+			      (LEN(cmds) + session->config->holes + 2));
 	strcpy(T[l], "");
 	l++;
 	if (*txt == '\0') {
-		i = 0;
-		while (cmds[i]) {
-			T[l] = (char *)malloc(sizeof(char) * strlen(cmds[i]));
-			strcpy(T[l], cmds[i]);
-			i++;
-			l++;
+		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++, l++) {
+			T[l] =
+			    (char *)malloc(sizeof(char) * (strlen(cmd->n) + 1));
+			strcpy(T[l], cmd->n);
 		}
 	}
 	if (*txt == '\0' ||
@@ -73,21 +81,19 @@ static char **completeCombination(const char *txt, int start, int end)
 	}
 	if (*txt >= 'a' && *txt <= 'z') {
 		j = l;
-		i = 0;
-		while (cmds[i]) {
-			if (strstr(cmds[i], txt) == cmds[i]) {
+		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++) {
+			if (strstr(cmd->n, txt) == cmd->n) {
 				T[l] = (char *)malloc(sizeof(char) *
-						      strlen(cmds[i]));
-				strcpy(T[l], cmds[i]);
+						      (strlen(cmd->n) + 1));
+				strcpy(T[l], cmd->n);
 				l++;
 			}
-			i++;
 		}
 		if (l == j + 1)
 			output = T[j];
 	}
 	if (output) {
-		T[0] = (char *)malloc(sizeof(char) * strlen(output));
+		T[0] = (char *)malloc(sizeof(char) * (strlen(output) + 1));
 		strcpy(T[0], output);
 		for (i = 1; i < l; i++)
 			free(T[i]);
@@ -96,17 +102,27 @@ static char **completeCombination(const char *txt, int start, int end)
 	T[l++] = NULL;
 	return T;
 }
-unsigned char *getCombination()
+/* return:
+ * -1 : input error, redo (do not redraw table)
+ *  0 : seccess input, redo if mm_play(T) does not success (do not redraw
+ *      table) or next (redraw table)
+ * 1  : cmd input, redo (do not redo table)
+ * 2  : cmd input, next (redraw table)
+ * */
+int getCombination(unsigned char *T)
 {
+	unsigned ret = -1;
 	char prmpt[200], *input, *inputorig;
 	unsigned i = 0, j = 0, k;
 	unsigned char c;
+	cmd_t *cmd;
 	snprintf(prmpt, 200, _("Enter you guesse: (%d of [0..%d] nbre) > "),
 		 session->config->holes, session->config->colors - 1);
 	rl_attempted_completion_function = completeCombination;
 	while ((input = readline(prmpt)) == NULL) {
 	};
-	inputorig = input;
+	inputorig = malloc(sizeof(char) * (strlen(input) + 1));
+	strcpy(inputorig, input);
 	char **args = (char **)malloc(
 	    sizeof(char *) *
 	    (20 < session->config->holes ? (session->config->holes + 2) : 20));
@@ -133,26 +149,23 @@ unsigned char *getCombination()
 	if (argc == 0)
 		goto input_err;
 	if (args[0][0] >= 'a' && args[0][0] <= 'z') {
-		i = 0;
-		while (cmds[i] && strstr(cmds[i], args[0]) != cmds[i])
-			i++;
-		if (cmds[i]) {
-			printf(_("Command '%s' excuted\n"), cmds[i]);
+		cmd = cmds;
+		while (cmd < cmds + LEN(cmds) &&
+		       strstr(cmd->n, args[0]) != cmd->n)
+			cmd++;
+		if (cmd < cmds + LEN(cmds)) {
+			ret = cmd->e(argc, (const char **)args, session);
+			char *cmd_txt = (char *)malloc(sizeof(char) *
+						       (strlen(inputorig) + 1));
+			strcpy(cmd_txt, inputorig);
+			add_history(cmd_txt);
+			ret = ret == 1 ? 2 : 1;
 		} else {
 			printf(_("Command unsupported '%s'\n"), args[0]);
 			goto input_err;
 		}
-		if (strstr("quit", args[0])) {
-			printf(_("Bye!\n"));
-			exit(0);
-		} else if (strstr("savegame", args[0])) {
-			printf(_("Saving session\n"));
-			mm_session_save(session);
-		}
 		goto cmd_execed;
 	}
-	unsigned char *T = (unsigned char *)malloc(sizeof(unsigned char) *
-						   session->config->holes);
 	i = 0;
 	j = 0;
 	k = 0;
@@ -173,41 +186,55 @@ unsigned char *getCombination()
 	else
 		free(inputorig);
 	free(args);
-	return T;
+	return 0;
 parse_err:
-	free(T);
 input_err:
 cmd_execed:
 	free(inputorig);
 	free(args);
-	return NULL;
+	return ret;
 }
 int main()
 {
-	unsigned char *T = NULL;
+	unsigned char *T = NULL, rst;
+	unsigned ret;
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
-	if (!(session = mm_session_restore()))
-		session = mm_session_new();
-	printf(_("Current Config:\n\tguesses: %d\n\tcolors: %d\n\tholes: %d\n"),
-	       session->config->guesses, session->config->colors,
-	       session->config->holes);
+	session = mm_session_restore();
 	do {
-		printf(_("Current State:\n\tGuessed: %d\n"), session->guessed);
-		printPanel();
-		while ((T = getCombination()) == NULL ||
-		       mm_play(session, T) != 0) {
-			if (T != NULL) {
-				printf(_("You Guesse is not valid!!\n"));
-				free(T);
-				T = NULL;
+		if (!session)
+			session = mm_session_new();
+		session = mm_session_new();
+		printf(_("Current Config:\n\tguesses: %d\n\tcolors: "
+			 "%d\n\tholes: %d\n"),
+		       session->config->guesses, session->config->colors,
+		       session->config->holes);
+		do {
+			printf(_("Current State:\n\tGuessed: %d\n"),
+			       session->guessed);
+			printPanel();
+			T = (unsigned char *)malloc(sizeof(unsigned char) *
+						    session->config->holes);
+			while ((ret = getCombination(T)) == -1 || ret == 1 ||
+			       (ret == 0 && mm_play(session, T) != 0)) {
+				if (ret == 0) {
+					printf(
+					    _("You Guesse is not valid!!\n"));
+				}
 			}
-		}
-	} while (session->state == MM_PLAYING);
-	printf(_("Final State:\n"));
-	printPanel();
-	printf("%s\n", (session->state == MM_SUCCESS) ? _("You successed :)")
-						      : _("You Failed :("));
+			if (ret != 0)
+				free(T);
+		} while (session->state == MM_PLAYING ||
+			 session->state == MM_NEW);
+		printf(_("Final State:\n"));
+		printPanel();
+		printf("%s\n", (session->state == MM_SUCCESS)
+				   ? _("You successed :)")
+				   : _("You Failed :("));
+		mm_session_free(session);
+		printf(_("restart? (Y/N): "));
+		scanf("%c", &rst);
+	} while (rst == 'y' || rst == 'Y');
 	return 0;
 }
