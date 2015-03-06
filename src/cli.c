@@ -112,18 +112,15 @@ unsigned char *getCombination() {
 				args[argc++] = input;
 			prvSpace = 0;
 		} else {
-			printf("Error: illegal charater on the command '%c'\n",
+			printf(_("Error: illegal charater on the command '%c'\n"),
 					*input);
 			argc=0;
 			break;
 		}
 		input++;
 	}
-	if(argc == 0) {
-		free(inputorig);
-		free(args);
-		return NULL;
-	}
+	if(argc == 0)
+		goto input_err;
 	if(args[0][0] >= 'a' && args[0][0] <= 'z') {
 		i = 0;
 		while(cmds[i] && strstr(cmds[i], args[0]) != cmds[i])
@@ -132,16 +129,16 @@ unsigned char *getCombination() {
 			printf(_("Command '%s' excuted\n"), cmds[i]);
 		} else {
 			printf(_("Command unsupported '%s'\n"), args[0]);
-			return NULL;
+			goto input_err;
 		}
 		if(strstr("quit", args[0])) {
 			printf(_("Bye!\n"));
 			exit(0);
 		} else if(strstr("savegame", args[0])) {
-			printf("Saving session\n");
+			printf(_("Saving session\n"));
 			mm_session_save(session);
 		}
-		return NULL;
+		goto cmd_execed;
 	}
 	unsigned char *T = (unsigned char*)malloc(sizeof(unsigned char) *
 			session->config->holes);
@@ -157,25 +154,28 @@ unsigned char *getCombination() {
 			continue;
 		} else {
 			printf(_("Illigal char on you guesse!!\n"));
-			free(T);
-			T = NULL;
-			break;
+			goto parse_err;
 		}
 	}
 	if(T)
 		add_history(inputorig);
 	else
 		free(inputorig);
+	free(args);
 	return T;
+parse_err:
+	free(T);
+input_err:
+cmd_execed:
+	free(inputorig);
+	free(args);
+	return NULL;
 }
 int main() {
 	unsigned char *T = NULL;
 	setlocale(LC_ALL,"");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
-#ifdef DEBUG
-	printf("LOCALDIR: %s\n", LOCALEDIR);
-#endif
 	if(!(session = mm_session_restore()))
 		session = mm_session_new();
 	printf(_("Current Config:\n\tguesses: %d\n\tcolors: %d\n\tholes: %d\n"),
