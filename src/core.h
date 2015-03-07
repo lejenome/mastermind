@@ -38,7 +38,7 @@ typedef struct
 typedef struct
 {
 	char *n; // config name
-	int d; // value (number)
+	int d;   // value (number)
 } mm_conf_t;
 
 extern mm_conf_t mm_confs[3];
