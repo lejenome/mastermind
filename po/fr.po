@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mastermind\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-07 08:24+0100\n"
+"POT-Creation-Date: 2015-03-07 08:31+0100\n"
 "PO-Revision-Date: 2015-03-04 22:58+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -54,22 +54,22 @@ msgstr ""
 msgid "Error: illegal charater on the command '%c'\n"
 msgstr ""
 
-#: src/cli.c:186
+#: src/cli.c:176
 #, c-format
 msgid "Enter you guesse: (%d of [0..%d] nbre) > "
 msgstr ""
 
-#: src/cli.c:210
+#: src/cli.c:197
 #, c-format
 msgid "Command unsupported '%s'\n"
 msgstr ""
 
-#: src/cli.c:226
+#: src/cli.c:213
 #, c-format
 msgid "Illigal char on you guesse!!\n"
 msgstr ""
 
-#: src/cli.c:259
+#: src/cli.c:246
 #, c-format
 msgid ""
 "Current Config:\n"
@@ -82,7 +82,7 @@ msgstr ""
 "\tcolors: %d\n"
 "\tholes: %d\n"
 
-#: src/cli.c:264
+#: src/cli.c:251
 #, c-format
 msgid ""
 "Current State:\n"
@@ -91,25 +91,25 @@ msgstr ""
 "Etat Current:\n"
 "\tGuessed: %d\n"
 
-#: src/cli.c:273
+#: src/cli.c:260
 #, c-format
 msgid "You Guesse is not valid!!\n"
 msgstr ""
 
-#: src/cli.c:280
+#: src/cli.c:267
 #, c-format
 msgid "Final State:\n"
 msgstr ""
 
-#: src/cli.c:283
+#: src/cli.c:270
 msgid "You successed :)"
 msgstr ""
 
-#: src/cli.c:284
+#: src/cli.c:271
 msgid "You Failed :("
 msgstr ""
 
-#: src/cli.c:286
+#: src/cli.c:273
 #, c-format
 msgid "restart? (Y/N): "
 msgstr ""

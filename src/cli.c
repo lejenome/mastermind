@@ -99,16 +99,11 @@ static char **completeCombination(const char *txt, int start, int end)
 			session->config->holes > 5 ? session->config->holes : 5);
 	T[l] = (char *)malloc(sizeof(char) *
 			      (LEN(cmds) + session->config->holes + 2));
-	strcpy(T[l], "");
-	l++;
+	T[l++] = strdup("");
 	argc = parseBuf(rl_line_buffer, args);
-	if (argc == 0) {
-		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++, l++) {
-			T[l] =
-			    (char *)malloc(sizeof(char) * (strlen(cmd->n) + 1));
-			strcpy(T[l], cmd->n);
-		}
-	}
+	if (argc == 0)
+		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++, l++)
+			T[l] = strdup(cmd->n);
 	if (argc == 0 ||
 	    (args[0][0] >= '0' && args[0][0] <= ('0' + session->config->colors))) {
 		for (j = 0; j < session->config->colors; j++, l++) {
@@ -120,14 +115,10 @@ static char **completeCombination(const char *txt, int start, int end)
 		j = l;
 		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++) {
 			if (strstr(cmd->n, args[0]) == cmd->n) {
-				if (strcmp(cmd->n, args[0]) == 0) {
+				if (strcmp(cmd->n, args[0]) == 0)
 					cmpltCmd = cmd;
-				} else {
-					T[l] = (char *)malloc(sizeof(char) *
-							(strlen(cmd->n) + 1));
-					strcpy(T[l], cmd->n);
-					l++;
-				}
+				else
+					T[l++] = strdup(cmd->n);
 			}
 		}
 		if (l == j + 1)
@@ -155,8 +146,7 @@ static char **completeCombination(const char *txt, int start, int end)
 		}
 	}
 	if (output) {
-		T[0] = (char *)malloc(sizeof(char) * (strlen(output) + 1));
-		strcpy(T[0], output);
+		T[0] = strdup(output);
 		for (i = 1; i < l; i++)
 			free(T[i]);
 		l = 1;
@@ -201,10 +191,7 @@ int getCombination(unsigned char *T)
 			cmd++;
 		if (cmd < cmds + LEN(cmds)) {
 			ret = cmd->e(argc, (const char **)args, session);
-			char *cmd_txt =
-			    (char *)malloc(sizeof(char) * (strlen(input) + 1));
-			strcpy(cmd_txt, input);
-			add_history(cmd_txt);
+			add_history(strdup(input));
 			ret = ret == 1 ? 2 : 1;
 		} else {
 			printf(_("Command unsupported '%s'\n"), args[0]);
