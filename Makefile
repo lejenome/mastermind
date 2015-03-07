@@ -40,6 +40,8 @@ po/%.po:
 	msginit --no-translator -l $(shell echo $@ |sed "s/po\/\(.*\).po/\1/") \
 		-i $(PACKAGE).pot -o $@
 
+format:
+	clang-format -style file -i {src/,}*.[ch]
 
 .PHONY: clean
 clean:

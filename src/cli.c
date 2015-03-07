@@ -95,8 +95,9 @@ static char **completeCombination(const char *txt, int start, int end)
 	mm_conf_t *conf, *cmpltCnf = NULL;
 	char **T = (char **)malloc(sizeof(char *) *
 				   (LEN(cmds) + session->config->colors + 2));
-	char **args = (char **)malloc(sizeof(char *) *
-			session->config->holes > 5 ? session->config->holes : 5);
+	char **args = (char **)malloc(
+	    sizeof(char *) * session->config->holes > 5 ? session->config->holes
+							: 5);
 	T[l] = (char *)malloc(sizeof(char) *
 			      (LEN(cmds) + session->config->holes + 2));
 	T[l++] = strdup("");
@@ -104,8 +105,8 @@ static char **completeCombination(const char *txt, int start, int end)
 	if (argc == 0)
 		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++, l++)
 			T[l] = strdup(cmd->n);
-	if (argc == 0 ||
-	    (args[0][0] >= '0' && args[0][0] <= ('0' + session->config->colors))) {
+	if (argc == 0 || (args[0][0] >= '0' &&
+			  args[0][0] <= ('0' + session->config->colors))) {
 		for (j = 0; j < session->config->colors; j++, l++) {
 			T[l] = (char *)malloc(sizeof(char) * 2);
 			sprintf(T[l], "%u", j);
@@ -124,24 +125,25 @@ static char **completeCombination(const char *txt, int start, int end)
 		if (l == j + 1)
 			output = T[j];
 	}
-	if(cmpltCmd && strcmp(cmpltCmd->n, "set") == 0) {
-		for(conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++, l++)
+	if (cmpltCmd && strcmp(cmpltCmd->n, "set") == 0) {
+		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs);
+		     conf++, l++)
 			T[l] = strdup(conf->n);
 	}
-	if(argc == 2 && strcmp(args[0], "set") == 0) {
+	if (argc == 2 && strcmp(args[0], "set") == 0) {
 		j = l;
-		for(conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++) {
-			if(strstr(conf->n, args[1]) == conf->n) {
-				if(strcmp(conf->n, args[1]) == 0)
+		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++) {
+			if (strstr(conf->n, args[1]) == conf->n) {
+				if (strcmp(conf->n, args[1]) == 0)
 					cmpltCnf = conf;
 				else
 					T[l++] = strdup(conf->n);
 			}
 		}
-		if(l == j+1)
+		if (l == j + 1)
 			output = T[j];
-		if(cmpltCnf) {
-			output = (char*)malloc(sizeof(char) * 4);
+		if (cmpltCnf) {
+			output = (char *)malloc(sizeof(char) * 4);
 			sprintf(output, "%d", cmpltCnf->d);
 		}
 	}
@@ -150,10 +152,10 @@ static char **completeCombination(const char *txt, int start, int end)
 		for (i = 1; i < l; i++)
 			free(T[i]);
 		l = 1;
-		if(cmpltCnf)
+		if (cmpltCnf)
 			free(output);
 	}
-	while(argc--)
+	while (argc--)
 		free(args[argc]);
 	free(args);
 	T[l++] = NULL;
@@ -244,8 +246,7 @@ int main()
 			printf(_("Starting new session\n"));
 			session = mm_session_new();
 		} else {
-			printf(_("Restoring old session\nState:\n\tGusessed: %d\n"),
-					session->guessed);
+			printf(_("Restoring old session\n"));
 		}
 		printf(_("Current Config:\n\tguesses: %d\n\tcolors: "
 			 "%d\n\tholes: %d\n"),
