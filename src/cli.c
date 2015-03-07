@@ -89,37 +89,37 @@ unsigned parseBuf(char *buf, char **args)
 }
 static char **completeCombination(const char *txt, int start, int end)
 {
-	unsigned l = 0, j, i;
+	unsigned l = 0, j, i, argc;
+	char *output = NULL;
 	cmd_t *cmd;
 	char **T = (char **)malloc(sizeof(char *) *
 				   (LEN(cmds) + session->config->colors + 2));
-	char *output = NULL, *buf;
-	buf = (char *)malloc(sizeof(char) * (strlen(rl_line_buffer) + 1));
-	strcpy(buf, rl_line_buffer);
-	while (*buf == ' ')
-		buf++;
+	char **args = (char **)malloc(sizeof(char *) *
+			session->config->holes > 5 ? session->config->holes : 5);
 	T[l] = (char *)malloc(sizeof(char) *
 			      (LEN(cmds) + session->config->holes + 2));
 	strcpy(T[l], "");
 	l++;
-	if (*buf == '\0') {
+	argc = parseBuf(rl_line_buffer, args);
+	if (argc == 0) {
 		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++, l++) {
 			T[l] =
 			    (char *)malloc(sizeof(char) * (strlen(cmd->n) + 1));
 			strcpy(T[l], cmd->n);
 		}
 	}
-	if (*buf == '\0' ||
-	    (*buf >= '0' && *buf <= ('0' + session->config->colors))) {
+	if (argc == 0 ||
+	    (args[0][0] >= '0' && args[0][0] <= ('0' + session->config->colors))) {
 		for (j = 0; j < session->config->colors; j++, l++) {
 			T[l] = (char *)malloc(sizeof(char) * 2);
 			sprintf(T[l], "%u", j);
 		}
 	}
-	if (*buf >= 'a' && *buf <= 'z') {
+	if (argc == 1 && args[0][0] >= 'a' && args[0][0] <= 'z') {
 		j = l;
 		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++) {
-			if (strstr(cmd->n, buf) == cmd->n) {
+			if (strstr(cmd->n, args[0]) == cmd->n &&
+					strcmp(cmd->n, args[0])) {
 				T[l] = (char *)malloc(sizeof(char) *
 						      (strlen(cmd->n) + 1));
 				strcpy(T[l], cmd->n);
@@ -136,7 +136,9 @@ static char **completeCombination(const char *txt, int start, int end)
 			free(T[i]);
 		l = 1;
 	}
-	free(buf);
+	while(argc--)
+		free(args[argc]);
+	free(args);
 	T[l++] = NULL;
 	return T;
 }
