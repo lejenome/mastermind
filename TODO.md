@@ -2,7 +2,7 @@
 [x] configs
 [x] saving session state
 [x] command auto complete
-[ ] subcommand auto complete
+[x] subcommand auto complete
 [ ] saving scores, history
 [ ] SDL backend
 [ ] ncurses backend

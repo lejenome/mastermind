@@ -91,7 +91,8 @@ static char **completeCombination(const char *txt, int start, int end)
 {
 	unsigned l = 0, j, i, argc;
 	char *output = NULL;
-	cmd_t *cmd;
+	cmd_t *cmd, *cmpltCmd = NULL;
+	mm_conf_t *conf, *cmpltCnf = NULL;
 	char **T = (char **)malloc(sizeof(char *) *
 				   (LEN(cmds) + session->config->colors + 2));
 	char **args = (char **)malloc(sizeof(char *) *
@@ -118,16 +119,40 @@ static char **completeCombination(const char *txt, int start, int end)
 	if (argc == 1 && args[0][0] >= 'a' && args[0][0] <= 'z') {
 		j = l;
 		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++) {
-			if (strstr(cmd->n, args[0]) == cmd->n &&
-					strcmp(cmd->n, args[0])) {
-				T[l] = (char *)malloc(sizeof(char) *
-						      (strlen(cmd->n) + 1));
-				strcpy(T[l], cmd->n);
-				l++;
+			if (strstr(cmd->n, args[0]) == cmd->n) {
+				if (strcmp(cmd->n, args[0]) == 0) {
+					cmpltCmd = cmd;
+				} else {
+					T[l] = (char *)malloc(sizeof(char) *
+							(strlen(cmd->n) + 1));
+					strcpy(T[l], cmd->n);
+					l++;
+				}
 			}
 		}
 		if (l == j + 1)
 			output = T[j];
+	}
+	if(cmpltCmd && strcmp(cmpltCmd->n, "set") == 0) {
+		for(conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++, l++)
+			T[l] = strdup(conf->n);
+	}
+	if(argc == 2 && strcmp(args[0], "set") == 0) {
+		j = l;
+		for(conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++) {
+			if(strstr(conf->n, args[1]) == conf->n) {
+				if(strcmp(conf->n, args[1]) == 0)
+					cmpltCnf = conf;
+				else
+					T[l++] = strdup(conf->n);
+			}
+		}
+		if(l == j+1)
+			output = T[j];
+		if(cmpltCnf) {
+			output = (char*)malloc(sizeof(char) * 4);
+			sprintf(output, "%d", cmpltCnf->d);
+		}
 	}
 	if (output) {
 		T[0] = (char *)malloc(sizeof(char) * (strlen(output) + 1));
@@ -135,6 +160,8 @@ static char **completeCombination(const char *txt, int start, int end)
 		for (i = 1; i < l; i++)
 			free(T[i]);
 		l = 1;
+		if(cmpltCnf)
+			free(output);
 	}
 	while(argc--)
 		free(args[argc]);
