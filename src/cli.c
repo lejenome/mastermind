@@ -240,9 +240,13 @@ int main()
 	textdomain(PACKAGE);
 	session = mm_session_restore();
 	do {
-		if (!session)
+		if (!session) {
+			printf(_("Starting new session\n"));
 			session = mm_session_new();
-		session = mm_session_new();
+		} else {
+			printf(_("Restoring old session\nState:\n\tGusessed: %d\n"),
+					session->guessed);
+		}
 		printf(_("Current Config:\n\tguesses: %d\n\tcolors: "
 			 "%d\n\tholes: %d\n"),
 		       session->config->guesses, session->config->colors,
