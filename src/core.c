@@ -143,7 +143,7 @@ void mm_init()
 	mm_data_path = (char *)malloc(sizeof(char) * 2000);
 	mm_config_path = (char *)malloc(sizeof(char) * 2000);
 	mm_store_path = (char *)malloc(sizeof(char) * 2000);
-	if (getenv("APPDATA")) { // running on windows
+	if (getenv("APPDATA")) { // MS Windows
 		strcpy(mm_data_path, getenv("APPDATA"));
 		strcpy(mm_config_path, getenv("APPDATA"));
 	} else if (strcmp(unm.sysname, "Darwin") == 0) { // Mac OS
@@ -200,18 +200,18 @@ void mm_session_free(mm_session *session)
 }
 unsigned int mm_session_save(mm_session *session)
 {
-	/* [----- 8 bits -----]
-	 * [ session.guessed  ]
-	 * [ session.state    ]
-	 * [ config.guesses   ]
-	 * [ config.colors    ]
-	 * [ config.holes     ]
-	 * [........mm_secret->val.......] // 8 bits x config.holes
-	 * [........mm_secret->freq......] // 8 bits x config.colors
-	 * [....panel[0].combination.....] // 8 bits x config.holes
-	 * [ panel[0].inplace ]
-	 * [ panel[0].secret  ]
-	 * [ .................... ] // panel[0] ... panel[session.guessed - 1]
+	/* [----------- 8 bits -----------]
+	 * [ mm_session->guessed          ]
+	 * [ mm_session->state            ]
+	 * [ mm_config->guesses           ]
+	 * [ mm_config->colors            ]
+	 * [ mm_config->holes             ]
+	 * [............mm_secret->val.............] // 8 bits x config.holes
+	 * [............mm_secret->freq............] // 8 bits x config.colors
+	 * [...mm_session->panel[0].combination....] // 8 bits x config.holes
+	 * [ mm_session->panel[0].inplace ]
+	 * [ mm_session->panel[0].secret  ]
+	 * [ ............ ] // panel[0] ... panel[session.guessed - 1]
 	 */
 	unsigned i;
 	FILE *f = fopen(mm_store_path, "wb");

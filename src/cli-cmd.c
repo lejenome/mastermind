@@ -82,3 +82,9 @@ int cmd_account(const char argc, const char **argv, mm_session *session)
 	       "/dev/rondom\n");
 	return 0;
 }
+int cmd_version(const char argc, const char **argv, mm_session *session)
+{
+	printf("%s - v%s\nSite: %s\n",
+			PACKAGE, PROGRAM_VERSION, PROGRAM_URL);
+	return 0;
+}

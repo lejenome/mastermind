@@ -15,4 +15,5 @@ int cmd_score(const char, const char **, mm_session *);
 int cmd_reset(const char, const char **, mm_session *);
 int cmd_help(const char, const char **, mm_session *);
 int cmd_account(const char, const char **, mm_session *);
+int cmd_version(const char, const char **, mm_session *);
 #endif

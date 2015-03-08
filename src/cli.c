@@ -22,6 +22,7 @@ cmd_t cmds[] = {
     {.n = "reset", .e = cmd_reset},
     {.n = "help", .e = cmd_help},
     {.n = "account", .e = cmd_account},
+    {.n = "version", .e = cmd_version},
 }; // "connect", "server", "disconnect", "version"
 void printPanel()
 {
