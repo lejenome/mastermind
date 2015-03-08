@@ -4,6 +4,7 @@
 #include <string.h>
 #include <assert.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <sys/stat.h>
 #include <sys/utsname.h>
 #include "core.h"
@@ -14,9 +15,9 @@ char *mm_data_path = NULL;
 char *mm_store_path = NULL;
 
 mm_conf_t mm_confs[3] = {
-    {.n = "guesses", .d = MM_GUESSES},
-    {.n = "colors", .d = MM_COLORS},
-    {.n = "holes", .d = MM_HOLES},
+    {.nm = "guesses", .val = MM_GUESSES},
+    {.nm = "colors", .val = MM_COLORS},
+    {.nm = "holes", .val = MM_HOLES},
 };
 
 mm_session *mm_session_new()
@@ -45,16 +46,16 @@ mm_config *mm_config_load()
 		while (fscanf(f, "%s %d", n, &d) != EOF) {
 			for (conf = mm_confs; conf < mm_confs + LEN(mm_confs);
 			     conf++) {
-				if (!strcmp(n, conf->n))
-					conf->d = d;
+				if (!strcmp(n, conf->nm))
+					conf->val = d;
 			}
 		}
 		free(n);
 		fclose(f);
 	}
-	config->guesses = (unsigned char)mm_confs[0].d;
-	config->colors = (unsigned char)mm_confs[1].d;
-	config->holes = (unsigned char)mm_confs[2].d;
+	config->guesses = (uint8_t)mm_confs[0].val;
+	config->colors = (uint8_t)mm_confs[1].val;
+	config->holes = (uint8_t)mm_confs[2].val;
 	return config;
 }
 void mm_config_save()
@@ -63,18 +64,18 @@ void mm_config_save()
 	mm_conf_t *conf;
 	if (f) {
 		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++)
-			fprintf(f, "%s %d\n", conf->n, conf->d);
+			fprintf(f, "%s %d\n", conf->nm, conf->val);
 		fclose(f);
 	}
 }
 unsigned mm_config_set(const char *name, const int value)
 {
 	mm_conf_t *conf = mm_confs;
-	while (conf < mm_confs + LEN(mm_confs) && strcmp(conf->n, name) != 0)
+	while (conf < mm_confs + LEN(mm_confs) && strcmp(conf->nm, name) != 0)
 		conf++;
 	if (conf == mm_confs + LEN(mm_confs))
 		return -1;
-	conf->d = value;
+	conf->val = value;
 	mm_config_save();
 	return 0;
 }
@@ -82,9 +83,8 @@ mm_secret *mm_secret_new(mm_config *conf)
 {
 	char i;
 	mm_secret *sec = (mm_secret *)malloc(sizeof(mm_secret));
-	sec->val = (unsigned char *)malloc(sizeof(unsigned char) * conf->holes);
-	sec->freq =
-	    (unsigned char *)malloc(sizeof(unsigned char) * conf->colors);
+	sec->val = (uint8_t *)malloc(sizeof(uint8_t) * conf->holes);
+	sec->freq = (uint8_t *)malloc(sizeof(uint8_t) * conf->colors);
 	srandom(time(NULL));
 	for (i = 0; i < conf->colors; i++)
 		sec->freq[i] = 0;
@@ -94,15 +94,15 @@ mm_secret *mm_secret_new(mm_config *conf)
 	}
 	return sec;
 }
-unsigned mm_play(mm_session *session, unsigned char *T)
+unsigned mm_play(mm_session *session, uint8_t *T)
 {
 	char i;
 	if (session->guessed >= session->config->guesses ||
 	    session->state == MM_SUCCESS)
 		return 1;
 	mm_guess *G = session->panel + session->guessed;
-	unsigned char *freq = (unsigned char *)malloc(sizeof(unsigned char) *
-						      session->config->colors);
+	uint8_t *freq =
+	    (uint8_t *)malloc(sizeof(uint8_t) * session->config->colors);
 	for (i = 0; i < session->config->colors; i++)
 		freq[i] = 0;
 	G->combination = T;
@@ -143,26 +143,29 @@ void mm_init()
 	mm_data_path = (char *)malloc(sizeof(char) * 2000);
 	mm_config_path = (char *)malloc(sizeof(char) * 2000);
 	mm_store_path = (char *)malloc(sizeof(char) * 2000);
-	if (getenv("APPDATA")) { //running on windows
+	if (getenv("APPDATA")) { // running on windows
 		strcpy(mm_data_path, getenv("APPDATA"));
 		strcpy(mm_config_path, getenv("APPDATA"));
-	}else if (strcmp(unm.sysname, "Darwin") == 0) { // Mac OS
-		sprintf(mm_config_path, "%s%s", home, "/Library/Application Support");
-		if(access(mm_config_path, R_OK | W_OK | X_OK) == 0) {
+	} else if (strcmp(unm.sysname, "Darwin") == 0) { // Mac OS
+		sprintf(mm_config_path, "%s%s", home,
+			"/Library/Application Support");
+		if (access(mm_config_path, R_OK | W_OK | X_OK) == 0) {
 			strcat(mm_config_path, "/" PACKAGE);
 			strcpy(mm_data_path, mm_config_path);
 		} else {
 			sprintf(mm_config_path, "%s%s", home, "/." PACKAGE);
 			strcpy(mm_data_path, mm_config_path);
 		}
-	}else { // Linux/Unix system ?
+	} else { // Linux/Unix system ?
 		// config dir; try use XDG based dir ~/.config/mastermind else
 		// fallback to ~/.mastermind
 		if (xdg_config)
-			sprintf(mm_config_path, "%s%s", xdg_config, "/" PACKAGE);
+			sprintf(mm_config_path, "%s%s", xdg_config,
+				"/" PACKAGE);
 		else
-			sprintf(mm_config_path, "%s%s", home, "/.config/" PACKAGE);
-		if(access(mm_config_path, W_OK | R_OK | X_OK) == 0)
+			sprintf(mm_config_path, "%s%s", home,
+				"/.config/" PACKAGE);
+		if (access(mm_config_path, W_OK | R_OK | X_OK) == 0)
 			strcat(mm_config_path, "/" PACKAGE);
 		else
 			sprintf(mm_data_path, "%s%s", home, "/." PACKAGE);
@@ -171,8 +174,9 @@ void mm_init()
 		if (xdg_data)
 			sprintf(mm_data_path, "%s%s", xdg_data, "/" PACKAGE);
 		else
-			sprintf(mm_data_path, "%s%s", home, "/.local/share/" PACKAGE);
-		if(access(mm_data_path, W_OK | R_OK | X_OK) == 0)
+			sprintf(mm_data_path, "%s%s", home,
+				"/.local/share/" PACKAGE);
+		if (access(mm_data_path, W_OK | R_OK | X_OK) == 0)
 			strcat(mm_data_path, "/" PACKAGE);
 		else
 			sprintf(mm_data_path, "%s%s", home, "/." PACKAGE);
@@ -215,16 +219,15 @@ unsigned int mm_session_save(mm_session *session)
 	_session->panel = NULL;
 	fwrite(_session, sizeof(mm_session), 1, f);
 	fwrite(session->config, sizeof(mm_config), 1, f);
-	fwrite(session->secret->val, sizeof(unsigned char),
-	       session->config->holes, f);
-	fwrite(session->secret->freq, sizeof(unsigned char),
-	       session->config->colors, f);
+	fwrite(session->secret->val, sizeof(uint8_t), session->config->holes,
+	       f);
+	fwrite(session->secret->freq, sizeof(uint8_t), session->config->colors,
+	       f);
 	for (i = 0; i < session->guessed; i++) {
-		fwrite(session->panel[i].combination, sizeof(unsigned char),
+		fwrite(session->panel[i].combination, sizeof(uint8_t),
 		       session->config->holes, f);
-		fwrite(&session->panel[i].inplace, sizeof(unsigned char), 1, f);
-		fwrite(&session->panel[i].insecret, sizeof(unsigned char), 1,
-		       f);
+		fwrite(&session->panel[i].inplace, sizeof(uint8_t), 1, f);
+		fwrite(&session->panel[i].insecret, sizeof(uint8_t), 1, f);
 	}
 	fclose(f);
 	free(_session);
@@ -247,28 +250,26 @@ mm_session *mm_session_restore()
 	if (!fread(session->config, sizeof(mm_config), 1, f))
 		goto conf_err;
 	session->secret = (mm_secret *)malloc(sizeof(mm_secret));
-	session->secret->val = (unsigned char *)malloc(sizeof(unsigned char) *
-						       session->config->holes);
-	if (!fread(session->secret->val, sizeof(unsigned char),
+	session->secret->val =
+	    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
+	if (!fread(session->secret->val, sizeof(uint8_t),
 		   session->config->holes, f))
 		goto sec_val_err;
-	session->secret->freq = (unsigned char *)malloc(
-	    sizeof(unsigned char) * session->config->colors);
-	if (!fread(session->secret->freq, sizeof(unsigned char),
+	session->secret->freq =
+	    (uint8_t *)malloc(sizeof(uint8_t) * session->config->colors);
+	if (!fread(session->secret->freq, sizeof(uint8_t),
 		   session->config->colors, f))
 		goto sec_freq_err;
 	unsigned i = 0;
 	session->panel =
 	    (mm_guess *)malloc(sizeof(mm_guess) * session->config->guesses);
 	for (i = 0; i < session->guessed; i++) {
-		session->panel[i].combination = (unsigned char *)malloc(
-		    sizeof(unsigned char) * session->config->holes);
-		if (!fread(session->panel[i].combination, sizeof(unsigned char),
+		session->panel[i].combination =
+		    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
+		if (!fread(session->panel[i].combination, sizeof(uint8_t),
 			   session->config->holes, f) ||
-		    !fread(&session->panel[i].inplace, sizeof(unsigned char), 1,
-			   f) ||
-		    !fread(&session->panel[i].insecret, sizeof(unsigned char),
-			   1, f))
+		    !fread(&session->panel[i].inplace, sizeof(uint8_t), 1, f) ||
+		    !fread(&session->panel[i].insecret, sizeof(uint8_t), 1, f))
 			goto guess_err;
 	}
 	fclose(f);

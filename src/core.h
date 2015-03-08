@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "../config.h"
 
 #ifndef __MM_CORE_H
@@ -12,33 +13,33 @@
 
 typedef struct
 {
-	unsigned char guesses; // max guesses on panel
-	unsigned char colors;  // max nbre of colors
-	unsigned char holes;   // nbre of holes (items) in a combination
+	uint8_t guesses; // max guesses on panel
+	uint8_t colors;  // max nbre of colors
+	uint8_t holes;   // nbre of holes (items) in a combination
 } mm_config;
 typedef struct
 {
-	unsigned char *combination; // given combination (guess)
-	unsigned char inplace;      // nbre of items on right place
-	unsigned char insecret;     // nbre of items on secret but not inplace
+	uint8_t *combination; // given combination (guess)
+	uint8_t inplace;      // nbre of items on right place
+	uint8_t insecret;     // nbre of items on secret but not inplace
 } mm_guess;
 typedef struct
 {
-	unsigned char *val;  // len: config->holes
-	unsigned char *freq; // len: config->colors
+	uint8_t *val;  // len: config->holes
+	uint8_t *freq; // len: config->colors
 } mm_secret;
 typedef struct
 {
-	unsigned char guessed; // nbre of user guessed combination
-	unsigned char state;   // current state of session
-	mm_secret *secret;     // secret combination to guess
-	mm_config *config;     // session config
-	mm_guess *panel;       // session panel
+	uint8_t guessed;   // nbre of user guessed combination
+	uint8_t state;     // current state of session
+	mm_secret *secret; // secret combination to guess
+	mm_config *config; // session config
+	mm_guess *panel;   // session panel
 } mm_session;
 typedef struct
 {
-	char *n; // config name
-	int d;   // value (number)
+	char *nm; // config name
+	int val;  // value (number)
 } mm_conf_t;
 
 extern mm_conf_t mm_confs[3];
@@ -53,6 +54,6 @@ void mm_config_save();
 unsigned mm_config_set(const char *, const int);
 
 mm_secret *mm_secret_new(mm_config *);
-unsigned mm_play(mm_session *, unsigned char *);
+unsigned mm_play(mm_session *, uint8_t *);
 void mm_init();
 #endif

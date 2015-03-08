@@ -3,6 +3,7 @@
 #include <string.h>
 #include <libintl.h>
 #include <locale.h>
+#include <stdint.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -139,23 +140,23 @@ static char **completeCombination(const char *txt, int start, int end)
 	if (cmpltCmd && strcmp(cmpltCmd->n, "set") == 0) {
 		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs);
 		     conf++, l++)
-			T[l] = strdup(conf->n);
+			T[l] = strdup(conf->nm);
 	}
 	if (argc == 2 && strcmp(args[0], "set") == 0) {
 		j = l;
 		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++) {
-			if (strstr(conf->n, args[1]) == conf->n) {
-				if (strcmp(conf->n, args[1]) == 0)
+			if (strstr(conf->nm, args[1]) == conf->nm) {
+				if (strcmp(conf->nm, args[1]) == 0)
 					cmpltCnf = conf;
 				else
-					T[l++] = strdup(conf->n);
+					T[l++] = strdup(conf->nm);
 			}
 		}
 		if (l == j + 1)
 			output = T[j];
 		if (cmpltCnf) {
 			output = (char *)malloc(sizeof(char) * 4);
-			sprintf(output, "%d", cmpltCnf->d);
+			sprintf(output, "%d", cmpltCnf->val);
 		}
 	}
 no_more:
@@ -180,12 +181,12 @@ no_more:
  * 1  : cmd input, redo (do not redo table)
  * 2  : cmd input, next (redraw table)
  * */
-int getCombination(unsigned char *T)
+int getCombination(uint8_t *T)
 {
 	unsigned ret = -1;
 	char prmpt[200], *input;
 	unsigned i = 0, j = 0, k, argc;
-	unsigned char c;
+	uint8_t c;
 	cmd_t *cmd;
 	snprintf(prmpt, 200, _("Enter you guesse: (%d of [0..%d] nbre) > "),
 		 session->config->holes, session->config->colors - 1);
@@ -247,7 +248,7 @@ cmd_execed:
 }
 int main()
 {
-	unsigned char *T = NULL, rst;
+	uint8_t *T = NULL, rst;
 	unsigned ret;
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
@@ -268,8 +269,8 @@ int main()
 			printf(_("Current State:\n\tGuessed: %d\n"),
 			       session->guessed);
 			printPanel();
-			T = (unsigned char *)malloc(sizeof(unsigned char) *
-						    session->config->holes);
+			T = (uint8_t *)malloc(sizeof(uint8_t) *
+					      session->config->holes);
 			while ((ret = getCombination(T)) == -1 || ret == 1 ||
 			       (ret == 0 && mm_play(session, T) != 0)) {
 				if (ret == 0) {

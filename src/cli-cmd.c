@@ -27,7 +27,7 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 	case 1:
 		printf("Global configs:\n");
 		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++)
-			printf("\t%s = %d\n", conf->n, conf->d);
+			printf("\t%s = %d\n", conf->nm, conf->val);
 		printf("Session configs:\n");
 		printf("\tguesses = %d\n\tcolors = %d\n\tholes = %d\n",
 		       session->config->guesses, session->config->colors,
@@ -36,10 +36,11 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 	case 2:
 		conf = mm_confs;
 		while (conf < mm_confs + LEN(mm_confs) &&
-		       strcmp(conf->n, argv[1]) != 0)
+		       strcmp(conf->nm, argv[1]) != 0)
 			conf++;
 		if (conf < mm_confs + LEN(mm_confs))
-			printf(_("Global config: %s = %d\n"), conf->n, conf->d);
+			printf(_("Global config: %s = %d\n"), conf->nm,
+			       conf->val);
 		else
 			printf(_("Global config not supported!!\n"));
 		break;
