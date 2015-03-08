@@ -89,7 +89,7 @@ unsigned parseBuf(char *buf, char **args)
 }
 static char **completeCombination(const char *txt, int start, int end)
 {
-	unsigned l = 0, j, i, argc;
+	unsigned l = 0, j, i, k, argc;
 	char *output = NULL;
 	cmd_t *cmd, *cmpltCmd = NULL;
 	mm_conf_t *conf, *cmpltCnf = NULL;
@@ -106,7 +106,18 @@ static char **completeCombination(const char *txt, int start, int end)
 		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++, l++)
 			T[l] = strdup(cmd->n);
 	if (argc == 0 || (args[0][0] >= '0' &&
-			  args[0][0] <= ('0' + session->config->colors))) {
+			  args[0][0] < ('0' + session->config->holes))) {
+		j = 0;
+		for (i = 0; i < strlen(rl_line_buffer); i++)
+			if (rl_line_buffer[i] >= '0' &&
+			    rl_line_buffer[i] < '0' + session->config->colors)
+				j++;
+			else if (rl_line_buffer[i] != ' ' &&
+				 rl_line_buffer[i] != '\t' &&
+				 rl_line_buffer[i] != ',')
+				goto no_more;
+		if (j >= session->config->holes)
+			goto no_more;
 		for (j = 0; j < session->config->colors; j++, l++) {
 			T[l] = (char *)malloc(sizeof(char) * 2);
 			sprintf(T[l], "%u", j);
@@ -147,6 +158,7 @@ static char **completeCombination(const char *txt, int start, int end)
 			sprintf(output, "%d", cmpltCnf->d);
 		}
 	}
+no_more:
 	if (output) {
 		T[0] = strdup(output);
 		for (i = 1; i < l; i++)
