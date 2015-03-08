@@ -3,6 +3,9 @@
 #include <time.h>
 #include <string.h>
 #include <assert.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/utsname.h>
 #include "core.h"
 
 #define LEN(a) (sizeof(a) / sizeof(a[0]))
@@ -134,27 +137,51 @@ mm_guess mm_play_last(mm_session *session)
 void mm_init()
 {
 	char *home = getenv("HOME");
+	struct utsname unm;
 	char *xdg_config = getenv("XDG_CONFIG_HOME");
 	char *xdg_data = getenv("XDG_DATA_HOME");
 	mm_data_path = (char *)malloc(sizeof(char) * 2000);
 	mm_config_path = (char *)malloc(sizeof(char) * 2000);
 	mm_store_path = (char *)malloc(sizeof(char) * 2000);
-	if (xdg_config)
-		sprintf(mm_config_path, "%s%s", xdg_config, "/" PACKAGE);
-	else
-		sprintf(mm_config_path, "%s%s", home, "/.config/" PACKAGE);
-	if (xdg_data)
-		sprintf(mm_data_path, "%s%s", xdg_data, "/" PACKAGE);
-	else
-		sprintf(mm_data_path, "%s%s", home, "/.local/share/" PACKAGE);
-	char *cmd = (char *)malloc(sizeof(char) * 4096);
-	snprintf(cmd, 4096, "mkdir -p '%s' '%s' > /dev/null", mm_data_path,
-		 mm_config_path);
-	system(cmd);
+	if (getenv("APPDATA")) { //running on windows
+		strcpy(mm_data_path, getenv("APPDATA"));
+		strcpy(mm_config_path, getenv("APPDATA"));
+	}else if (strcmp(unm.sysname, "Darwin") == 0) { // Mac OS
+		sprintf(mm_config_path, "%s%s", home, "/Library/Application Support");
+		if(access(mm_config_path, R_OK | W_OK | X_OK) == 0) {
+			strcat(mm_config_path, "/" PACKAGE);
+			strcpy(mm_data_path, mm_config_path);
+		} else {
+			sprintf(mm_config_path, "%s%s", home, "/." PACKAGE);
+			strcpy(mm_data_path, mm_config_path);
+		}
+	}else { // Linux/Unix system ?
+		// config dir; try use XDG based dir ~/.config/mastermind else
+		// fallback to ~/.mastermind
+		if (xdg_config)
+			sprintf(mm_config_path, "%s%s", xdg_config, "/" PACKAGE);
+		else
+			sprintf(mm_config_path, "%s%s", home, "/.config/" PACKAGE);
+		if(access(mm_config_path, W_OK | R_OK | X_OK) == 0)
+			strcat(mm_config_path, "/" PACKAGE);
+		else
+			sprintf(mm_data_path, "%s%s", home, "/." PACKAGE);
+		// data dir; try use XDG based dir ~/.local/share/mastermind
+		// else fallback to ~/.mastermind
+		if (xdg_data)
+			sprintf(mm_data_path, "%s%s", xdg_data, "/" PACKAGE);
+		else
+			sprintf(mm_data_path, "%s%s", home, "/.local/share/" PACKAGE);
+		if(access(mm_data_path, W_OK | R_OK | X_OK) == 0)
+			strcat(mm_data_path, "/" PACKAGE);
+		else
+			sprintf(mm_data_path, "%s%s", home, "/." PACKAGE);
+	}
+	mkdir(mm_data_path, 0700);
+	mkdir(mm_config_path, 0700);
 	sprintf(mm_store_path, "%s%s", mm_data_path, "/store.data");
 	strcat(mm_config_path, "/config");
 	strcat(mm_data_path, "/data.txt");
-	free(cmd);
 }
 void mm_session_free(mm_session *session)
 {

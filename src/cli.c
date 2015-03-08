@@ -89,7 +89,7 @@ unsigned parseBuf(char *buf, char **args)
 }
 static char **completeCombination(const char *txt, int start, int end)
 {
-	unsigned l = 0, j, i, k, argc;
+	unsigned l = 0, j, i, argc;
 	char *output = NULL;
 	cmd_t *cmd, *cmpltCmd = NULL;
 	mm_conf_t *conf, *cmpltCnf = NULL;
