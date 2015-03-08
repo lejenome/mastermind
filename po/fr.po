@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mastermind\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-08 20:30+0100\n"
+"POT-Creation-Date: 2015-03-08 21:18+0100\n"
 "PO-Revision-Date: 2015-03-04 22:58+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -32,12 +32,12 @@ msgstr ""
 msgid "Global config: %s = %d\n"
 msgstr ""
 
-#: src/cli-cmd.c:44
+#: src/cli-cmd.c:45
 #, c-format
 msgid "Global config not supported!!\n"
 msgstr ""
 
-#: src/cli-cmd.c:50
+#: src/cli-cmd.c:51
 #, c-format
 msgid ""
 "Command format error!\n"

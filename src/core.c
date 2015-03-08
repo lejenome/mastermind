@@ -200,24 +200,25 @@ void mm_session_free(mm_session *session)
 }
 unsigned int mm_session_save(mm_session *session)
 {
-	/* [...mm_session...]
-	 * [...mm_config...]
-	 * [...mm_secret->val...]
-	 * [...mm_secret->freq...]
-	 * [...mm_guess[0]->combination...]
-	 * [...mm_guess[0]->in{place,secret}...]
-	 * ....
+	/* [----- 8 bits -----]
+	 * [ session.guessed  ]
+	 * [ session.state    ]
+	 * [ config.guesses   ]
+	 * [ config.colors    ]
+	 * [ config.holes     ]
+	 * [........mm_secret->val.......] // 8 bits x config.holes
+	 * [........mm_secret->freq......] // 8 bits x config.colors
+	 * [....panel[0].combination.....] // 8 bits x config.holes
+	 * [ panel[0].inplace ]
+	 * [ panel[0].secret  ]
+	 * [ .................... ] // panel[0] ... panel[session.guessed - 1]
 	 */
 	unsigned i;
 	FILE *f = fopen(mm_store_path, "wb");
 	if (!f)
 		return -1;
-	mm_session *_session = (mm_session *)malloc(sizeof(mm_session));
-	memcpy(_session, session, sizeof(mm_session));
-	_session->secret = NULL;
-	_session->config = NULL;
-	_session->panel = NULL;
-	fwrite(_session, sizeof(mm_session), 1, f);
+	fwrite(&session->guessed, sizeof(uint8_t), 1, f);
+	fwrite(&session->state, sizeof(uint8_t), 1, f);
 	fwrite(session->config, sizeof(mm_config), 1, f);
 	fwrite(session->secret->val, sizeof(uint8_t), session->config->holes,
 	       f);
@@ -230,7 +231,6 @@ unsigned int mm_session_save(mm_session *session)
 		fwrite(&session->panel[i].insecret, sizeof(uint8_t), 1, f);
 	}
 	fclose(f);
-	free(_session);
 	return 0;
 }
 mm_session *mm_session_restore()
@@ -241,10 +241,9 @@ mm_session *mm_session_restore()
 	if (!f)
 		return NULL;
 	mm_session *session = (mm_session *)malloc(sizeof(mm_session));
-	if (!fread(session, sizeof(mm_session), 1, f))
+	if (!fread(&session->guessed, sizeof(uint8_t), 1, f))
 		goto session_err;
-	if (session->config != NULL || session->secret != NULL ||
-	    session->panel != NULL)
+	if (!fread(&session->state, sizeof(uint8_t), 1, f))
 		goto session_err;
 	session->config = (mm_config *)malloc(sizeof(mm_config));
 	if (!fread(session->config, sizeof(mm_config), 1, f))
