@@ -69,12 +69,12 @@ unsigned parseBuf(char *buf, char **args)
 				start = NULL;
 			}
 		} else if ((*buf >= '0' && *buf <= '9') ||
-			   (*buf >= 'a' && *buf <= 'z')) {
+			   (*buf >= 'a' && *buf <= 'z') || *buf == '_') {
 			if (start == NULL)
 				start = buf;
 		} else {
 			printf(
-			    _("Error: illegal charater on the command '%c'\n"),
+			    _("\nError: illegal charater on the command '%c'\n"),
 			    *buf);
 			argc = 0;
 			break;

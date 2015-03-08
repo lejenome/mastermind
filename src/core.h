@@ -42,12 +42,13 @@ typedef struct
 	int val;  // value (number)
 } mm_conf_t;
 
-extern mm_conf_t mm_confs[3];
+extern mm_conf_t mm_confs[5];
 
 mm_session *mm_session_new();
 mm_session *mm_session_restore();
 unsigned int mm_session_save(mm_session *);
 void mm_session_free(mm_session *);
+void mm_session_exit(mm_session *);
 
 mm_config *mm_config_load();
 void mm_config_save();

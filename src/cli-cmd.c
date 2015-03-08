@@ -9,6 +9,7 @@
 
 int cmd_quit(const char argc, const char **argv, mm_session *session)
 {
+	mm_session_exit(session);
 	printf(_("Bye!\n"));
 	exit(0);
 	return 0;

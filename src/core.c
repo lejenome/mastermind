@@ -14,10 +14,17 @@ char *mm_config_path = NULL;
 char *mm_data_path = NULL;
 char *mm_store_path = NULL;
 
-mm_conf_t mm_confs[3] = {
-    {.nm = "guesses", .val = MM_GUESSES},
-    {.nm = "colors", .val = MM_COLORS},
-    {.nm = "holes", .val = MM_HOLES},
+#define MM_POS_GUESSES 0
+#define MM_POS_COLORS 1
+#define MM_POS_HOLES 2
+#define MM_POS_SAVE_EXIT 3
+#define MM_POS_SAVE_PLAY 4
+mm_conf_t mm_confs[5] = {
+    [MM_POS_GUESSES]   = {.nm = "guesses", .val = MM_GUESSES},
+    [MM_POS_COLORS]    = {.nm = "colors", .val = MM_COLORS},
+    [MM_POS_HOLES]     = {.nm = "holes", .val = MM_HOLES},
+    [MM_POS_SAVE_EXIT] = {.nm = "save_on_exit", .val = 0},
+    [MM_POS_SAVE_PLAY] = {.nm = "save_on_play", .val = 0},
 };
 
 mm_session *mm_session_new()
@@ -53,9 +60,9 @@ mm_config *mm_config_load()
 		free(n);
 		fclose(f);
 	}
-	config->guesses = (uint8_t)mm_confs[0].val;
-	config->colors = (uint8_t)mm_confs[1].val;
-	config->holes = (uint8_t)mm_confs[2].val;
+	config->guesses = (uint8_t)mm_confs[MM_POS_GUESSES].val;
+	config->colors = (uint8_t)mm_confs[MM_POS_COLORS].val;
+	config->holes = (uint8_t)mm_confs[MM_POS_HOLES].val;
 	return config;
 }
 void mm_config_save()
@@ -127,6 +134,8 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 	else
 		session->state = MM_PLAYING;
 	free(freq);
+	if(mm_confs[MM_POS_SAVE_PLAY].val == 1)
+		mm_session_save(session);
 	return 0;
 }
 mm_guess mm_play_last(mm_session *session)
@@ -160,11 +169,9 @@ void mm_init()
 		// config dir; try use XDG based dir ~/.config/mastermind else
 		// fallback to ~/.mastermind
 		if (xdg_config)
-			sprintf(mm_config_path, "%s%s", xdg_config,
-				"/" PACKAGE);
+			strcpy(mm_config_path, xdg_config);
 		else
-			sprintf(mm_config_path, "%s%s", home,
-				"/.config/" PACKAGE);
+			sprintf(mm_config_path, "%s%s", home, "/.config");
 		if (access(mm_config_path, W_OK | R_OK | X_OK) == 0)
 			strcat(mm_config_path, "/" PACKAGE);
 		else
@@ -172,10 +179,9 @@ void mm_init()
 		// data dir; try use XDG based dir ~/.local/share/mastermind
 		// else fallback to ~/.mastermind
 		if (xdg_data)
-			sprintf(mm_data_path, "%s%s", xdg_data, "/" PACKAGE);
+			strcpy(mm_data_path, xdg_data);
 		else
-			sprintf(mm_data_path, "%s%s", home,
-				"/.local/share/" PACKAGE);
+			sprintf(mm_data_path, "%s%s", home, "/.local/share");
 		if (access(mm_data_path, W_OK | R_OK | X_OK) == 0)
 			strcat(mm_data_path, "/" PACKAGE);
 		else
@@ -197,6 +203,11 @@ void mm_session_free(mm_session *session)
 	free(session->secret);
 	free(session->config);
 	free(session);
+}
+void mm_session_exit(mm_session *session) {
+	if(session->state == MM_PLAYING && mm_confs[MM_POS_SAVE_EXIT].val == 1)
+		mm_session_save(session);
+	mm_session_free(session);
 }
 unsigned int mm_session_save(mm_session *session)
 {
