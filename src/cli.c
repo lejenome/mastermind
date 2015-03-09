@@ -73,9 +73,9 @@ unsigned parseBuf(char *buf, char **args)
 			if (start == NULL)
 				start = buf;
 		} else {
-			printf(
-			    _("\nError: illegal charater on the command '%c'\n"),
-			    *buf);
+			printf(_("\nError: illegal charater on the command "
+				 "'%c'\n"),
+			       *buf);
 			argc = 0;
 			break;
 		}
@@ -91,6 +91,8 @@ unsigned parseBuf(char *buf, char **args)
 }
 static char **completeCombination(const char *txt, int start, int end)
 {
+	if (rl_point != rl_end)
+		return (char **)NULL;
 	unsigned l = 0, j, i, argc;
 	char *output = NULL;
 	cmd_t *cmd, *cmpltCmd = NULL;
@@ -100,15 +102,13 @@ static char **completeCombination(const char *txt, int start, int end)
 	char **args = (char **)malloc(
 	    sizeof(char *) * session->config->holes > 5 ? session->config->holes
 							: 5);
-	T[l] = (char *)malloc(sizeof(char) *
-			      (LEN(cmds) + session->config->holes + 2));
 	T[l++] = strdup("");
 	argc = parseBuf(rl_line_buffer, args);
 	if (argc == 0)
 		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++, l++)
 			T[l] = strdup(cmd->n);
 	if (argc == 0 || (args[0][0] >= '0' &&
-			  args[0][0] < ('0' + session->config->holes))) {
+			  args[0][0] < ('0' + session->config->colors))) {
 		j = 0;
 		for (i = 0; i < strlen(rl_line_buffer); i++)
 			if (rl_line_buffer[i] >= '0' &&
@@ -168,11 +168,16 @@ no_more:
 		l = 1;
 		if (cmpltCnf)
 			free(output);
+	} else if (l == 1 && rl_line_buffer[rl_point - 1] != ' ') {
+		free(T[0]);
+		free(T);
+		T = (char **)NULL;
 	}
+	if (T)
+		T[l++] = NULL;
 	while (argc--)
 		free(args[argc]);
 	free(args);
-	T[l++] = NULL;
 	return T;
 }
 /* return:

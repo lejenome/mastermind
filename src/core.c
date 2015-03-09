@@ -20,11 +20,11 @@ char *mm_store_path = NULL;
 #define MM_POS_SAVE_EXIT 3
 #define MM_POS_SAVE_PLAY 4
 mm_conf_t mm_confs[5] = {
-    [MM_POS_GUESSES]   = {.nm = "guesses", .val = MM_GUESSES},
-    [MM_POS_COLORS]    = {.nm = "colors", .val = MM_COLORS},
-    [MM_POS_HOLES]     = {.nm = "holes", .val = MM_HOLES},
-    [MM_POS_SAVE_EXIT] = {.nm = "save_on_exit", .val = 0},
-    [MM_POS_SAVE_PLAY] = {.nm = "save_on_play", .val = 0},
+	[MM_POS_GUESSES] = {.nm = "guesses", .val = MM_GUESSES},
+	[MM_POS_COLORS] = {.nm = "colors", .val = MM_COLORS},
+	[MM_POS_HOLES] = {.nm = "holes", .val = MM_HOLES},
+	[MM_POS_SAVE_EXIT] = {.nm = "save_on_exit", .val = 0},
+	[MM_POS_SAVE_PLAY] = {.nm = "save_on_play", .val = 0},
 };
 
 mm_session *mm_session_new()
@@ -134,7 +134,7 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 	else
 		session->state = MM_PLAYING;
 	free(freq);
-	if(mm_confs[MM_POS_SAVE_PLAY].val == 1)
+	if (mm_confs[MM_POS_SAVE_PLAY].val == 1)
 		mm_session_save(session);
 	return 0;
 }
@@ -204,8 +204,9 @@ void mm_session_free(mm_session *session)
 	free(session->config);
 	free(session);
 }
-void mm_session_exit(mm_session *session) {
-	if(session->state == MM_PLAYING && mm_confs[MM_POS_SAVE_EXIT].val == 1)
+void mm_session_exit(mm_session *session)
+{
+	if (session->state == MM_PLAYING && mm_confs[MM_POS_SAVE_EXIT].val == 1)
 		mm_session_save(session);
 	mm_session_free(session);
 }
