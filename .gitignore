@@ -3,6 +3,7 @@
 /mastermind
 /mastermind.pot
 /intl
+.*.swp*
 *~
 # Object files
 *.o

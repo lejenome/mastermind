@@ -25,17 +25,17 @@ msgstr ""
 #: src/cli-cmd.c:20
 #, c-format
 msgid "Saving session\n"
-msgstr ""
+msgstr "Enregistrement de session\n"
 
 #: src/cli-cmd.c:43
 #, c-format
 msgid "Global config: %s = %d\n"
-msgstr ""
+msgstr "Configuration global: %s = %d\n"
 
 #: src/cli-cmd.c:46
 #, c-format
 msgid "Global config not supported!!\n"
-msgstr ""
+msgstr "Configuration globale pas supportee!!\n"
 
 #: src/cli-cmd.c:52
 #, c-format
@@ -64,7 +64,7 @@ msgstr ""
 #: src/cli.c:218
 #, c-format
 msgid "Command unsupported '%s'\n"
-msgstr ""
+msgstr "Command non supportée '%s'\n"
 
 #: src/cli.c:234
 #, c-format
@@ -113,7 +113,7 @@ msgstr ""
 #: src/cli.c:291
 #, c-format
 msgid "Final State:\n"
-msgstr ""
+msgstr "Etat final:\n"
 
 #: src/cli.c:294
 msgid "You successed :)"
