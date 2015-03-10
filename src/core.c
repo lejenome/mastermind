@@ -26,7 +26,9 @@ mm_conf_t mm_confs[5] = {
 	[MM_POS_SAVE_EXIT] = {.nm = "save_on_exit", .val = 0},
 	[MM_POS_SAVE_PLAY] = {.nm = "save_on_play", .val = 0},
 };
-
+/* create new mastermind session and initialize viables && config 
+ * return: mm_session* : new session object 
+ */
 mm_session *mm_session_new()
 {
 	mm_session *session = (mm_session *)malloc(sizeof(mm_session));
@@ -38,6 +40,10 @@ mm_session *mm_session_new()
 	    (mm_guess *)malloc(sizeof(mm_guess) * session->config->guesses);
 	return session;
 }
+/* load global config from config file and create new session config based 
+ * on global config
+ * return: mm_config* : new session config object 
+ */ 
 mm_config *mm_config_load()
 {
 	mm_config *config;
@@ -65,6 +71,8 @@ mm_config *mm_config_load()
 	config->holes = (uint8_t)mm_confs[MM_POS_HOLES].val;
 	return config;
 }
+/* save global config on the config file 
+ */
 void mm_config_save()
 {
 	FILE *f = fopen(mm_config_path, "w");
@@ -75,13 +83,18 @@ void mm_config_save()
 		fclose(f);
 	}
 }
+/* change global config with name to value then save to config file 
+ * param name: const char* : name of global config to change
+ * param value: const int : the new value of global config name
+ * return: unsigned : 0 on success , 1 on failure
+ */
 unsigned mm_config_set(const char *name, const int value)
 {
 	mm_conf_t *conf = mm_confs;
 	while (conf < mm_confs + LEN(mm_confs) && strcmp(conf->nm, name) != 0)
 		conf++;
 	if (conf == mm_confs + LEN(mm_confs))
-		return -1;
+		return 1;
 	conf->val = value;
 	mm_config_save();
 	return 0;
