@@ -64,7 +64,10 @@ int cmd_restart(const char argc, const char **argv, mm_session *s)
 }
 int cmd_help(const char argc, const char **argv, mm_session *session)
 {
-	printf("Help me please!!!\n");
+	printf(_("About " PACKAGE": \nIs a two players logical game(encoder,decoder)"
+	"encoder chose one combination compose from four to six color"
+	"decoder try to find this combination by trying to find color position \n"
+	"RTFM: http://en.wikipedia.org/wiki/Mastermind_%28board_game%29#Gameplay_and_rules"));
 	return 0;
 }
 int cmd_score(const char argc, const char **argv, mm_session *session)
