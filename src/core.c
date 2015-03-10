@@ -99,6 +99,12 @@ unsigned mm_config_set(const char *name, const int value)
 	mm_config_save();
 	return 0;
 }
+/* create the secret part of mastermind using session config 
+ * this fuction use random and save it on mm_secret->val && save freq of every
+ * color on mm_secret->freq
+ * param conf : mm_config* : config of current session 
+ * return : mm_secret* : secret objet for this session
+ */
 mm_secret *mm_secret_new(mm_config *conf)
 {
 	char i;
@@ -114,6 +120,18 @@ mm_secret *mm_secret_new(mm_config *conf)
 	}
 	return sec;
 }
+/* This function is the most important function in the code 
+ * this function accept new guess combination , add it to 
+ * the session if it's not ended and calculed the score of 
+ * the current guess  then update session status
+ * param session : mm_session* : current session
+ * param t : uint8_t : the new guess combination
+ * return : unsigned : 
+ * 		0 on success 	
+ *  	1 on failure
+ * 			- session already ended
+ * 			- combination is not valid 
+ */
 unsigned mm_play(mm_session *session, uint8_t *T)
 {
 	char i;
