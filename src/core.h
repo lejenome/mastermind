@@ -4,8 +4,6 @@
 #ifndef __MM_CORE_H
 #define __MM_CORE_H
 
-#define MM_COLORS_MAX 10
-
 #define MM_NEW 0
 #define MM_PLAYING 1
 #define MM_SUCCESS 2

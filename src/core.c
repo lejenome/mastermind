@@ -26,8 +26,8 @@ mm_conf_t mm_confs[5] = {
 	[MM_POS_SAVE_EXIT] = {.nm = "save_on_exit", .val = 0},
 	[MM_POS_SAVE_PLAY] = {.nm = "save_on_play", .val = 0},
 };
-/* create new mastermind session and initialize viables && config 
- * return: mm_session* : new session object 
+/* create new mastermind session and initialize viables && config
+ * return: mm_session* : new session object
  */
 mm_session *mm_session_new()
 {
@@ -40,10 +40,10 @@ mm_session *mm_session_new()
 	    (mm_guess *)malloc(sizeof(mm_guess) * session->config->guesses);
 	return session;
 }
-/* load global config from config file and create new session config based 
+/* load global config from config file and create new session config based
  * on global config
- * return: mm_config* : new session config object 
- */ 
+ * return: mm_config* : new session config object
+ */
 mm_config *mm_config_load()
 {
 	mm_config *config;
@@ -67,17 +67,17 @@ mm_config *mm_config_load()
 		fclose(f);
 	}
 	if (mm_confs[MM_POS_GUESSES].val > MM_GUESSES_MAX)
-		mm_confs[MM_POS_GUESSES].val=MM_GUESSES;
+		mm_confs[MM_POS_GUESSES].val = MM_GUESSES;
 	if (mm_confs[MM_POS_COLORS].val > MM_COLORS_MAX)
-		mm_confs[MM_POS_COLORS].val=MM_COLORS;
+		mm_confs[MM_POS_COLORS].val = MM_COLORS;
 	if (mm_confs[MM_POS_HOLES].val > MM_HOLES_MAX)
-		mm_confs[MM_POS_HOLES].val=MM_HOLES;
+		mm_confs[MM_POS_HOLES].val = MM_HOLES;
 	config->guesses = (uint8_t)mm_confs[MM_POS_GUESSES].val;
 	config->colors = (uint8_t)mm_confs[MM_POS_COLORS].val;
 	config->holes = (uint8_t)mm_confs[MM_POS_HOLES].val;
 	return config;
 }
-/* save global config on the config file 
+/* save global config on the config file
  */
 void mm_config_save()
 {
@@ -89,7 +89,7 @@ void mm_config_save()
 		fclose(f);
 	}
 }
-/* change global config with name to value then save to config file 
+/* change global config with name to value then save to config file
  * param name: const char* : name of global config to change
  * param value: const int : the new value of global config name
  * return: unsigned : 0 on success , 1 on failure
@@ -111,10 +111,10 @@ unsigned mm_config_set(const char *name, const int value)
 	mm_config_save();
 	return 0;
 }
-/* create the secret part of mastermind using session config 
+/* create the secret part of mastermind using session config
  * this fuction use random and save it on mm_secret->val && save freq of every
  * color on mm_secret->freq
- * param conf : mm_config* : config of current session 
+ * param conf : mm_config* : config of current session
  * return : mm_secret* : secret objet for this session
  */
 mm_secret *mm_secret_new(mm_config *conf)
@@ -132,17 +132,17 @@ mm_secret *mm_secret_new(mm_config *conf)
 	}
 	return sec;
 }
-/* This function is the most important function in the code 
- * this function accept new guess combination , add it to 
- * the session if it's not ended and calculed the score of 
+/* This function is the most important function in the code
+ * this function accept new guess combination , add it to
+ * the session if it's not ended and calculed the score of
  * the current guess  then update session status
  * param session : mm_session* : current session
  * param t : uint8_t : the new guess combination
- * return : unsigned : 
- * 		0 on success 	
+ * return : unsigned :
+ * 		0 on success
  *  	1 on failure
  * 			- session already ended
- * 			- combination is not valid 
+ * 			- combination is not valid
  */
 unsigned mm_play(mm_session *session, uint8_t *T)
 {
@@ -183,7 +183,7 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 }
 /* get last gusess objet
  * param session : mm_session* : current objet
- * return : session : mm_session 
+ * return : session : mm_session
  */
 mm_guess mm_play_last(mm_session *session)
 {
@@ -267,7 +267,7 @@ void mm_session_exit(mm_session *session)
 		mm_session_save(session);
 	mm_session_free(session);
 }
-/* save session object on mm_data_path file 
+/* save session object on mm_data_path file
  * param session : mm_session* : current session object
  * return : unsigned : 0 on success , 1 on failure
  */
@@ -307,9 +307,9 @@ unsigned int mm_session_save(mm_session *session)
 	return 0;
 }
 /* this function restore session object from mm_data_path file
- * return mm_session* : NULL on failure , session object pointeur on 
+ * return mm_session* : NULL on failure , session object pointeur on
  * success
- */ 
+ */
 mm_session *mm_session_restore()
 {
 	if (!mm_store_path)
