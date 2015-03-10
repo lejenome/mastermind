@@ -9,7 +9,11 @@
 // default settings
 #define MM_HOLES 4
 #define MM_COLORS 6
-#define MM_GUESSES 12
+#define MM_GUESSES 10
+
+#define MM_HOLES_MAX 8
+#define MM_COLORS_MAX 12
+#define MM_GUESSES_MAX 20
 
 #include <locale.h>
 #include <libintl.h>
