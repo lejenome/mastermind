@@ -39,9 +39,9 @@ void printPanel()
 			else
 				printf("   |");
 		if (i < session->guessed)
-			printf(_("  InPlace: %2d, InSecret: %2d, OutSecret: "
-				 "%2d\n"),
-			       session->panel[i].inplace,
+			printf(_("  Y %2d, A %2d, N %2d \n"),
+
+				 			       session->panel[i].inplace,
 			       session->panel[i].insecret -
 				   session->panel[i].inplace,
 			       session->config->holes -
