@@ -10,7 +10,9 @@ locales = fr
 
 DEFINES=-DLOCALEDIR=\"$(localedir)\"
 CFLAGS += $(DEFINES) -Wall -I/usr/local/include -Wno-char-subscripts
-LDFLAGS+= -L/usr/local/lib -lreadline
+CFLAGS += $(shell sdl2-config --cflags)
+LDFLAGS_CLI = -L/usr/local/lib -lreadline
+LDFLAGS_SDL = $(shell sdl2-config --libs)
 
 MKDIR = mkdir -p
 ifdef DEBUG
@@ -22,7 +24,10 @@ endif
 
 all: $(PACKAGE)cli intl
 $(PACKAGE)cli: cli.o cli-cmd.o core.o
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(LDFLAGS_CLI)
+	-@chmod +x $@
+$(PACKAGE)sdl: sdl.o core.o
+	$(CC) -o $@ $^ $(LDFLAGS) $(LDFLAGS_SDL)
 	-@chmod +x $@
 %.o: src/%.c
 	$(CC) -c $^ $(CFLAGS)
