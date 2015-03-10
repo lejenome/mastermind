@@ -204,8 +204,8 @@ void mm_init()
 	mm_config_path = (char *)malloc(sizeof(char) * 2000);
 	mm_store_path = (char *)malloc(sizeof(char) * 2000);
 	if (getenv("APPDATA")) { // MS Windows
-		strcpy(mm_data_path, getenv("APPDATA"));
-		strcpy(mm_config_path, getenv("APPDATA"));
+		sprintf(mm_data_path, "%s%s", getenv("APPDATA"), "/" PACKAGE);
+		sprintf(mm_config_path, "%s%S", getenv("APPDATA"), "/" PACKAGE);
 	} else if (strcmp(unm.sysname, "Darwin") == 0) { // Mac OS
 		sprintf(mm_config_path, "%s%s", home,
 			"/Library/Application Support");
