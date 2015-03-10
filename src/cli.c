@@ -31,7 +31,7 @@ void printPanel()
 		putchar('+');
 		for (j = 0; j < session->config->holes; j++)
 			printf("---+");
-		printf("\n|");
+		printf("  +-----+-----+-----+\n|");
 		for (j = 0; j < session->config->holes; j++)
 			if (i < session->guessed)
 				printf(" %d |",
@@ -39,7 +39,7 @@ void printPanel()
 			else
 				printf("   |");
 		if (i < session->guessed)
-			printf(_("  Y %2d, A %2d, N %2d \n"),
+			printf(_("  | Y%2d | A%2d | N%2d |\n"),
 
 				 			       session->panel[i].inplace,
 			       session->panel[i].insecret -
@@ -47,11 +47,12 @@ void printPanel()
 			       session->config->holes -
 				   session->panel[i].insecret);
 		else
-			putchar('\n');
+			printf("  |     |     |     |\n");
 	}
 	putchar('+');
 	for (j = 0; j < session->config->holes; j++)
 		printf("---+");
+	printf("  +-----+-----+-----+");
 	putchar('\n');
 }
 unsigned parseBuf(char *buf, char **args)
