@@ -66,6 +66,12 @@ mm_config *mm_config_load()
 		free(n);
 		fclose(f);
 	}
+	if (mm_confs[MM_POS_GUESSES].val > MM_GUESSES_MAX)
+		mm_confs[MM_POS_GUESSES].val=MM_GUESSES;
+	if (mm_confs[MM_POS_COLORS].val > MM_COLORS_MAX)
+		mm_confs[MM_POS_COLORS].val=MM_COLORS;
+	if (mm_confs[MM_POS_HOLES].val > MM_HOLES_MAX)
+		mm_confs[MM_POS_HOLES].val=MM_HOLES;
 	config->guesses = (uint8_t)mm_confs[MM_POS_GUESSES].val;
 	config->colors = (uint8_t)mm_confs[MM_POS_COLORS].val;
 	config->holes = (uint8_t)mm_confs[MM_POS_HOLES].val;
@@ -96,6 +102,12 @@ unsigned mm_config_set(const char *name, const int value)
 	if (conf == mm_confs + LEN(mm_confs))
 		return 1;
 	conf->val = value;
+	if (strcmp("holes", name) && (value > MM_HOLES_MAX || value < 2))
+		conf->val = MM_HOLES;
+	if (strcmp("colors", name) && (value > MM_COLORS_MAX || value < 2))
+		conf->val = MM_COLORS;
+	if (strcmp("guesses", name) && (value > MM_GUESSES_MAX || value < 2))
+		conf->val = MM_GUESSES;
 	mm_config_save();
 	return 0;
 }
