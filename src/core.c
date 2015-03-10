@@ -66,6 +66,12 @@ mm_config *mm_config_load()
 		free(n);
 		fclose(f);
 	}
+	if (mm_confs[MM_POS_GUESSES].val > MM_GUESSES_MAX)
+		mm_confs[MM_POS_GUESSES].val=MM_GUESSES;
+	if (mm_confs[MM_POS_COLORS].val > MM_COLORS_MAX)
+		mm_confs[MM_POS_COLORS].val=MM_COLORS;
+	if (mm_confs[MM_POS_HOLES].val > MM_HOLES_MAX)
+		mm_confs[MM_POS_HOLES].val=MM_HOLES;
 	config->guesses = (uint8_t)mm_confs[MM_POS_GUESSES].val;
 	config->colors = (uint8_t)mm_confs[MM_POS_COLORS].val;
 	config->holes = (uint8_t)mm_confs[MM_POS_HOLES].val;
@@ -96,6 +102,12 @@ unsigned mm_config_set(const char *name, const int value)
 	if (conf == mm_confs + LEN(mm_confs))
 		return 1;
 	conf->val = value;
+	if (strcmp("holes", name) && (value > MM_HOLES_MAX || value < 2))
+		conf->val = MM_HOLES;
+	if (strcmp("colors", name) && (value > MM_COLORS_MAX || value < 2))
+		conf->val = MM_COLORS;
+	if (strcmp("guesses", name) && (value > MM_GUESSES_MAX || value < 2))
+		conf->val = MM_GUESSES;
 	mm_config_save();
 	return 0;
 }
@@ -169,11 +181,19 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 		mm_session_save(session);
 	return 0;
 }
+/* get last gusess objet
+ * param session : mm_session* : current objet
+ * return : session : mm_session 
+ */
 mm_guess mm_play_last(mm_session *session)
 {
 	assert(session->guessed == 0);
 	return session->panel[session->guessed - 1];
 }
+/* This function initialize data && config && store files path using system
+ * and core default standard
+ * NOTE : this is an internal function
+ */
 void mm_init()
 {
 	char *home = getenv("HOME");
@@ -224,6 +244,9 @@ void mm_init()
 	strcat(mm_config_path, "/config");
 	strcat(mm_data_path, "/data.txt");
 }
+/* free session object
+ * param session : mm_session* : session object
+ */
 void mm_session_free(mm_session *session)
 {
 	while (session->guessed--)
@@ -235,12 +258,19 @@ void mm_session_free(mm_session *session)
 	free(session->config);
 	free(session);
 }
+/* save session if not ended && save_on_exit = 1 then free object
+ * param session : mm_session* : session object
+ */
 void mm_session_exit(mm_session *session)
 {
 	if (session->state == MM_PLAYING && mm_confs[MM_POS_SAVE_EXIT].val == 1)
 		mm_session_save(session);
 	mm_session_free(session);
 }
+/* save session object on mm_data_path file 
+ * param session : mm_session* : current session object
+ * return : unsigned : 0 on success , 1 on failure
+ */
 unsigned int mm_session_save(mm_session *session)
 {
 	/* [----------- 8 bits -----------]
@@ -276,6 +306,10 @@ unsigned int mm_session_save(mm_session *session)
 	fclose(f);
 	return 0;
 }
+/* this function restore session object from mm_data_path file
+ * return mm_session* : NULL on failure , session object pointeur on 
+ * success
+ */ 
 mm_session *mm_session_restore()
 {
 	if (!mm_store_path)

@@ -4,8 +4,8 @@
 #define __MM_CLI_CMD_H
 typedef struct
 {
-	char *n;
-	int (*e)(const char, const char **, mm_session *);
+	char *n; // name of command 
+	int (*e)(const char, const char **, mm_session *); // function to excute 
 } cmd_t;
 int cmd_quit(const char, const char **, mm_session *);
 int cmd_savegame(const char, const char **, mm_session *);
