@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mastermind\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-09 09:49+0100\n"
+"POT-Creation-Date: 2015-03-10 07:39+0100\n"
 "PO-Revision-Date: 2015-03-04 22:58+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -35,7 +35,7 @@ msgstr "Configuration global: %s = %d\n"
 #: src/cli-cmd.c:46
 #, c-format
 msgid "Global config not supported!!\n"
-msgstr "Configuration globale pas supportee!!\n"
+msgstr "Configuration globale non supportee!!\n"
 
 #: src/cli-cmd.c:52
 #, c-format
@@ -49,7 +49,7 @@ msgstr ""
 msgid "  InPlace: %2d, InSecret: %2d, OutSecret: %2d\n"
 msgstr ""
 
-#: src/cli.c:77
+#: src/cli.c:76
 #, c-format
 msgid ""
 "\n"
@@ -64,7 +64,7 @@ msgstr ""
 #: src/cli.c:218
 #, c-format
 msgid "Command unsupported '%s'\n"
-msgstr "Command non supportée '%s'\n"
+msgstr "Command non supportee '%s'\n"
 
 #: src/cli.c:234
 #, c-format
