@@ -41,7 +41,7 @@ void printPanel()
 		if (i < session->guessed)
 			printf(_("  | Y%2d | A%2d | N%2d |\n"),
 
-				 			       session->panel[i].inplace,
+			       session->panel[i].inplace,
 			       session->panel[i].insecret -
 				   session->panel[i].inplace,
 			       session->config->holes -
