@@ -9,7 +9,7 @@
 - [ ] SDL backend
 - [ ] ncurses backend
 - [ ] build for linux/Mac/Win/Android/iOS/...
-- [ ] MM_{GUESSES,COLORS,HOLES}_MAX support
+- [x] MM_{GUESSES,COLORS,HOLES}_MAX support
 - [ ] \(do/don't\) repeat colors on combination (remise / sans remise)
 - [ ] package it for ubuntu/archlinux/windows/android
 - [ ] account support
