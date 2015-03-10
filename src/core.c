@@ -169,11 +169,18 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 		mm_session_save(session);
 	return 0;
 }
+/* get last gusess objet
+ * param session : mm_session* : current objet
+ * return : session : mm_session 
+ */
 mm_guess mm_play_last(mm_session *session)
 {
 	assert(session->guessed == 0);
 	return session->panel[session->guessed - 1];
 }
+/* This function initialize data && config && store files path using system
+ * and core default standard
+ */
 void mm_init()
 {
 	char *home = getenv("HOME");
