@@ -55,24 +55,24 @@ void printPanel()
 	printf("  +-----+-----+-----+");
 	putchar('\n');
 }
-char** parseBuf(char *buf, unsigned *argc)
+char **parseBuf(char *buf, unsigned *argc)
 {
 	char *start = NULL;
 	char **args, *c;
-	unsigned  i=0;
+	unsigned i = 0;
 	c = buf;
 	// get argc
-	while(*c != '\0') {
-		if(*c == ' ' || *c == '\t' || *c == ',') {
-			if(start) {
+	while (*c != '\0') {
+		if (*c == ' ' || *c == '\t' || *c == ',') {
+			if (start) {
 				i++;
-			       start= NULL;
+				start = NULL;
 			}
-		}else if((*c >= '0' && *c <= '9') ||
-				(*c >= 'a' && *c <= 'z') || *c == '_') {
-			if(start == NULL)
+		} else if ((*c >= '0' && *c <= '9') ||
+			   (*c >= 'a' && *c <= 'z') || *c == '_') {
+			if (start == NULL)
 				start = c;
-		}else {
+		} else {
 			printf(_("\nError: illegal charater on the command "
 				 "'%c'\n"),
 			       *c);
@@ -82,13 +82,13 @@ char** parseBuf(char *buf, unsigned *argc)
 		}
 		c++;
 	}
-	if(start)
+	if (start)
 		i++;
 	*argc = i;
 	// get args
-	if(*argc == 0)
-		return (char**)NULL;
-	args = (char**)malloc(sizeof(char*) * (*argc));
+	if (*argc == 0)
+		return (char **)NULL;
+	args = (char **)malloc(sizeof(char *) * (*argc));
 	i = 0;
 	start = NULL;
 	while (*buf != '\0') {
