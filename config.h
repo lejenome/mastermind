@@ -15,10 +15,14 @@
 #define MM_COLORS_MAX 12
 #define MM_GUESSES_MAX 20
 
+#ifndef DISABLE_LOCALE
 #include <locale.h>
 #include <libintl.h>
-
 #define _(str) gettext(str)
+
+#else
+#define _(str) (str)
+#endif // DISABLE_LOCALE
 
 #ifndef LOCALEDIR
 #define LOCALEDIR "intl"

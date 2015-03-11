@@ -17,13 +17,15 @@ MKDIR = mkdir -p
 ifdef DEBUG
 	CFLAGS += -DDEBUG -g
 endif
-ifeq (, $(filter Linux GNU GNU/%, $(shell uname -s)))
-	LDFLAGS +=-liconv -lintl
-endif
 ifdef DISABLE_READLINE
 	DEFINES += -DDISABLE_READLINE
 else
 	LDFLAGS_CLI += -L/usr/local/lib -lreadline
+endif
+ifdef DISABLE_LOCALE
+	DEFINES += -DDISABLE_LOCALE
+else ifeq (, $(filter Linux GNU GNU/%, $(shell uname -s)))
+	LDFLAGS +=-liconv -lintl
 endif
 
 all: $(PACKAGE)cli intl

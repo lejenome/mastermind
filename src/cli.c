@@ -282,9 +282,11 @@ int main()
 {
 	uint8_t *T = NULL, rst;
 	unsigned ret;
+#ifndef DISABLE_LOCALE
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
+#endif
 	session = mm_session_restore();
 	do {
 		if (!session) {
