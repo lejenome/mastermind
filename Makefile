@@ -8,10 +8,9 @@ docdir?=$(datadir)/doc/$(PACKAGE)
 PACKAGE = mastermind
 locales = fr
 
-DEFINES=-DLOCALEDIR=\"$(localedir)\"
+DEFINES+= -DLOCALEDIR=\"$(localedir)\"
 CFLAGS += $(DEFINES) -Wall -I/usr/local/include -Wno-char-subscripts
 CFLAGS += $(shell sdl2-config --cflags)
-LDFLAGS_CLI = -L/usr/local/lib -lreadline
 LDFLAGS_SDL = $(shell sdl2-config --libs)
 
 MKDIR = mkdir -p
@@ -20,6 +19,11 @@ ifdef DEBUG
 endif
 ifeq (, $(filter Linux GNU GNU/%, $(shell uname -s)))
 	LDFLAGS +=-liconv -lintl
+endif
+ifdef DISABLE_READLINE
+	DEFINES += -DDISABLE_READLINE
+else
+	LDFLAGS_CLI += -L/usr/local/lib -lreadline
 endif
 
 all: $(PACKAGE)cli intl

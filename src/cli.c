@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+
+#ifndef DISABLE_READLINE
 #include <readline/readline.h>
 #include <readline/history.h>
+#endif // DISABLE_READLINE
 
 #include "../config.h"
 #include "cli-cmd.h"
@@ -61,7 +64,7 @@ char **parseBuf(char *buf, unsigned *argc)
 	c = buf;
 	// get argc
 	while (*c != '\0') {
-		if (*c == ' ' || *c == '\t' || *c == ',') {
+		if (*c == ' ' || *c == '\t' || *c == ',' || *c == '\n') {
 			if (start) {
 				i++;
 				start = NULL;
@@ -90,7 +93,8 @@ char **parseBuf(char *buf, unsigned *argc)
 	i = 0;
 	start = NULL;
 	while (*buf != '\0') {
-		if (*buf == ' ' || *buf == '\t' || *buf == ',') {
+		if (*buf == ' ' || *buf == '\t' || *buf == ',' ||
+		    *buf == '\n') {
 			if (start) {
 				args[i++] = strndup(start, buf - start);
 				start = NULL;
@@ -105,6 +109,7 @@ char **parseBuf(char *buf, unsigned *argc)
 		args[i++] = strndup(start, buf - start);
 	return args;
 }
+#ifndef DISABLE_READLINE
 static char **completeCombination(const char *txt, int start, int end)
 {
 	if (rl_point != rl_end)
@@ -193,13 +198,14 @@ no_more:
 	free(args);
 	return T;
 }
-/* return:
- * -1 : input error, redo (do not redraw table)
- *  0 : seccess input, redo if mm_play(T) does not success (do not redraw
- *      table) or next (redraw table)
- * 1  : cmd input, redo (do not redo table)
- * 2  : cmd input, next (redraw table)
- * */
+#endif // DISABLE_READLINE
+       /* return:
+	* -1 : input error, redo (do not redraw table)
+	*  0 : seccess input, redo if mm_play(T) does not success (do not redraw
+	*      table) or next (redraw table)
+	* 1  : cmd input, redo (do not redo table)
+	* 2  : cmd input, next (redraw table)
+	* */
 int getCombination(uint8_t *T)
 {
 	unsigned ret = -1;
@@ -209,9 +215,15 @@ int getCombination(uint8_t *T)
 	cmd_t *cmd;
 	snprintf(prmpt, 200, _("Enter you guesse: (%d of [0..%d] nbre) > "),
 		 session->config->holes, session->config->colors - 1);
+#ifndef DISABLE_READLINE
 	rl_attempted_completion_function = completeCombination;
 	while ((input = readline(prmpt)) == NULL) {
 	};
+#else
+	printf("%s", prmpt);
+	input = (char *)malloc(sizeof(char) * 4096);
+	fgets(input, 4095, stdin);
+#endif // DISABLE_READLINE
 	args = parseBuf(input, &argc);
 	if (argc == 0)
 		goto input_err;
@@ -222,7 +234,9 @@ int getCombination(uint8_t *T)
 			cmd++;
 		if (cmd < cmds + LEN(cmds)) {
 			ret = cmd->e(argc, (const char **)args, session);
+#ifndef DISABLE_READLINE
 			add_history(strdup(input));
+#endif // DISABLE_READLINE
 			ret = ret == 1 ? 2 : 1;
 		} else {
 			printf(_("Command unsupported '%s'\n"), args[0]);
@@ -245,9 +259,11 @@ int getCombination(uint8_t *T)
 			goto parse_err;
 		}
 	}
+#ifndef DISABLE_READLINE
 	if (T)
 		add_history(input);
 	else
+#endif // DISABLE_READLINE
 		free(input);
 	while (argc--)
 		free(args[argc]);
