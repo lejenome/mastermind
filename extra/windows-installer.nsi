@@ -10,6 +10,7 @@ LicenseData "..\LICENSE"
 #Page directory
 #Page instfiles
 # http://nsis.sourceforge.net/VLC_media_player
+!include "MUI2.nsh"
 # Install config
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_DIRECTORY
