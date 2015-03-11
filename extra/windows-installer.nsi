@@ -1,6 +1,7 @@
 outFile "mastermind-installer.exe"
 
 !define APPNAME "MasterMind"
+!define DESCRIPTION "Simple and highly customizable MasterMind game implementation"
 !define ABOUTURL "https://github.com/lejenome/mastermind"
 
 InstallDir "$PROGRAMFILES\${APPNAME}"
@@ -20,9 +21,27 @@ Section "install"
 	File "..\cygiconv-2.dll"
 
 	WriteUninstaller "uninstall.exe"
+
+	# Based on http://nsis.sourceforge.net/A_simple_installer_with_start_menu_shortcut_and_uninstaller
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName" "${APPNAME} - ${DESCRIPTION}"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\""
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "InstallLocation" "$\"$INSTDIR$\""
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME}" "URLInfoAbout" "$\"${ABOUTURL}$\""
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "NoModify" "1"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "NoRepair" "1"
 SectionEnd
+
+function un.onInit
+	# Based on http://nsis.sourceforge.net/A_simple_installer_with_start_menu_shortcut_and_uninstaller
+	SetShellVarContext all
+	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME}?"
+		Abort
+functionEnd
 
 Section "uninstall"
 	Delete "$INSTDIR\*"
 	rmDir "$INSTDIR"
+
+	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 SectionEnd
