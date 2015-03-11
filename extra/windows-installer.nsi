@@ -32,13 +32,6 @@ Section "install"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "NoRepair" "1"
 SectionEnd
 
-function un.onInit
-	# Based on http://nsis.sourceforge.net/A_simple_installer_with_start_menu_shortcut_and_uninstaller
-	SetShellVarContext all
-	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME}?"
-		Abort
-functionEnd
-
 Section "uninstall"
 	Delete "$INSTDIR\*"
 	rmDir "$INSTDIR"
