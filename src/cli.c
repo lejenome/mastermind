@@ -55,56 +55,70 @@ void printPanel()
 	printf("  +-----+-----+-----+");
 	putchar('\n');
 }
-unsigned parseBuf(char *buf, char **args)
+char** parseBuf(char *buf, unsigned *argc)
 {
 	char *start = NULL;
-	unsigned argc = 0;
+	char **args, *c;
+	unsigned  i=0;
+	c = buf;
+	// get argc
+	while(*c != '\0') {
+		if(*c == ' ' || *c == '\t' || *c == ',') {
+			if(start) {
+				i++;
+			       start= NULL;
+			}
+		}else if((*c >= '0' && *c <= '9') ||
+				(*c >= 'a' && *c <= 'z') || *c == '_') {
+			if(start == NULL)
+				start = c;
+		}else {
+			printf(_("\nError: illegal charater on the command "
+				 "'%c'\n"),
+			       *c);
+			i = 0;
+			start = NULL;
+			break;
+		}
+		c++;
+	}
+	if(start)
+		i++;
+	*argc = i;
+	// get args
+	if(*argc == 0)
+		return (char**)NULL;
+	args = (char**)malloc(sizeof(char*) * (*argc));
+	i = 0;
+	start = NULL;
 	while (*buf != '\0') {
 		if (*buf == ' ' || *buf == '\t' || *buf == ',') {
 			if (start) {
-				args[argc] = (char *)malloc(sizeof(char) *
-							    (buf - start + 1));
-				strncpy(args[argc], start, buf - start);
-				args[argc][buf - start] = '\0';
-				argc++;
+				args[i++] = strndup(start, buf - start);
 				start = NULL;
 			}
-		} else if ((*buf >= '0' && *buf <= '9') ||
-			   (*buf >= 'a' && *buf <= 'z') || *buf == '_') {
+		} else {
 			if (start == NULL)
 				start = buf;
-		} else {
-			printf(_("\nError: illegal charater on the command "
-				 "'%c'\n"),
-			       *buf);
-			argc = 0;
-			break;
 		}
 		buf++;
 	}
-	if (start) {
-		args[argc] = (char *)malloc(sizeof(char) * (buf - start + 1));
-		strncpy(args[argc], start, buf - start);
-		args[argc][buf - start] = '\0';
-		argc++;
-	}
-	return argc;
+	if (start)
+		args[i++] = strndup(start, buf - start);
+	return args;
 }
 static char **completeCombination(const char *txt, int start, int end)
 {
 	if (rl_point != rl_end)
 		return (char **)NULL;
 	unsigned l = 0, j, i, argc;
-	char *output = NULL;
+	char *output = NULL, **args;
 	cmd_t *cmd, *cmpltCmd = NULL;
 	mm_conf_t *conf, *cmpltCnf = NULL;
 	char **T = (char **)malloc(sizeof(char *) *
 				   (LEN(cmds) + session->config->colors + 2));
-	char **args = (char **)malloc(
-	    sizeof(char *) * session->config->holes > 5 ? session->config->holes
-							: 5);
 	T[l++] = strdup("");
-	argc = parseBuf(rl_line_buffer, args);
+	args = parseBuf(rl_line_buffer, &argc);
 	if (argc == 0)
 		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++, l++)
 			T[l] = strdup(cmd->n);
@@ -191,7 +205,7 @@ no_more:
 int getCombination(uint8_t *T)
 {
 	unsigned ret = -1;
-	char prmpt[200], *input;
+	char prmpt[200], *input, **args;
 	unsigned i = 0, j = 0, k, argc;
 	uint8_t c;
 	cmd_t *cmd;
@@ -200,10 +214,7 @@ int getCombination(uint8_t *T)
 	rl_attempted_completion_function = completeCombination;
 	while ((input = readline(prmpt)) == NULL) {
 	};
-	char **args = (char **)malloc(
-	    sizeof(char *) *
-	    (20 < session->config->holes ? (session->config->holes + 2) : 20));
-	argc = parseBuf(input, args);
+	args = parseBuf(input, &argc);
 	if (argc == 0)
 		goto input_err;
 	if (args[0][0] >= 'a' && args[0][0] <= 'z') {

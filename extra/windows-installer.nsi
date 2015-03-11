@@ -5,10 +5,11 @@ outFile "mastermind-installer.exe"
 !define MUI_PRODUCT "MasterMind"
 !define DESCRIPTION "Simple and highly customizable MasterMind game implementation"
 !define ABOUTURL "https://github.com/lejenome/mastermind"
+#!define MUI_ICON "mastermind.ico"
+#!define MUI_UNICON "mastermind.ico"
 Name "${MUI_PRODUCT}"
 
 InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
-LicenseData "..\LICENSE"
 
 RequestExecutionLevel user
 
@@ -69,7 +70,7 @@ Section "uninstall"
 	rmDir "$INSTDIR"
 
 	Delete "$DESKTOP\mastermindcli.lnk"
-	Delete "$SMPROGRAMS\${MUI_PRODUCT}\*"
+	Delete "$SMPROGRAMS\${MUI_PRODUCT}\*.*"
 	RmDir  "$SMPROGRAMS\${MUI_PRODUCT}"
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}"
 
