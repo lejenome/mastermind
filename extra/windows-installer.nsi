@@ -4,7 +4,7 @@ outFile "mastermind-installer.exe"
 !define ABOUTURL "https://github.com/lejenome/mastermind"
 
 InstallDir "$PROGRAMFILES\${APPNAME}"
-LicenseData "..\LICENCE"
+LicenseData "..\LICENSE"
 
 Page directory
 Page instfiles
@@ -14,7 +14,7 @@ Section "install"
 	File "..\README.md"
 	File "..\mastermindcli.exe"
 	File "..\cygwin1.dll"
-	File "..\cygwinreadline7.dll"
+	File "..\cygreadline7.dll"
 	File "..\cygncursesw-10.dll"
 	File "..\cygintl-8.dll"
 	File "..\cygiconv-2.dll"
