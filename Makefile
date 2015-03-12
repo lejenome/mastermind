@@ -24,6 +24,7 @@ else
 endif
 ifdef DISABLE_LOCALE
 	DEFINES += -DDISABLE_LOCALE
+	locales =
 else ifeq (, $(filter Linux GNU GNU/%, $(shell uname -s)))
 	LDFLAGS +=-liconv -lintl
 endif

@@ -199,13 +199,14 @@ no_more:
 	return T;
 }
 #endif // DISABLE_READLINE
-       /* return:
-	* -1 : input error, redo (do not redraw table)
-	*  0 : seccess input, redo if mm_play(T) does not success (do not redraw
-	*      table) or next (redraw table)
-	* 1  : cmd input, redo (do not redo table)
-	* 2  : cmd input, next (redraw table)
-	* */
+
+/* return:
+* -1 : input error, redo (do not redraw table)
+*  0 : seccess input, redo if mm_play(T) does not success (do not redraw
+*      table) or next (redraw table)
+* 1  : cmd input, redo (do not redo table)
+* 2  : cmd input, next (redraw table)
+* */
 int getCombination(uint8_t *T)
 {
 	unsigned ret = -1;
