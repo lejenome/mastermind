@@ -3,11 +3,15 @@
 #include <time.h>
 #include <string.h>
 #include <assert.h>
-#include <unistd.h>
 #include <stdint.h>
+#include "core.h"
+#ifdef POSIX
+#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/utsname.h>
-#include "core.h"
+#else
+#include <windows.h>
+#endif
 
 #define LEN(a) (sizeof(a) / sizeof(a[0]))
 char *mm_config_path = NULL;
@@ -196,17 +200,13 @@ mm_guess mm_play_last(mm_session *session)
  */
 void mm_init()
 {
-	char *home = getenv("HOME");
-	struct utsname unm;
-	char *xdg_config = getenv("XDG_CONFIG_HOME");
-	char *xdg_data = getenv("XDG_DATA_HOME");
 	mm_data_path = (char *)malloc(sizeof(char) * 2000);
 	mm_config_path = (char *)malloc(sizeof(char) * 2000);
 	mm_store_path = (char *)malloc(sizeof(char) * 2000);
-	if (getenv("APPDATA")) { // MS Windows
-		sprintf(mm_data_path, "%s%s", getenv("APPDATA"), "/" PACKAGE);
-		sprintf(mm_config_path, "%s%s", getenv("APPDATA"), "/" PACKAGE);
-	} else if (strcmp(unm.sysname, "Darwin") == 0) { // Mac OS
+#ifdef POSIX
+	struct utsname unm;
+	char *home = getenv("HOME");
+	if (strcmp(unm.sysname, "Darwin") == 0) { // Mac OS
 		sprintf(mm_config_path, "%s%s", home,
 			"/Library/Application Support");
 		if (access(mm_config_path, R_OK | W_OK | X_OK) == 0) {
@@ -217,6 +217,8 @@ void mm_init()
 			strcpy(mm_data_path, mm_config_path);
 		}
 	} else { // Linux/Unix system ?
+		char *xdg_config = getenv("XDG_CONFIG_HOME");
+		char *xdg_data = getenv("XDG_DATA_HOME");
 		// config dir; try use XDG based dir ~/.config/mastermind else
 		// fallback to ~/.mastermind
 		if (xdg_config)
@@ -240,6 +242,17 @@ void mm_init()
 	}
 	mkdir(mm_data_path, 0700);
 	mkdir(mm_config_path, 0700);
+#else
+	if (getenv("APPDATA")) { // MS Windows
+		sprintf(mm_data_path, "%s%s", getenv("APPDATA"), "/" PACKAGE);
+		sprintf(mm_config_path, "%s%s", getenv("APPDATA"), "/" PACKAGE);
+		CreateDirectory(mm_data_path, NULL);
+		CreateDirectory(mm_conig_path, NULL);
+	} else {
+		strcpy(mm_config_path, ".");
+		strcpy(mm_data_path, ".");
+	}
+#endif
 	sprintf(mm_store_path, "%s%s", mm_data_path, "/store.data");
 	strcat(mm_config_path, "/config");
 	strcat(mm_data_path, "/data.txt");

@@ -1,12 +1,13 @@
 #ifndef __MASTERMIND_CONFIG_H
 #define __MASTERMIND_CONFIG_H
 
+// Package info
 #define PACKAGE "mastermind"
 #define PROGRAM_NAME PACKAGE
 #define PROGRAM_VERSION "0.1"
 #define PROGRAM_URL "https://github.com/lejenome/mastermind"
 
-// default settings
+// Default settings
 #define MM_HOLES 4
 #define MM_COLORS 6
 #define MM_GUESSES 10
@@ -15,6 +16,7 @@
 #define MM_COLORS_MAX 12
 #define MM_GUESSES_MAX 20
 
+// Global defines
 #ifndef DISABLE_LOCALE
 #include <locale.h>
 #include <libintl.h>
@@ -27,5 +29,16 @@
 #ifndef LOCALEDIR
 #define LOCALEDIR "intl"
 #endif // LOCALEDIR
+
+// Detect POSIX systems:
+// http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system
+#if !defined(_WIN32) && (defined(__unix__) || defined(__unix) ||               \
+			 (defined(__APPLE__) && defined(__MACH__)))
+#define POSIX
+#elif defined(_WIN32)
+#define WINDOWS
+#else
+#error System type unknown, please report
+#endif
 
 #endif //__MASTERMIN_CONFIG_H
