@@ -6,5 +6,16 @@ Links to documenations used on this homework project:
 - NSIS: [1”](http://nsis.sourceforge.net/Docs/)
 
 Other sources:
-- Standard functions overview: `$ man 0 *.h` and `$ man 3 <std_function>`
-- SDL function/structs overview: `$ man 3 SDL_*`
+- man command:
+```shell
+# examples:
+man 0 stdlib.h
+man 3 strdup
+man 3 SDL_Surface
+```
+- info command:
+```shell
+# example:
+info Make
+```
+- cling (LLVM based interactive C/C++ interpreter): [site](https://root.cern.ch/drupal/content/cling)
