@@ -1,11 +1,13 @@
-Links to documenations used on this homework project:
+Learning sources used on mastermind homework developement.
+
+**Online Docs/Tutos:**
 - Make: [1”](http://www.chemie.fu-berlin.de/chemnet/use/info/make/make_toc.html)
 - Readline: [1”](http://web.mit.edu/gnu/doc/html/rlman_2.html)
 - SDL: [1”](http://lazyfoo.net/tutorials/SDL/index.php)
 - Gettext: [1”](http://www.gnu.org/software/gettext/manual/gettext.html)
 - NSIS: [1”](http://nsis.sourceforge.net/Docs/)
 
-Other sources:
+**Commands and tools:**
 - man command:
 ```shell
 # examples:
