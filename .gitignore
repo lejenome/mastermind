@@ -3,8 +3,28 @@
 /mastermind
 /mastermind.pot
 /intl
+
+# swaps
 .*.swp*
 *~
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt
+MasterMind-*.deb
+MasterMind-*.rpm
+MasterMind-*.tar.gz
+MasterMind-*.tar.Z
+MasterMind-*.tar.xz
+MasterMind-*.tar.bz2
+MasterMind-*zip
+CPackConfig.cmake
+CPackSourceConfig.cmake
+_CPack_Packages
+
 # Object files
 *.o
 *.ko
