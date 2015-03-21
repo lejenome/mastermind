@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mastermind\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-11 15:00+0100\n"
+"POT-Creation-Date: 2015-03-20 10:13+0100\n"
 "PO-Revision-Date: 2015-03-04 22:58+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -61,34 +61,34 @@ msgid ""
 "Error: illegal charater on the command '%c'\n"
 msgstr "Erreur:  caractere invalide dans la commande'%c'\n"
 
-#: src/cli.c:216
+#: src/cli.c:217
 #, c-format
 msgid "Enter you guesse: (%d of [0..%d] nbre) > "
 msgstr "Donner votre essai: (%d nbre de [0..%d]) > "
 
-#: src/cli.c:242
+#: src/cli.c:243
 #, c-format
 msgid "Command unsupported '%s'\n"
 msgstr "Commande non supportee '%s'\n"
 
-#: src/cli.c:258
+#: src/cli.c:259
 #, c-format
 msgid "Illigal char on you guesse!!\n"
 msgstr "Charactere invalide dans votre essai!!\n"
 
-#: src/cli.c:293
+#: src/cli.c:294
 #, fuzzy, c-format
 msgid "Starting new session\n"
 msgstr "Enregistrement de session\n"
 
-#: src/cli.c:296
+#: src/cli.c:297
 #, fuzzy, c-format
 msgid "Restoring old session\n"
 msgstr ""
 "Etat Current:\n"
 "\tGuessed: %d\n"
 
-#: src/cli.c:298
+#: src/cli.c:299
 #, c-format
 msgid ""
 "Current Config:\n"
@@ -101,7 +101,7 @@ msgstr ""
 "\tcolors: %d\n"
 "\tholes: %d\n"
 
-#: src/cli.c:303
+#: src/cli.c:304
 #, c-format
 msgid ""
 "Current State:\n"
@@ -110,25 +110,25 @@ msgstr ""
 "Etat Current:\n"
 "\tGuessed: %d\n"
 
-#: src/cli.c:312
+#: src/cli.c:313
 #, c-format
 msgid "You Guesse is not valid!!\n"
 msgstr "Votre essai est invalide!!!!\n"
 
-#: src/cli.c:319
+#: src/cli.c:320
 #, c-format
 msgid "Final State:\n"
 msgstr "Etat final:\n"
 
-#: src/cli.c:322
+#: src/cli.c:323
 msgid "You successed :)"
 msgstr "Tu a gagne :)"
 
-#: src/cli.c:323
+#: src/cli.c:324
 msgid "You Failed :("
 msgstr "Rate :("
 
-#: src/cli.c:325
+#: src/cli.c:326
 #, c-format
 msgid "restart? (Y/N): "
 msgstr "resultat? (O/N): "
