@@ -3,6 +3,7 @@
 /mastermind
 /mastermind.pot
 /intl
+*.gmo
 
 # swaps
 .*.swp*
