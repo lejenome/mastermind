@@ -2,9 +2,9 @@
 #define __MASTERMIND_CONFIG_H
 
 // Package info
-#define PACKAGE "mastermind"
+#define PACKAGE "@PROJECT_NAME@"
 #define PROGRAM_NAME PACKAGE
-#define PROGRAM_VERSION "0.1"
+#define PROGRAM_VERSION "@PROJECT_VERSION"
 #define PROGRAM_URL "https://github.com/lejenome/mastermind"
 
 // Default settings

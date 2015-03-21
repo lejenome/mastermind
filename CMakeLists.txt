@@ -1,9 +1,7 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.0)
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
 
-Project(MasterMind)
-set(MasterMind_VERSION_MAJOR 0)
-set(MasterMind_VERSION_MINOR 1)
+Project(MasterMind VERSION 0.1.0 LANGUAGES C)
 
 add_executable(mastermindcli src/core.c src/cli-cmd.c src/cli.c)
 add_executable(mastermindsdl src/core.c src/sdl.c)
@@ -37,6 +35,11 @@ if(DEBUG)
 endif(DEBUG)
 
 GETTEXT_CREATE_TRANSLATIONS(mastermind.pot ALL po/fr.po)
+
+configure_file (
+	"${PROJECT_SOURCE_DIR}/config.h.in"
+	"${PROJECT_BINARY_DIR}/config.h"
+)
 
 install(TARGETS mastermindcli DESTINATION bin)
 install(TARGETS mastermindsdl DESTINATION bin)
