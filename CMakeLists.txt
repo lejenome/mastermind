@@ -6,11 +6,12 @@ set(MasterMind_VERSION_MAJOR 0)
 set(MasterMind_VERSION_MINOR 1)
 
 add_executable(mastermindcli src/core.c src/cli-cmd.c src/cli.c)
+add_executable(mastermindsdl src/core.c src/sdl.c)
 
 INCLUDE(FindPkgConfig)
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(mastermindcli ${SDL2_LIBRARIES})
+TARGET_LINK_LIBRARIES(mastermindsdl ${SDL2_LIBRARIES})
 
 option(USE_READLINE "Enable readline autocompletetion featues" ON)
 if(USE_READLINE)
@@ -38,4 +39,5 @@ endif(DEBUG)
 GETTEXT_CREATE_TRANSLATIONS(mastermind.pot ALL po/fr.po)
 
 install(TARGETS mastermindcli DESTINATION bin)
+install(TARGETS mastermindsdl DESTINATION bin)
 INCLUDE(mm_cpack)
