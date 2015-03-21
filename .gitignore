@@ -3,8 +3,18 @@
 /mastermind
 /mastermind.pot
 /intl
+
+# swaps
 .*.swp*
 *~
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+#Makefile
+cmake_install.cmake
+install_manifest.txt
+
 # Object files
 *.o
 *.ko
