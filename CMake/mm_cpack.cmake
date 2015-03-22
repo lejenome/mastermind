@@ -3,7 +3,7 @@ set(CPACK_PACKAGE_VENDOR "Dev2Space")
 set(CPACK_PACKAGE_VERSION "${MasterMind_VERSION}")
 set(CPACK_PACKAGE_VERSION_MAJOR ${MasterMind_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${MasterMind_VERSION_MINOR})
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "MasterMind; A simple and highly customizable MasterMind implementation")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "MasterMind; A simple and highly customizable MasterMind implementation")
 
 set(CPACK_PACKAGE_CONTACT "Moez Bouhlel")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "bmoez.j@gmail.com")
@@ -54,13 +54,13 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
 	set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-dbg")
 endif()
 
-SET(CPACK_GENERATOR "DEB;RPM;TGZ;ZIP") # "NSIS;CygwinBinary;PackageMaker;DragNDrop"
+set(CPACK_GENERATOR "DEB;RPM;TGZ;ZIP") # "NSIS;CygwinBinary;PackageMaker;DragNDrop"
 set(PACKAGE_SOURCE_GENERATOR "TGZ;ZIP")
 
-SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libncurses5 libsdl2-2.0") # libsdl2-dev libncurses5-dev # FIXME
-SET(CPACK_DEBIAN_PACKAGE_SECTION "Games")
-SET(CPACK_RPM_PACKAGE_GROUP "Amusements/Games")
-SET(CPACK_RPM_PACKAGE_REQUIRES "libncurses5 SDL2") # FIXME
-SET(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libncurses5 libsdl2-2.0") # libsdl2-dev libncurses5-dev # FIXME
+set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
+set(CPACK_RPM_PACKAGE_GROUP "Amusements/Games")
+set(CPACK_RPM_PACKAGE_REQUIRES "libncurses5 SDL2") # FIXME
+set(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
 
 INCLUDE(CPack)
