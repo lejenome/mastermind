@@ -23,7 +23,6 @@ elseif(WIN32)
 	find_path(SDL2_INCLUDE_DIRS
 		NAMES SDL.h
 		PATHS "${CMAKE_CURRENT_SOURCE_DIR}/win32/include-${_win_subdir}"
-		PATH_SUFFIXES SDL2
 		NO_DEFAULT_PATH
 	)
 endif(UNIX)
