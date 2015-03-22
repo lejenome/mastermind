@@ -30,6 +30,10 @@ mm_conf_t mm_confs[5] = {
 	[MM_POS_SAVE_EXIT] = {.nm = "save_on_exit", .val = 0},
 	[MM_POS_SAVE_PLAY] = {.nm = "save_on_play", .val = 0},
 };
+#ifndef POSIX
+#define srandom(var) srand(var)
+#define random() rand()
+#endif
 /* create new mastermind session and initialize viables && config
  * return: mm_session* : new session object
  */
@@ -127,7 +131,6 @@ mm_secret *mm_secret_new(mm_config *conf)
 	mm_secret *sec = (mm_secret *)malloc(sizeof(mm_secret));
 	sec->val = (uint8_t *)malloc(sizeof(uint8_t) * conf->holes);
 	sec->freq = (uint8_t *)malloc(sizeof(uint8_t) * conf->colors);
-	srandom(time(NULL));
 	for (i = 0; i < conf->colors; i++)
 		sec->freq[i] = 0;
 	for (i = 0; i < conf->holes; i++) {
@@ -203,6 +206,7 @@ void mm_init()
 	mm_data_path = (char *)malloc(sizeof(char) * 2000);
 	mm_config_path = (char *)malloc(sizeof(char) * 2000);
 	mm_store_path = (char *)malloc(sizeof(char) * 2000);
+	srandom(time(NULL));
 #ifdef POSIX
 	struct utsname unm;
 	char *home = getenv("HOME");
