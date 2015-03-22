@@ -247,7 +247,7 @@ void mm_init()
 		sprintf(mm_data_path, "%s%s", getenv("APPDATA"), "/" PACKAGE);
 		sprintf(mm_config_path, "%s%s", getenv("APPDATA"), "/" PACKAGE);
 		CreateDirectory(mm_data_path, NULL);
-		CreateDirectory(mm_conig_path, NULL);
+		CreateDirectory(mm_config_path, NULL);
 	} else {
 		strcpy(mm_config_path, ".");
 		strcpy(mm_data_path, ".");
