@@ -7,7 +7,26 @@ add_executable(mastermindcli src/core.c src/cli-cmd.c src/cli.c)
 add_executable(mastermindsdl src/core.c src/sdl.c)
 
 INCLUDE(FindPkgConfig)
-PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+if(UNIX)
+	PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+elseif(WIN32)
+	if(CMAKE_C_COMPILER_ID EQUAL MSVC)
+		set(_win_subdir msvc)
+	elseif(CMAKE_C_COMPILER_ID EQUAL GNU OR CMAKE_C_COMPILER_ID EQUAL Clang)
+		set(_win_subdir mingw)
+	endif(CMAKE_C_COMPILER_ID EQUAL MSVC) # FIXME: support more compilers
+	find_library(SDL2_LIBRARIES
+		NAMES SDL2
+		PATHS "${CMAKE_CURRENT_SOURCE_DIR}/win32/lib-${_win_subdir}"
+		NO_DEFAULT_PATH
+	)
+	find_path(SDL2_INCLUDE_DIRS
+		NAMES SDL.h
+		PATHS "${CMAKE_CURRENT_SOURCE_DIR}/win32/include-${_win_subdir}"
+		PATH_SUFFIXES SDL2
+		NO_DEFAULT_PATH
+	)
+endif(UNIX)
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
 TARGET_LINK_LIBRARIES(mastermindsdl ${SDL2_LIBRARIES})
 
