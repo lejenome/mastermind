@@ -57,7 +57,7 @@ GETTEXT_CREATE_TRANSLATIONS(mastermind.pot po/fr.po)
 
 configure_file (
 	"${PROJECT_SOURCE_DIR}/config.h.in"
-	"${PROJECT_BINARY_DIR}/config.h"
+	"${PROJECT_SOURCE_DIR}/config.h"
 )
 find_package(Clangformat)
 if(CLANG_FORMAT_FOUND)
