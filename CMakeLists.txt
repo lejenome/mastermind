@@ -10,11 +10,11 @@ INCLUDE(FindPkgConfig)
 if(UNIX)
 	PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 elseif(WIN32)
-	if(CMAKE_C_COMPILER_ID EQUAL MSVC)
+	if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
 		set(_win_subdir msvc)
-	elseif(CMAKE_C_COMPILER_ID EQUAL GNU OR CMAKE_C_COMPILER_ID EQUAL Clang)
+	elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
 		set(_win_subdir mingw)
-	endif(CMAKE_C_COMPILER_ID EQUAL MSVC) # FIXME: support more compilers
+	endif(CMAKE_C_COMPILER_ID STREQUAL "MSVC") # FIXME: support more compilers
 	find_library(SDL2_LIBRARIES
 		NAMES SDL2
 		PATHS "${CMAKE_CURRENT_SOURCE_DIR}/win32/lib-${_win_subdir}"
