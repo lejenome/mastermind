@@ -1,6 +1,6 @@
 set(CPACK_PACKAGE_NAME "MasterMind")
 set(CPACK_PACKAGE_VENDOR "Dev2Space")
-set(CPACK_PACKAGE_VERSION "${MasterMind_VERSION_MAJOR}.${MasterMind_VERSION_MINOR}.0")
+set(CPACK_PACKAGE_VERSION "${MasterMind_VERSION}")
 set(CPACK_PACKAGE_VERSION_MAJOR ${MasterMind_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${MasterMind_VERSION_MINOR})
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "MasterMind; A simple and highly customizable MasterMind implementation")
