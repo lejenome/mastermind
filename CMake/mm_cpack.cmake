@@ -57,10 +57,10 @@ endif()
 set(CPACK_GENERATOR "DEB;RPM;TGZ;ZIP") # "NSIS;CygwinBinary;PackageMaker;DragNDrop"
 set(PACKAGE_SOURCE_GENERATOR "TGZ;ZIP")
 
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libncurses5 libsdl2-2.0") # libsdl2-dev libncurses5-dev # FIXME
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libncurses5, libsdl2-2.0") # libsdl2-dev libncurses5-dev # FIXME
 set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
 set(CPACK_RPM_PACKAGE_GROUP "Amusements/Games")
-set(CPACK_RPM_PACKAGE_REQUIRES "libncurses5 SDL2") # FIXME
+set(CPACK_RPM_PACKAGE_REQUIRES "libncurses5, SDL2") # FIXME
 set(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
 
 INCLUDE(CPack)
