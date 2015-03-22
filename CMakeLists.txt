@@ -31,7 +31,8 @@ endif(USE_LOCALE)
 
 option(DEBUG "Debug Build" OFF)
 if(DEBUG)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDEBUG -g")
+	add_compile_options(-g)
+	add_definitions(-DDEBUG)
 endif(DEBUG)
 
 GETTEXT_CREATE_TRANSLATIONS(mastermind.pot po/fr.po)
