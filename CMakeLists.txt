@@ -7,28 +7,16 @@ set(PROJECT_WEBSITE "https://github.com/lejenome/mastermind")
 add_executable(mastermindcli src/core.c src/cli-cmd.c src/cli.c)
 add_executable(mastermindsdl src/core.c src/sdl.c)
 
-if(UNIX)
-	INCLUDE(FindPkgConfig)
-	PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-elseif(WIN32)
-	if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-		set(_win_subdir msvc)
-	elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
-		set(_win_subdir mingw)
-	endif(CMAKE_C_COMPILER_ID STREQUAL "MSVC") # FIXME: support more compilers
-	find_library(SDL2_LIBRARIES
-		NAMES SDL2
-		PATHS "${CMAKE_CURRENT_SOURCE_DIR}/win32/lib-${_win_subdir}"
-		NO_DEFAULT_PATH
-	)
-	find_path(SDL2_INCLUDE_DIRS
-		NAMES SDL.h
-		PATHS "${CMAKE_CURRENT_SOURCE_DIR}/win32/include-${_win_subdir}"
-		NO_DEFAULT_PATH
-	)
-endif(UNIX)
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(mastermindsdl ${SDL2_LIBRARIES})
+if(MINGW)
+	SET(CMAKE_INCLUDE_PATH
+		${CMAKE_INCLUDE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/mingw")
+elseif(MSVC)
+	SET(CMAKE_INCLUDE_PATH
+		${CMAKE_INCLUDE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/msvc")
+endif(MINGW)
+find_package(SDL2 REQUIRED)
+INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIR})
+TARGET_LINK_LIBRARIES(mastermindsdl ${SDL2_LIBRARY})
 
 option(USE_READLINE "Enable readline autocompletetion featues" ON)
 if(USE_READLINE)

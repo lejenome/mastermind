@@ -58,3 +58,5 @@ _CPack_Packages
 *.hex
 
 !/win32/**
+!/msvc/**
+!/mingw/**
