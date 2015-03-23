@@ -4,8 +4,8 @@
 // Package info
 #define PACKAGE "@PROJECT_NAME@"
 #define PROGRAM_NAME PACKAGE
-#define PROGRAM_VERSION "@PROJECT_VERSION"
-#define PROGRAM_URL "https://github.com/lejenome/mastermind"
+#define PROGRAM_VERSION "@PROJECT_VERSION@"
+#define PROGRAM_URL "@PROJECT_WEBSITE@"
 
 // Default settings
 #define MM_HOLES 4
