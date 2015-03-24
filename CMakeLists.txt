@@ -30,7 +30,11 @@ endif(USE_READLINE)
 
 option(USE_LOCALE "Enable internationalization support" ON)
 if(USE_LOCALE)
+	find_package(Intl)
 	find_package(Gettext)
+	include_directories(${Intl_INCLUDE_DIRS})
+	target_link_libraries(mastermindcli ${Intl_LIBRARIES})
+	target_link_libraries(mastermindsdl ${Intl_LIBRARIES})
 	GETTEXT_CREATE_TRANSLATIONS(mastermind.pot po/fr.po)
 else(USE_LOCALE)
 	message("Building without locale support!")
@@ -42,6 +46,9 @@ if(DEBUG)
 	add_compile_options(-g)
 	add_definitions(-DDEBUG)
 endif(DEBUG)
+if("${CMAKE_C_COMPILER_ID}" MATCHES "(Clang|GNU|Intel)")
+	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-char-subscripts")
+endif("${CMAKE_C_COMPILER_ID}" MATCHES "(Clang|GNU|Intel)")
 
 configure_file (
 	"${PROJECT_SOURCE_DIR}/config.h.in"

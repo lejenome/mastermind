@@ -1,4 +1,5 @@
 # based on Archlinux recommondations: https://wiki.archlinux.org/index.php/MinGW_package_guidelines
+# TODO: AUR mingw-w64-gettext, mingw-w64-sdl2, mingw-w64-readline
 SET(CMAKE_SYSTEM_NAME Windows)
 SET(_mingw_w64 "x86_64-w64-mingw32")
 #SET(_mingw_w64 "i686-w64-mingw32")
