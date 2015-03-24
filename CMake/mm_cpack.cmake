@@ -48,7 +48,9 @@ set(CPACK_SOURCE_IGNORE_FILES
 	"\\\\.deb$"
 	"\\\\.rpm$"
 	"\\\\.zip$"
-)
+	"\\\\.exe$"
+	"\\\\.7z$"
+) #FIXME ignore .dll on source dir
 
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}")
 if(CMAKE_BUILD_TYPE MATCHES "Debug")

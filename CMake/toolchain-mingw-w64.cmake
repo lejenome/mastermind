@@ -3,7 +3,7 @@
 SET(CMAKE_SYSTEM_NAME Windows)
 SET(_mingw_w64 "x86_64-w64-mingw32")
 #SET(_mingw_w64 "i686-w64-mingw32")
-#SET(CMAKE_C_FLAGS "-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4")
+SET(CMAKE_C_FLAGS "-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4")
 
 SET(CMAKE_C_COMPILER ${_mingw_w64}-gcc)
 SET(CMAKE_CXX_COMPILER ${_mingw_w64}-g++)

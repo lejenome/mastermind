@@ -8,11 +8,26 @@ add_executable(mastermindcli src/core.c src/cli-cmd.c src/cli.c)
 add_executable(mastermindsdl src/core.c src/sdl.c)
 
 if(MINGW)
-	SET(CMAKE_INCLUDE_PATH
-		${CMAKE_INCLUDE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/mingw")
+	#LIST(APPEND CMAKE_INCLUDE_PATH
+	#	"${CMAKE_CURRENT_SOURCE_DIR}/mingw")
+	#LIST(APPEND CMAKE_LIBRARY_PATH
+	#	"${CMAKE_CURRENT_SOURCE_DIR}/mingw")
+	if(CMAKE_SIZEOF_VOID_P EQUAL 8) # x64
+		LIST(APPEND CMAKE_INCLUDE_PATH
+			"${CMAKE_CURRENT_SOURCE_DIR}/mingw/x86_64-w64-mingw32/include")
+		LIST(APPEND CMAKE_LIBRARY_PATH
+			"${CMAKE_CURRENT_SOURCE_DIR}/mingw/x86_64-w64-mingw32/lib")
+	else(CMAKE_SIZEOF_VOID_P EQUAL 8) # x86
+		LIST(APPEND CMAKE_INCLUDE_PATH
+			"${CMAKE_CURRENT_SOURCE_DIR}/mingw/i686-w64-mingw32/include")
+		LIST(APPEND CMAKE_LIBRARY_PATH
+			"${CMAKE_CURRENT_SOURCE_DIR}/mingw/i686-w64-mingw32/lib")
+	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 elseif(MSVC)
-	SET(CMAKE_INCLUDE_PATH
-		${CMAKE_INCLUDE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/msvc")
+	LIST(APPEND CMAKE_INCLUDE_PATH
+		"${CMAKE_CURRENT_SOURCE_DIR}/msvc")
+	LIST(APPEND CMAKE_LIBRARY_PATH
+		"${CMAKE_CURRENT_SOURCE_DIR}/msvc")
 endif(MINGW)
 find_package(SDL2 REQUIRED)
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIR})
@@ -46,9 +61,9 @@ if(DEBUG)
 	add_compile_options(-g)
 	add_definitions(-DDEBUG)
 endif(DEBUG)
-if("${CMAKE_C_COMPILER_ID}" MATCHES "(Clang|GNU|Intel)")
+if(CMAKE_C_COMPILER_ID MATCHES "(Clang|GNU|Intel)")
 	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-char-subscripts")
-endif("${CMAKE_C_COMPILER_ID}" MATCHES "(Clang|GNU|Intel)")
+endif(CMAKE_C_COMPILER_ID MATCHES "(Clang|GNU|Intel)")
 
 configure_file (
 	"${PROJECT_SOURCE_DIR}/config.h.in"

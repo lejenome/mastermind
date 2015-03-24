@@ -23,6 +23,7 @@ MasterMind*.tar.Z
 MasterMind*.tar.xz
 MasterMind*.tar.bz2
 MasterMind*.zip
+MasterMind*.7z
 CPackConfig.cmake
 CPackSourceConfig.cmake
 _CPack_Packages
