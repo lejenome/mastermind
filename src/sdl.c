@@ -69,7 +69,7 @@ int cliBackend() { return 0; }
 char *getStr(unsigned l)
 {
 	SDL_Event event;
-	char *str = (char*)malloc(sizeof(char) * (l + 1));
+	char *str = (char *)malloc(sizeof(char) * (l + 1));
 	unsigned i = 0;
 	while (SDL_PollEvent(&event) > -1 && i < l) {
 		// SDL_PollEvent returns either 0 or 1
@@ -97,6 +97,26 @@ char *getStr(unsigned l)
 	}
 	str[i] = '\0';
 	return str;
+}
+int drawGuess(SDL_Renderer *rend, SDL_Table *T, unsigned i)
+{
+	char *g = getStr(T->cols);
+	printf("Get guess: %s\n", g);
+	unsigned j;
+	SDL_Rect rect;
+	rect.h = T->h / (T->rows * 3);
+	rect.w = T->w / (T->cols * 3);
+	rect.y = T->y + ((T->h / (T->rows * 3)) * (i * 3 + 1));
+	rect.x = T->x + (T->w / (T->cols * 3));
+	for (j = 0; j < T->cols; j++) {
+		SDL_SetRenderDrawColor(rend, 255 / (g[j] - SDLK_a + 1),
+				       (150 * g[j]) % 200, 100 / (g[j] % 3 + 1),
+				       255);
+		SDL_RenderFillRect(rend, &rect);
+		rect.x += T->w / T->cols;
+	}
+	SDL_RenderPresent(rend);
+	return 0;
 }
 int main(int argc, char *argv[])
 {
@@ -141,8 +161,8 @@ int main(int argc, char *argv[])
 	drawTable(rend, &panel);
 	drawTable(rend, &state);
 	unsigned i;
-	for(i = 0; i < rows; i++)
-		printf("getStr: %s\n", getStr(cols));
+	for (i = 0; i < rows; i++)
+		drawGuess(rend, &panel, i);
 	// quit
 	SDL_DestroyWindow(win);
 	SDL_Quit();
