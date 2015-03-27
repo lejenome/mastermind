@@ -70,7 +70,6 @@ int main(int argc, char *argv[])
 	SDL_Window *win = NULL;
 	SDL_Surface *surf = NULL;
 	SDL_Renderer *rend = NULL;
-	SDL_Table panel;
 	SDL_Event event;
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		printf("SDL could not be initialize! Error: %s\n",
@@ -93,15 +92,22 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	setBg(rend);
-	unsigned rows = 6, cols = 4, w = SCREEN_WIDTH / (cols + 1),
+	unsigned rows = 6, cols = 4, w = SCREEN_WIDTH / (cols + 4),
 		 h = SCREEN_HEIGHT / (rows + 1);
-	panel = (SDL_Table){.x = w / 2,
-			    .y = h / 2,
-			    .w = w * cols,
-			    .h = h * rows,
-			    .rows = rows,
-			    .cols = cols};
+	SDL_Table panel = (SDL_Table){.x = w / 2,
+				      .y = h / 2,
+				      .w = w * cols,
+				      .h = h * rows,
+				      .rows = rows,
+				      .cols = cols};
+	SDL_Table state = (SDL_Table){.x = w / 2 + ((panel.cols + 1) * w),
+				      .y = h / 2,
+				      .w = w * 2,
+				      .h = h * rows,
+				      .rows = rows,
+				      .cols = 2};
 	drawTable(rend, &panel);
+	drawTable(rend, &state);
 	while (SDL_PollEvent(&event) > -1) {
 		// SDL_PollEvent returns either 0 or 1
 		switch (event.type) {
