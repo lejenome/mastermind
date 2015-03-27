@@ -3,6 +3,7 @@
 /mastermind
 /mastermind.pot
 /intl
+/build
 /config.h
 *.gmo
 
