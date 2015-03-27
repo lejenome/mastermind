@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mastermind\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-18 21:20+0100\n"
+"POT-Creation-Date: 2015-03-27 02:19+0100\n"
 "PO-Revision-Date: 2015-03-04 22:58+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,41 +17,41 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/cli.c:77
+#: ../src/cli.c:90
 #, fuzzy, c-format
 msgid ""
 "\n"
 "Error: illegal charater on the command '%c'\n"
 msgstr "Erreur:  caractere invalide dans la commande'%c'\n"
 
-#: src/cli.c:43
+#: ../src/cli.c:43
 #, c-format
 msgid "  | Y%2d | A%2d | N%2d |\n"
 msgstr ""
 
-#: src/cli-cmd.c:67
+#: ../src/cli-cmd.c:67
 #, c-format
 msgid "About "
 msgstr ""
 
-#: src/cli-cmd.c:13
+#: ../src/cli-cmd.c:13
 #, c-format
 msgid "Bye!\n"
 msgstr ""
 
-#: src/cli-cmd.c:52
+#: ../src/cli-cmd.c:52
 #, c-format
 msgid ""
 "Command format error!\n"
 "set [config_name [config_value]]\n"
 msgstr ""
 
-#: src/cli.c:243
+#: ../src/cli.c:256
 #, c-format
 msgid "Command unsupported '%s'\n"
 msgstr "Commande non supportee '%s'\n"
 
-#: src/cli.c:299
+#: ../src/cli.c:312
 #, c-format
 msgid ""
 "Current Config:\n"
@@ -64,7 +64,7 @@ msgstr ""
 "\tcolors: %d\n"
 "\tholes: %d\n"
 
-#: src/cli.c:304
+#: ../src/cli.c:317
 #, c-format
 msgid ""
 "Current State:\n"
@@ -73,62 +73,62 @@ msgstr ""
 "Etat Current:\n"
 "\tGuessed: %d\n"
 
-#: src/cli.c:217
+#: ../src/cli.c:230
 #, c-format
 msgid "Enter you guesse: (%d of [0..%d] nbre) > "
 msgstr "Donner votre essai: (%d nbre de [0..%d]) > "
 
-#: src/cli.c:320
+#: ../src/cli.c:333
 #, c-format
 msgid "Final State:\n"
 msgstr "Etat final:\n"
 
-#: src/cli-cmd.c:46
+#: ../src/cli-cmd.c:46
 #, c-format
 msgid "Global config not supported!!\n"
 msgstr "Configuration globale non supportee!!\n"
 
-#: src/cli-cmd.c:43
+#: ../src/cli-cmd.c:43
 #, c-format
 msgid "Global config: %s = %d\n"
 msgstr "Configuration global: %s = %d\n"
 
-#: src/cli.c:259
+#: ../src/cli.c:272
 #, c-format
 msgid "Illigal char on you guesse!!\n"
 msgstr "Charactere invalide dans votre essai!!\n"
 
-#: src/cli.c:297
+#: ../src/cli.c:310
 #, fuzzy, c-format
 msgid "Restoring old session\n"
 msgstr ""
 "Etat Current:\n"
 "\tGuessed: %d\n"
 
-#: src/cli-cmd.c:20
+#: ../src/cli-cmd.c:20
 #, c-format
 msgid "Saving session\n"
 msgstr "Enregistrement de session\n"
 
-#: src/cli.c:294
+#: ../src/cli.c:307
 #, fuzzy, c-format
 msgid "Starting new session\n"
 msgstr "Enregistrement de session\n"
 
-#: src/cli.c:324
+#: ../src/cli.c:337
 msgid "You Failed :("
 msgstr "Rate :("
 
-#: src/cli.c:313
+#: ../src/cli.c:326
 #, c-format
 msgid "You Guesse is not valid!!\n"
 msgstr "Votre essai est invalide!!!!\n"
 
-#: src/cli.c:323
+#: ../src/cli.c:336
 msgid "You successed :)"
 msgstr "Tu a gagne :)"
 
-#: src/cli.c:326
+#: ../src/cli.c:339
 #, c-format
 msgid "restart? (Y/N): "
 msgstr "resultat? (O/N): "
