@@ -6,10 +6,11 @@
 #define SCREEN_HEIGHT 640
 #define SCREEN_WIDTH 480
 
-int setBg(SDL_Surface *surf)
+int setSurfBg(SDL_Surface *surf)
 {
 	SDL_Surface *img = NULL, *tmp = NULL;
 	SDL_Rect rect;
+	SDL_FillRect(surf, NULL, SDL_MapRGB(surf->format, 0xFF, 0xFF, 0xFF));
 	img = SDL_LoadBMP("test.bmp");
 	if (img == NULL) {
 		printf("SDL could not load bmp image 'test.bmp'! Error: %s\n",
@@ -32,19 +33,29 @@ int setBg(SDL_Surface *surf)
 	rect.w = SCREEN_WIDTH;
 	// SDL_BlitSurface(img, NULL, surf, NULL);
 	SDL_BlitScaled(img, NULL, surf, &rect);
+	// SDL_UpdateWindowSurface(win);
 	return 0;
 }
-int drawTable(SDL_Window *win)
+int setBg(SDL_Renderer *rend)
 {
-	SDL_Renderer *rend = NULL;
-	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-	if (rend == NULL)
-		return -1;
 	SDL_SetRenderDrawColor(rend, 0xFF, 0xFF, 0xFF, 0xFF);
-	SDL_Rect rect = {50, 50, SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100};
-	SDL_RenderFillRect(rend, &rect);
-	SDL_SetRenderDrawColor(rend, 0x55, 0x66, 0xFF, 0xFF);
-	SDL_RenderDrawLine(rend, 100, 50, 100, SCREEN_HEIGHT - 100);
+	SDL_RenderFillRect(rend, NULL);
+	return 0;
+}
+int drawTable(SDL_Renderer *rend, unsigned rows, unsigned cols)
+{
+	unsigned w, h, x, y, i, H, W;
+	w = SCREEN_WIDTH / (cols + 1);
+	h = SCREEN_HEIGHT / (rows + 1);
+	x = w / 2;
+	y = h / 2;
+	H = h * rows;
+	W = w * cols;
+	SDL_SetRenderDrawColor(rend, 0x00, 0x00, 0x00, 0x00);
+	for (i = 0; i <= rows; i++)
+		SDL_RenderDrawLine(rend, x, y + (h * i), x + W, y + (h * i));
+	for (i = 0; i <= cols; i++)
+		SDL_RenderDrawLine(rend, x + (w * i), y, x + (w * i), y + H);
 	SDL_RenderPresent(rend);
 	return 0;
 }
@@ -52,6 +63,7 @@ int main(int argc, char *argv[])
 {
 	SDL_Window *win = NULL;
 	SDL_Surface *surf = NULL;
+	SDL_Renderer *rend = NULL;
 	SDL_Event event;
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		printf("SDL could not be initialize! Error: %s\n",
@@ -66,10 +78,15 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	surf = SDL_GetWindowSurface(win);
-	SDL_FillRect(surf, NULL, SDL_MapRGB(surf->format, 0xFF, 0xFF, 0xFF));
-	setBg(surf);
-	SDL_UpdateWindowSurface(win);
-	drawTable(win);
+	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+	if (rend == NULL || surf == NULL) {
+		printf(
+		    "Error on getting window surface or renderer! Error %s\n",
+		    SDL_GetError());
+		return -1;
+	}
+	setBg(rend);
+	drawTable(rend, 5, 6);
 	while (SDL_PollEvent(&event) > -1) {
 		// SDL_PollEvent returns either 0 or 1
 		switch (event.type) {
