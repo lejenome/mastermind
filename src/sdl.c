@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL.h>
+#include <string.h>
+#include "../config.h"
+#include "core.h"
 
 #define SCREEN_HEIGHT 640
 #define SCREEN_WIDTH 480
@@ -66,12 +69,13 @@ int drawTable(SDL_Renderer *rend, SDL_Table *T)
 	return 0;
 }
 int cliBackend() { return 0; }
-char *getStr(unsigned l)
+uint8_t *getGuess(mm_session *session)
 {
 	SDL_Event event;
-	char *str = (char *)malloc(sizeof(char) * (l + 1));
+	uint8_t *str =
+	    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
 	unsigned i = 0;
-	while (SDL_PollEvent(&event) > -1 && i < l) {
+	while (SDL_PollEvent(&event) > -1 && i < session->config->holes) {
 		// SDL_PollEvent returns either 0 or 1
 		switch (event.type) {
 		case SDL_QUIT:
@@ -80,8 +84,9 @@ char *getStr(unsigned l)
 			break;
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym >= SDLK_a &&
-			    event.key.keysym.sym <= SDLK_j)
-				str[i++] = event.key.keysym.sym;
+			    event.key.keysym.sym <=
+				(session->config->colors + SDLK_a))
+				str[i++] = event.key.keysym.sym - SDLK_a;
 			printf("Key down event: %d (%c) \n",
 			       event.key.keysym.sym, event.key.keysym.sym);
 			break;
@@ -95,22 +100,25 @@ char *getStr(unsigned l)
 			break;
 		}
 	}
-	str[i] = '\0';
 	return str;
 }
-int drawGuess(SDL_Renderer *rend, SDL_Table *T, unsigned i)
+int drawGuess(SDL_Renderer *rend, SDL_Table *T, mm_session *session)
 {
-	char *g = getStr(T->cols);
-	printf("Get guess: %s\n", g);
-	unsigned j;
+	uint8_t *g;
+	do {
+		g = getGuess(session);
+	} while (mm_play(session, g) != 0);
+	printf("Get guess(%d): %s\n", session->guessed, g);
+	unsigned i;
 	SDL_Rect rect;
 	rect.h = T->h / (T->rows * 3);
 	rect.w = T->w / (T->cols * 3);
-	rect.y = T->y + ((T->h / (T->rows * 3)) * (i * 3 + 1));
+	rect.y =
+	    T->y + ((T->h / (T->rows * 3)) * ((session->guessed - 1) * 3 + 1));
 	rect.x = T->x + (T->w / (T->cols * 3));
-	for (j = 0; j < T->cols; j++) {
-		SDL_SetRenderDrawColor(rend, 255 / (g[j] - SDLK_a + 1),
-				       (150 * g[j]) % 200, 100 / (g[j] % 3 + 1),
+	for (i = 0; i < T->cols; i++) {
+		SDL_SetRenderDrawColor(rend, 255 / (g[i] + 1),
+				       (150 * g[i]) % 200, 100 / (g[i] % 3 + 1),
 				       255);
 		SDL_RenderFillRect(rend, &rect);
 		rect.x += T->w / T->cols;
@@ -143,26 +151,35 @@ int main(int argc, char *argv[])
 		    SDL_GetError());
 		return -1;
 	}
-	setBg(rend);
-	unsigned rows = 6, cols = 4, w = SCREEN_WIDTH / (cols + 4),
-		 h = SCREEN_HEIGHT / (rows + 1);
-	SDL_Table panel = (SDL_Table){.x = w / 2,
-				      .y = h / 2,
-				      .w = w * cols,
-				      .h = h * rows,
-				      .rows = rows,
-				      .cols = cols};
-	SDL_Table state = (SDL_Table){.x = w / 2 + ((panel.cols + 1) * w),
-				      .y = h / 2,
-				      .w = w * 2,
-				      .h = h * rows,
-				      .rows = rows,
-				      .cols = 2};
-	drawTable(rend, &panel);
-	drawTable(rend, &state);
-	unsigned i;
-	for (i = 0; i < rows; i++)
-		drawGuess(rend, &panel, i);
+	mm_session *session = mm_session_restore();
+	if (session == NULL)
+		session = mm_session_new();
+	for (;;) {
+		setBg(rend);
+		unsigned w = SCREEN_WIDTH / (session->config->holes + 4),
+			 h = SCREEN_HEIGHT / (session->config->guesses + 1);
+		SDL_Table panel = (SDL_Table){.x = w / 2,
+					      .y = h / 2,
+					      .w = w * session->config->holes,
+					      .h = h * session->config->guesses,
+					      .rows = session->config->guesses,
+					      .cols = session->config->holes};
+		SDL_Table state =
+		    (SDL_Table){.x = w / 2 + ((panel.cols + 1) * w),
+				.y = h / 2,
+				.w = w * 2,
+				.h = h * session->config->guesses,
+				.rows = session->config->guesses,
+				.cols = 2};
+		drawTable(rend, &panel);
+		drawTable(rend, &state);
+		while (session->state == MM_PLAYING || session->state == MM_NEW)
+			drawGuess(rend, &panel, session);
+		SDL_RenderClear(rend);
+		mm_session_free(session);
+		session = mm_session_new();
+		SDL_Delay(2000);
+	}
 	// quit
 	SDL_DestroyWindow(win);
 	SDL_Quit();
