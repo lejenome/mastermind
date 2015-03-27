@@ -1,8 +1,10 @@
 #Credits to http://www.cmake.org/pipermail/cmake/2014-January/056677.html
 string(REPLACE ":" ";" _PATH $ENV{PATH})
 foreach(p ${_PATH})
-        file(GLOB cand ${p}/clang-format*)
+	file(GLOB cand ${p}/clang-format ${p}/clang-format-[3-9]*)
         if(cand)
+		list(GET cand 0 cand)
+		message("found clang-format: ${cand}")
                 set(CLANG_FORMAT_EXECUTABLE ${cand})
                 set(CLANG_FORMAT_FOUND ON)
                 execute_process(COMMAND ${CLANG_FORMAT_EXECUTABLE} -version OUTPUT_VARIABLE clang_out )

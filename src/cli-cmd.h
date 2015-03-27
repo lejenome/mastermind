@@ -2,7 +2,8 @@
 
 #ifndef __MM_CLI_CMD_H
 #define __MM_CLI_CMD_H
-typedef struct {
+typedef struct
+{
 	char *n;					   // name of command
 	int (*e)(const char, const char **, mm_session *); // function to excute
 } cmd_t;
