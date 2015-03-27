@@ -65,12 +65,36 @@ int drawTable(SDL_Renderer *rend, SDL_Table *T)
 	SDL_RenderPresent(rend);
 	return 0;
 }
+int eventListener()
+{
+	SDL_Event event;
+	while (SDL_PollEvent(&event) > -1) {
+		// SDL_PollEvent returns either 0 or 1
+		switch (event.type) {
+		case SDL_QUIT:
+			printf("Quit event\n");
+			return 0;
+			break;
+		case SDL_KEYDOWN:
+			printf("Key down event: %d\n", event.key.keysym.sym);
+			break;
+		case SDL_WINDOWEVENT:
+			if (event.window.event == SDL_WINDOWEVENT_RESIZED)
+				printf("Video resize event\n");
+			break;
+		default:
+			printf("Unknown event\n");
+			SDL_Delay(200);
+			break;
+		}
+	}
+	return 0;
+}
 int main(int argc, char *argv[])
 {
 	SDL_Window *win = NULL;
 	SDL_Surface *surf = NULL;
 	SDL_Renderer *rend = NULL;
-	SDL_Event event;
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		printf("SDL could not be initialize! Error: %s\n",
 		       SDL_GetError());
@@ -108,27 +132,8 @@ int main(int argc, char *argv[])
 				      .cols = 2};
 	drawTable(rend, &panel);
 	drawTable(rend, &state);
-	while (SDL_PollEvent(&event) > -1) {
-		// SDL_PollEvent returns either 0 or 1
-		switch (event.type) {
-		case SDL_QUIT:
-			printf("Quit event\n");
-			goto quit;
-			break;
-		case SDL_KEYDOWN:
-			printf("Key down event: %d\n", event.key.keysym.sym);
-			break;
-		case SDL_WINDOWEVENT:
-			if (event.window.event == SDL_WINDOWEVENT_RESIZED)
-				printf("Video resize event\n");
-			break;
-		default:
-			printf("Unknown event\n");
-			SDL_Delay(200);
-			break;
-		}
-	}
-quit:
+	eventListener();
+	// quit
 	SDL_DestroyWindow(win);
 	SDL_Quit();
 	return 0;
