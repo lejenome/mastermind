@@ -65,30 +65,38 @@ int drawTable(SDL_Renderer *rend, SDL_Table *T)
 	SDL_RenderPresent(rend);
 	return 0;
 }
-int eventListener()
+int cliBackend() { return 0; }
+char *getStr(unsigned l)
 {
 	SDL_Event event;
-	while (SDL_PollEvent(&event) > -1) {
+	char *str = (char*)malloc(sizeof(char) * (l + 1));
+	unsigned i = 0;
+	while (SDL_PollEvent(&event) > -1 && i < l) {
 		// SDL_PollEvent returns either 0 or 1
 		switch (event.type) {
 		case SDL_QUIT:
 			printf("Quit event\n");
-			return 0;
+			return NULL;
 			break;
 		case SDL_KEYDOWN:
-			printf("Key down event: %d\n", event.key.keysym.sym);
+			if (event.key.keysym.sym >= SDLK_a &&
+			    event.key.keysym.sym <= SDLK_j)
+				str[i++] = event.key.keysym.sym;
+			printf("Key down event: %d (%c) \n",
+			       event.key.keysym.sym, event.key.keysym.sym);
 			break;
 		case SDL_WINDOWEVENT:
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED)
 				printf("Video resize event\n");
 			break;
 		default:
-			printf("Unknown event\n");
-			SDL_Delay(200);
+			// printf("Unknown event\n");
+			// SDL_Delay(200);
 			break;
 		}
 	}
-	return 0;
+	str[i] = '\0';
+	return str;
 }
 int main(int argc, char *argv[])
 {
@@ -132,7 +140,9 @@ int main(int argc, char *argv[])
 				      .cols = 2};
 	drawTable(rend, &panel);
 	drawTable(rend, &state);
-	eventListener();
+	unsigned i;
+	for(i = 0; i < rows; i++)
+		printf("getStr: %s\n", getStr(cols));
 	// quit
 	SDL_DestroyWindow(win);
 	SDL_Quit();
