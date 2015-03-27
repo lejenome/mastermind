@@ -5,6 +5,14 @@
 
 #define SCREEN_HEIGHT 640
 #define SCREEN_WIDTH 480
+typedef struct {
+	unsigned x;
+	unsigned y;
+	unsigned w;
+	unsigned h;
+	unsigned rows;
+	unsigned cols;
+} SDL_Table;
 
 int setSurfBg(SDL_Surface *surf)
 {
@@ -42,20 +50,18 @@ int setBg(SDL_Renderer *rend)
 	SDL_RenderFillRect(rend, NULL);
 	return 0;
 }
-int drawTable(SDL_Renderer *rend, unsigned rows, unsigned cols)
+int drawTable(SDL_Renderer *rend, SDL_Table *T)
 {
-	unsigned w, h, x, y, i, H, W;
-	w = SCREEN_WIDTH / (cols + 1);
-	h = SCREEN_HEIGHT / (rows + 1);
-	x = w / 2;
-	y = h / 2;
-	H = h * rows;
-	W = w * cols;
+	unsigned i, h, w;
+	h = T->h / T->rows;
+	w = T->w / T->cols;
 	SDL_SetRenderDrawColor(rend, 0x00, 0x00, 0x00, 0x00);
-	for (i = 0; i <= rows; i++)
-		SDL_RenderDrawLine(rend, x, y + (h * i), x + W, y + (h * i));
-	for (i = 0; i <= cols; i++)
-		SDL_RenderDrawLine(rend, x + (w * i), y, x + (w * i), y + H);
+	for (i = 0; i <= T->rows; i++)
+		SDL_RenderDrawLine(rend, T->x, T->y + (h * i), T->x + T->w,
+				   T->y + (h * i));
+	for (i = 0; i <= T->cols; i++)
+		SDL_RenderDrawLine(rend, T->x + (w * i), T->y, T->x + (w * i),
+				   T->y + T->h);
 	SDL_RenderPresent(rend);
 	return 0;
 }
@@ -64,6 +70,7 @@ int main(int argc, char *argv[])
 	SDL_Window *win = NULL;
 	SDL_Surface *surf = NULL;
 	SDL_Renderer *rend = NULL;
+	SDL_Table panel;
 	SDL_Event event;
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		printf("SDL could not be initialize! Error: %s\n",
@@ -86,7 +93,15 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	setBg(rend);
-	drawTable(rend, 5, 6);
+	unsigned rows = 6, cols = 4, w = SCREEN_WIDTH / (cols + 1),
+		 h = SCREEN_HEIGHT / (rows + 1);
+	panel = (SDL_Table){.x = w / 2,
+			    .y = h / 2,
+			    .w = w * cols,
+			    .h = h * rows,
+			    .rows = rows,
+			    .cols = cols};
+	drawTable(rend, &panel);
 	while (SDL_PollEvent(&event) > -1) {
 		// SDL_PollEvent returns either 0 or 1
 		switch (event.type) {
