@@ -9,33 +9,28 @@
 #define MM_SUCCESS 2
 #define MM_FAIL 4
 
-typedef struct
-{
+typedef struct {
 	uint8_t guesses; // max guesses on panel
 	uint8_t colors;  // max nbre of colors
 	uint8_t holes;   // nbre of holes (items) in a combination
 } mm_config;
-typedef struct
-{
+typedef struct {
 	uint8_t *combination; // given combination (guess)
 	uint8_t inplace;      // nbre of items on right place
 	uint8_t insecret;     // nbre of items on secret but not inplace
 } mm_guess;
-typedef struct
-{
+typedef struct {
 	uint8_t *val;  // len: config->holes
 	uint8_t *freq; // len: config->colors
 } mm_secret;
-typedef struct
-{
+typedef struct {
 	uint8_t guessed;   // nbre of user guessed combination
 	uint8_t state;     // current state of session
 	mm_secret *secret; // secret combination to guess
 	mm_config *config; // session config
 	mm_guess *panel;   // session panel
 } mm_session;
-typedef struct
-{
+typedef struct {
 	char *nm; // config name
 	int val;  // value (number)
 	int min;  // min value it can take

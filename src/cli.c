@@ -294,7 +294,7 @@ cmd_execed:
 }
 int main()
 {
-	uint8_t *T = NULL, rst;
+	uint8_t *T = NULL, c;
 	unsigned ret;
 #ifndef DISABLE_LOCALE
 	setlocale(LC_ALL, "");
@@ -335,9 +335,13 @@ int main()
 		printf("%s\n", (session->state == MM_SUCCESS)
 				   ? _("You successed :)")
 				   : _("You Failed :("));
+		printf(_("Secret Key is: "));
+		for (c = 0; c < session->config->holes; c++)
+			putchar('0' + session->secret->val[c]);
+		putchar('\n');
 		mm_session_free(session);
 		printf(_("restart? (Y/N): "));
-		scanf("%c", &rst);
-	} while (rst == 'y' || rst == 'Y');
+		scanf("%c", &c);
+	} while (c == 'y' || c == 'Y');
 	return 0;
 }

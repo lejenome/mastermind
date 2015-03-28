@@ -8,8 +8,7 @@
 
 #define SCREEN_HEIGHT 640
 #define SCREEN_WIDTH 480
-typedef struct
-{
+typedef struct {
 	unsigned x;
 	unsigned y;
 	unsigned w;
