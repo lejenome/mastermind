@@ -24,11 +24,26 @@ char *mm_store_path = NULL;
 #define MM_POS_SAVE_EXIT 3
 #define MM_POS_SAVE_PLAY 4
 mm_conf_t mm_confs[5] = {
-	[MM_POS_GUESSES] = {.nm = "guesses", .val = MM_GUESSES},
-	[MM_POS_COLORS] = {.nm = "colors", .val = MM_COLORS},
-	[MM_POS_HOLES] = {.nm = "holes", .val = MM_HOLES},
-	[MM_POS_SAVE_EXIT] = {.nm = "save_on_exit", .val = 0},
-	[MM_POS_SAVE_PLAY] = {.nm = "save_on_play", .val = 0},
+	[MM_POS_GUESSES] = {.nm = "guesses",
+			    .val = MM_GUESSES,
+			    .min = 2,
+			    .max = MM_GUESSES_MAX},
+	[MM_POS_COLORS] = {.nm = "colors",
+			   .val = MM_COLORS,
+			   .min = 2,
+			   .max = MM_COLORS_MAX},
+	[MM_POS_HOLES] = {.nm = "holes",
+			  .val = MM_HOLES,
+			  .min = 2,
+			  .max = MM_HOLES_MAX},
+	[MM_POS_SAVE_EXIT] = {.nm = "save_on_exit",
+			      .val = 0,
+			      .min = 0,
+			      .max = 1},
+	[MM_POS_SAVE_PLAY] = {.nm = "save_on_play",
+			      .val = 0,
+			      .min = 0,
+			      .max = 1},
 };
 #ifndef POSIX
 #define srandom(var) srand(var)
@@ -100,22 +115,22 @@ void mm_config_save()
 /* change global config with name to value then save to config file
  * param name: const char* : name of global config to change
  * param value: const int : the new value of global config name
- * return: unsigned : 0 on success , 1 on failure
+ * return: unsigned : 0 on success , 1 if conf option not found, 2 if conf
+ *         value is not valid
  */
 unsigned mm_config_set(const char *name, const int value)
 {
 	mm_conf_t *conf = mm_confs;
+#ifdef DEBUG
+	printf("Set change: %s = %d\n", name, value);
+#endif
 	while (conf < mm_confs + LEN(mm_confs) && strcmp(conf->nm, name) != 0)
 		conf++;
 	if (conf == mm_confs + LEN(mm_confs))
 		return 1;
+	if (value < conf->min || value > conf->max)
+		return 2;
 	conf->val = value;
-	if (strcmp("holes", name) && (value > MM_HOLES_MAX || value < 2))
-		conf->val = MM_HOLES;
-	if (strcmp("colors", name) && (value > MM_COLORS_MAX || value < 2))
-		conf->val = MM_COLORS;
-	if (strcmp("guesses", name) && (value > MM_GUESSES_MAX || value < 2))
-		conf->val = MM_GUESSES;
 	mm_config_save();
 	return 0;
 }

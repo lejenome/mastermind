@@ -33,6 +33,8 @@ typedef struct {
 typedef struct {
 	char *nm; // config name
 	int val;  // value (number)
+	int min;  // min value it can take
+	int max;  // max value it can take
 } mm_conf_t;
 
 extern mm_conf_t mm_confs[5];
