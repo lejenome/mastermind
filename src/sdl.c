@@ -17,6 +17,33 @@ typedef struct {
 	unsigned cols;
 } SDL_Table;
 
+SDL_Window *win = NULL;
+SDL_Surface *surf = NULL;
+SDL_Renderer *rend = NULL;
+
+void init_sdl()
+{
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		printf("SDL could not be initialize! Error: %s\n",
+		       SDL_GetError());
+		exit(1);
+	}
+	win = SDL_CreateWindow("Master Mind", SDL_WINDOWPOS_UNDEFINED,
+			       SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+			       SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	if (win == NULL) {
+		printf("SDL could not create win! Error: %s\n", SDL_GetError());
+		exit(1);
+	}
+	surf = SDL_GetWindowSurface(win);
+	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+	if (rend == NULL || surf == NULL) {
+		printf(
+		    "Error on getting window surface or renderer! Error %s\n",
+		    SDL_GetError());
+		exit(1);
+	}
+}
 int setSurfBg(SDL_Surface *surf)
 {
 	SDL_Surface *img = NULL, *tmp = NULL;
@@ -47,13 +74,13 @@ int setSurfBg(SDL_Surface *surf)
 	// SDL_UpdateWindowSurface(win);
 	return 0;
 }
-int setBg(SDL_Renderer *rend)
+int setBg()
 {
 	SDL_SetRenderDrawColor(rend, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderFillRect(rend, NULL);
 	return 0;
 }
-int drawTable(SDL_Renderer *rend, SDL_Table *T)
+int drawTable(SDL_Table *T)
 {
 	unsigned i, h, w;
 	h = T->h / T->rows;
@@ -102,7 +129,7 @@ uint8_t *getGuess(mm_session *session)
 	}
 	return str;
 }
-int drawGuess(SDL_Renderer *rend, SDL_Table *T, mm_session *session)
+int drawGuess(SDL_Table *T, mm_session *session)
 {
 	uint8_t *g;
 	do {
@@ -128,34 +155,12 @@ int drawGuess(SDL_Renderer *rend, SDL_Table *T, mm_session *session)
 }
 int main(int argc, char *argv[])
 {
-	SDL_Window *win = NULL;
-	SDL_Surface *surf = NULL;
-	SDL_Renderer *rend = NULL;
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		printf("SDL could not be initialize! Error: %s\n",
-		       SDL_GetError());
-		exit(1);
-	}
-	win = SDL_CreateWindow("Master Mind", SDL_WINDOWPOS_UNDEFINED,
-			       SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-			       SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if (win == NULL) {
-		printf("SDL could not create win! Error: %s\n", SDL_GetError());
-		exit(1);
-	}
-	surf = SDL_GetWindowSurface(win);
-	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-	if (rend == NULL || surf == NULL) {
-		printf(
-		    "Error on getting window surface or renderer! Error %s\n",
-		    SDL_GetError());
-		return -1;
-	}
+	init_sdl();
 	mm_session *session = mm_session_restore();
 	if (session == NULL)
 		session = mm_session_new();
 	for (;;) {
-		setBg(rend);
+		setBg();
 		unsigned w = SCREEN_WIDTH / (session->config->holes + 4),
 			 h = SCREEN_HEIGHT / (session->config->guesses + 1);
 		SDL_Table panel = (SDL_Table){.x = w / 2,
@@ -171,16 +176,18 @@ int main(int argc, char *argv[])
 				.h = h * session->config->guesses,
 				.rows = session->config->guesses,
 				.cols = 2};
-		drawTable(rend, &panel);
-		drawTable(rend, &state);
+		drawTable(&panel);
+		drawTable(&state);
 		while (session->state == MM_PLAYING || session->state == MM_NEW)
-			drawGuess(rend, &panel, session);
+			drawGuess(&panel, session);
 		SDL_RenderClear(rend);
 		mm_session_free(session);
 		session = mm_session_new();
 		SDL_Delay(2000);
 	}
 	// quit
+	SDL_DestroyRenderer(rend);
+	SDL_FreeSurface(surf);
 	SDL_DestroyWindow(win);
 	SDL_Quit();
 	return 0;
