@@ -18,7 +18,7 @@ typedef struct {
 } SDL_Table;
 
 SDL_Window *win = NULL;
-SDL_Surface *surf = NULL;
+// SDL_Surface *surf = NULL;
 SDL_Renderer *rend = NULL;
 
 void init_sdl()
@@ -28,21 +28,14 @@ void init_sdl()
 		       SDL_GetError());
 		exit(1);
 	}
-	win = SDL_CreateWindow("Master Mind", SDL_WINDOWPOS_UNDEFINED,
-			       SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-			       SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if (win == NULL) {
-		printf("SDL could not create win! Error: %s\n", SDL_GetError());
+	if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT,
+					SDL_WINDOW_SHOWN, &win, &rend)) {
+		printf("Error on creating window and gettings renderer! Error: "
+		       "%s\n",
+		       SDL_GetError());
 		exit(1);
 	}
-	surf = SDL_GetWindowSurface(win);
-	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-	if (rend == NULL || surf == NULL) {
-		printf(
-		    "Error on getting window surface or renderer! Error %s\n",
-		    SDL_GetError());
-		exit(1);
-	}
+	// surf = SDL_GetWindowSurface(win);
 }
 int setSurfBg(SDL_Surface *surf)
 {
@@ -187,7 +180,7 @@ int main(int argc, char *argv[])
 	}
 	// quit
 	SDL_DestroyRenderer(rend);
-	SDL_FreeSurface(surf);
+	// SDL_FreeSurface(surf);
 	SDL_DestroyWindow(win);
 	SDL_Quit();
 	return 0;
