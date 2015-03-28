@@ -37,36 +37,6 @@ void init_sdl()
 	}
 	// surf = SDL_GetWindowSurface(win);
 }
-int setSurfBg(SDL_Surface *surf)
-{
-	SDL_Surface *img = NULL, *tmp = NULL;
-	SDL_Rect rect;
-	SDL_FillRect(surf, NULL, SDL_MapRGB(surf->format, 0xFF, 0xFF, 0xFF));
-	img = SDL_LoadBMP("test.bmp");
-	if (img == NULL) {
-		printf("SDL could not load bmp image 'test.bmp'! Error: %s\n",
-		       SDL_GetError());
-		return 1;
-	}
-	tmp = SDL_ConvertSurface(img, surf->format, 0);
-	if (tmp == NULL) {
-		printf("SDL could not optimaze the image! Error: %s\n",
-		       SDL_GetError());
-		SDL_FreeSurface(img);
-		return 1;
-	}
-	SDL_FreeSurface(img);
-	img = tmp;
-	tmp = NULL;
-	rect.x = 0;
-	rect.y = 0;
-	rect.h = SCREEN_HEIGHT;
-	rect.w = SCREEN_WIDTH;
-	// SDL_BlitSurface(img, NULL, surf, NULL);
-	SDL_BlitScaled(img, NULL, surf, &rect);
-	// SDL_UpdateWindowSurface(win);
-	return 0;
-}
 int setBg()
 {
 	SDL_SetRenderDrawColor(rend, 0xFF, 0xFF, 0xFF, 0xFF);

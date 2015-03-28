@@ -57,6 +57,7 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 }
 int cmd_restart(const char argc, const char **argv, mm_session *s)
 {
+	//  FIXME: find better and standard way to reset session object
 	extern mm_session *session;
 	mm_session_free(session);
 	session = mm_session_new();
