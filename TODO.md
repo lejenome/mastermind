@@ -4,9 +4,9 @@
 - [x] cli interface
 - [x] command auto complete
 - [x] subcommand auto complete
+- [x] SDL backend
 - [ ] cli colored output
 - [ ] saving scores, history
-- [ ] SDL backend
 - [ ] ncurses backend
 - [ ] build for linux/Mac/Win/Android/iOS/...
 - [x] MM_{GUESSES,COLORS,HOLES}_MAX support
@@ -14,3 +14,4 @@
 - [ ] package it for ubuntu/archlinux/windows/android
 - [ ] account support
 - [ ] multiplayer support
+- [ ] cli backend table design themes support

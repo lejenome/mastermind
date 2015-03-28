@@ -37,6 +37,13 @@ void init_sdl()
 	}
 	// surf = SDL_GetWindowSurface(win);
 }
+void clean_sdl()
+{
+	SDL_DestroyRenderer(rend);
+	// SDL_FreeSurface(surf);
+	SDL_DestroyWindow(win);
+	SDL_Quit();
+}
 int setBg()
 {
 	SDL_SetRenderDrawColor(rend, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -58,7 +65,6 @@ int drawTable(SDL_Table *T)
 	SDL_RenderPresent(rend);
 	return 0;
 }
-int cliBackend() { return 0; }
 uint8_t *getGuess(mm_session *session)
 {
 	SDL_Event event;
@@ -69,8 +75,8 @@ uint8_t *getGuess(mm_session *session)
 		// SDL_PollEvent returns either 0 or 1
 		switch (event.type) {
 		case SDL_QUIT:
-			printf("Quit event\n");
-			return NULL;
+			clean_sdl();
+			exit(0);
 			break;
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym >= SDLK_a &&
@@ -97,7 +103,7 @@ int drawGuess(SDL_Table *T, mm_session *session)
 	uint8_t *g;
 	do {
 		g = getGuess(session);
-	} while (mm_play(session, g) != 0);
+	} while (mm_play(session, g));
 	printf("Get guess(%d): %s\n", session->guessed, g);
 	unsigned i;
 	SDL_Rect rect;
@@ -148,10 +154,6 @@ int main(int argc, char *argv[])
 		session = mm_session_new();
 		SDL_Delay(2000);
 	}
-	// quit
-	SDL_DestroyRenderer(rend);
-	// SDL_FreeSurface(surf);
-	SDL_DestroyWindow(win);
-	SDL_Quit();
+	clean_sdl();
 	return 0;
 }
