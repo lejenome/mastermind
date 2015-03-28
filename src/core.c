@@ -80,21 +80,31 @@ mm_config *mm_config_load()
 	if ((f = fopen(mm_config_path, "r"))) {
 		n = (char *)malloc(sizeof(char) * 40);
 		while (fscanf(f, "%s %d", n, &d) != EOF) {
-			for (conf = mm_confs; conf < mm_confs + LEN(mm_confs);
-			     conf++) {
-				if (!strcmp(n, conf->nm))
-					conf->val = d;
+			conf = mm_confs;
+			while (conf < mm_confs + LEN(mm_confs) &&
+			       strcmp(n, conf->nm) != 0)
+				conf++;
+			if (conf == mm_confs + LEN(mm_confs)) {
+#ifdef DEBUG
+				printf(_("Error: config option not supported: "
+					 "%s\n"),
+				       n);
+#endif
+				continue;
 			}
+			if (d >= conf->min && d <= conf->max)
+				conf->val = d;
+#ifdef DEBUG
+			else
+				printf(
+				    _("Error: config option value invalid: %s "
+				      "= %d\n"),
+				    n, d);
+#endif
 		}
 		free(n);
 		fclose(f);
 	}
-	if (mm_confs[MM_POS_GUESSES].val > MM_GUESSES_MAX)
-		mm_confs[MM_POS_GUESSES].val = MM_GUESSES;
-	if (mm_confs[MM_POS_COLORS].val > MM_COLORS_MAX)
-		mm_confs[MM_POS_COLORS].val = MM_COLORS;
-	if (mm_confs[MM_POS_HOLES].val > MM_HOLES_MAX)
-		mm_confs[MM_POS_HOLES].val = MM_HOLES;
 	config->guesses = (uint8_t)mm_confs[MM_POS_GUESSES].val;
 	config->colors = (uint8_t)mm_confs[MM_POS_COLORS].val;
 	config->holes = (uint8_t)mm_confs[MM_POS_HOLES].val;
@@ -121,9 +131,6 @@ void mm_config_save()
 unsigned mm_config_set(const char *name, const int value)
 {
 	mm_conf_t *conf = mm_confs;
-#ifdef DEBUG
-	printf("Set change: %s = %d\n", name, value);
-#endif
 	while (conf < mm_confs + LEN(mm_confs) && strcmp(conf->nm, name) != 0)
 		conf++;
 	if (conf == mm_confs + LEN(mm_confs))
