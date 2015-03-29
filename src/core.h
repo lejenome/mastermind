@@ -51,5 +51,6 @@ unsigned mm_config_set(const char *, const int);
 
 mm_secret *mm_secret_new(mm_config *);
 unsigned mm_play(mm_session *, uint8_t *);
+long unsigned mm_score(mm_session *session);
 void mm_init();
 #endif

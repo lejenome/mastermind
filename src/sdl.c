@@ -72,9 +72,9 @@ int drawTable(SDL_Table *T)
 uint8_t *getGuess()
 {
 	SDL_Event event;
-	uint8_t *str =
-	    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
+	uint8_t *str;
 	unsigned i = 0;
+	str = (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
 	while (SDL_PollEvent(&event) > -1 && i < session->config->holes) {
 		// SDL_PollEvent returns either 0 or 1
 		switch (event.type) {

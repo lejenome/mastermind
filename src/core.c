@@ -210,6 +210,18 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 		mm_session_save(session);
 	return 0;
 }
+long unsigned mm_score(mm_session *session)
+{
+	unsigned i;
+	long unsigned score = (1.0F / (float)session->guessed) *
+			      (1.5F / (float)session->config->guesses + 1) *
+			      ((float)session->config->holes * 1.5F) *
+			      ((float)session->config->colors * 1.5F);
+	for (i = 0; i < session->guessed; i++)
+		score *= session->panel[i].inplace * 4 +
+			 session->panel[i].insecret * 2;
+	return score;
+}
 /* get last gusess objet
  * param session : mm_session* : current objet
  * return : session : mm_session

@@ -335,11 +335,14 @@ int main()
 		printf("%s\n", (session->state == MM_SUCCESS)
 				   ? _("You successed :)")
 				   : _("You Failed :("));
+		if (session->state == MM_SUCCESS)
+			printf(_("Your score is: %ld\n"), mm_score(session));
 		printf(_("Secret Key is: "));
 		for (c = 0; c < session->config->holes; c++)
 			putchar('0' + session->secret->val[c]);
 		putchar('\n');
 		mm_session_free(session);
+		session = NULL;
 		printf(_("restart? (Y/N): "));
 		scanf("%c", &c);
 	} while (c == 'y' || c == 'Y');
