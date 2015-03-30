@@ -15,7 +15,7 @@
 
 #define LEN(a) (sizeof(a) / sizeof(a[0]))
 char *mm_config_path = NULL;
-char *mm_data_path = NULL;
+char *mm_score_path = NULL;
 char *mm_store_path = NULL;
 
 #define MM_POS_GUESSES 0
@@ -161,6 +161,42 @@ mm_secret *mm_secret_new(mm_config *conf)
 	}
 	return sec;
 }
+void mm_score_save(mm_session *session)
+{
+	FILE *f;
+	long unsigned scores[20], score;
+	unsigned l = 0, i = 0;
+	f = fopen(mm_score_path, "r+");
+	if (f == NULL)
+		return;
+	while (l < 20 && fscanf(f, "%ld", scores + l) != EOF)
+		l++;
+	score = mm_score(session);
+	i = l;
+	if (l == 0) {
+		scores[0] = score;
+		goto done;
+	} else if (score <= scores[l - 1] && l == 20) {
+		goto abort;
+	} else if (l == 20) {
+		i--;
+		scores[i - 1] = scores[i];
+	}
+	while (--i > 0 && score > scores[i])
+		scores[i] = scores[i - 1];
+	scores[i] = score;
+done:
+	l++;
+	rewind(f);
+	for (i = 0; i < l; i++) {
+		fprintf(f, "%ld\n", scores[i]);
+#ifdef DEBUG
+		printf("scores[%d] = %ld\n", i, scores[i]);
+#endif
+	}
+abort:
+	fclose(f);
+}
 /* This function is the most important function in the code
  * this function accept new guess combination , add it to
  * the session if it's not ended and calculed the score of
@@ -208,6 +244,8 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 	free(freq);
 	if (mm_confs[MM_POS_SAVE_PLAY].val == 1)
 		mm_session_save(session);
+	if (session->state == MM_SUCCESS)
+		mm_score_save(session);
 	return 0;
 }
 long unsigned mm_score(mm_session *session)
@@ -217,6 +255,7 @@ long unsigned mm_score(mm_session *session)
 			      (1.5F / (float)session->config->guesses + 1) *
 			      ((float)session->config->holes * 1.5F) *
 			      ((float)session->config->colors * 1.5F);
+	// TODO: do/don't repeat color support
 	for (i = 0; i < session->guessed; i++)
 		score *= session->panel[i].inplace * 4 +
 			 session->panel[i].insecret * 2;
@@ -237,7 +276,7 @@ mm_guess mm_play_last(mm_session *session)
  */
 void mm_init()
 {
-	mm_data_path = (char *)malloc(sizeof(char) * 2000);
+	mm_score_path = (char *)malloc(sizeof(char) * 2000);
 	mm_config_path = (char *)malloc(sizeof(char) * 2000);
 	mm_store_path = (char *)malloc(sizeof(char) * 2000);
 	srandom(time(NULL));
@@ -249,10 +288,10 @@ void mm_init()
 			"/Library/Application Support");
 		if (access(mm_config_path, R_OK | W_OK | X_OK) == 0) {
 			strcat(mm_config_path, "/" PACKAGE);
-			strcpy(mm_data_path, mm_config_path);
+			strcpy(mm_score_path, mm_config_path);
 		} else {
 			sprintf(mm_config_path, "%s%s", home, "/." PACKAGE);
-			strcpy(mm_data_path, mm_config_path);
+			strcpy(mm_score_path, mm_config_path);
 		}
 	} else { // Linux/Unix system ?
 		char *xdg_config = getenv("XDG_CONFIG_HOME");
@@ -266,34 +305,34 @@ void mm_init()
 		if (access(mm_config_path, W_OK | R_OK | X_OK) == 0)
 			strcat(mm_config_path, "/" PACKAGE);
 		else
-			sprintf(mm_data_path, "%s%s", home, "/." PACKAGE);
+			sprintf(mm_score_path, "%s%s", home, "/." PACKAGE);
 		// data dir; try use XDG based dir ~/.local/share/mastermind
 		// else fallback to ~/.mastermind
 		if (xdg_data)
-			strcpy(mm_data_path, xdg_data);
+			strcpy(mm_score_path, xdg_data);
 		else
-			sprintf(mm_data_path, "%s%s", home, "/.local/share");
-		if (access(mm_data_path, W_OK | R_OK | X_OK) == 0)
-			strcat(mm_data_path, "/" PACKAGE);
+			sprintf(mm_score_path, "%s%s", home, "/.local/share");
+		if (access(mm_score_path, W_OK | R_OK | X_OK) == 0)
+			strcat(mm_score_path, "/" PACKAGE);
 		else
-			sprintf(mm_data_path, "%s%s", home, "/." PACKAGE);
+			sprintf(mm_score_path, "%s%s", home, "/." PACKAGE);
 	}
-	mkdir(mm_data_path, 0700);
+	mkdir(mm_score_path, 0700);
 	mkdir(mm_config_path, 0700);
 #else
 	if (getenv("APPDATA")) { // MS Windows
-		sprintf(mm_data_path, "%s%s", getenv("APPDATA"), "/" PACKAGE);
+		sprintf(mm_score_path, "%s%s", getenv("APPDATA"), "/" PACKAGE);
 		sprintf(mm_config_path, "%s%s", getenv("APPDATA"), "/" PACKAGE);
-		CreateDirectory(mm_data_path, NULL);
+		CreateDirectory(mm_score_path, NULL);
 		CreateDirectory(mm_config_path, NULL);
 	} else {
 		strcpy(mm_config_path, ".");
-		strcpy(mm_data_path, ".");
+		strcpy(mm_score_path, ".");
 	}
 #endif
-	sprintf(mm_store_path, "%s%s", mm_data_path, "/store.data");
+	sprintf(mm_store_path, "%s%s", mm_score_path, "/store.data");
 	strcat(mm_config_path, "/config");
-	strcat(mm_data_path, "/data.txt");
+	strcat(mm_score_path, "/score.txt");
 }
 /* free session object
  * param session : mm_session* : session object
@@ -318,7 +357,7 @@ void mm_session_exit(mm_session *session)
 		mm_session_save(session);
 	mm_session_free(session);
 }
-/* save session object on mm_data_path file
+/* save session object on mm_store_path file
  * param session : mm_session* : current session object
  * return : unsigned : 0 on success , 1 on failure
  */
@@ -357,7 +396,7 @@ unsigned int mm_session_save(mm_session *session)
 	fclose(f);
 	return 0;
 }
-/* this function restore session object from mm_data_path file
+/* this function restore session object from mm_store_path file
  * return mm_session* : NULL on failure , session object pointeur on
  * success
  */

@@ -6,8 +6,8 @@
 - [x] subcommand auto complete
 - [x] SDL backend
 - [x] MM_{GUESSES,COLORS,HOLES}_MAX support
+- [x] saving scores, history
 - [ ] cli colored output
-- [ ] saving scores, history
 - [ ] ncurses backend
 - [ ] build for linux/Mac/Win/Android/iOS/...
 - [ ] \(do/don't\) repeat colors on combination (remise / sans remise)
