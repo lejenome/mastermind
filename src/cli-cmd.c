@@ -26,13 +26,14 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 	mm_conf_t *conf;
 	switch (argc) {
 	case 1:
-		printf("Global configs:\n");
+		printf(_("Global configs:\n"));
 		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++)
 			printf("\t%s = %d\n", conf->nm, conf->val);
-		printf("Session configs:\n");
-		printf("\tguesses = %d\n\tcolors = %d\n\tholes = %d\n",
+		printf(_("Session configs:\n"));
+		printf("\tguesses = %d\n\tcolors = %d\n\tholes = %d\n\tremise "
+		       "= %d\n",
 		       session->config->guesses, session->config->colors,
-		       session->config->holes);
+		       session->config->holes, session->config->remise);
 		break;
 	case 2:
 		conf = mm_confs;

@@ -21,9 +21,10 @@ char *mm_store_path = NULL;
 #define MM_POS_GUESSES 0
 #define MM_POS_COLORS 1
 #define MM_POS_HOLES 2
-#define MM_POS_SAVE_EXIT 3
-#define MM_POS_SAVE_PLAY 4
-mm_conf_t mm_confs[5] = {
+#define MM_POS_REMISE 3
+#define MM_POS_SAVE_EXIT 4
+#define MM_POS_SAVE_PLAY 5
+mm_conf_t mm_confs[6] = {
 	[MM_POS_GUESSES] = {.nm = "guesses",
 			    .val = MM_GUESSES,
 			    .min = 2,
@@ -36,6 +37,7 @@ mm_conf_t mm_confs[5] = {
 			  .val = MM_HOLES,
 			  .min = 2,
 			  .max = MM_HOLES_MAX},
+	[MM_POS_REMISE] = {.nm = "remise", .val = 0, .min = 0, .max = 1},
 	[MM_POS_SAVE_EXIT] = {.nm = "save_on_exit",
 			      .val = 0,
 			      .min = 0,
@@ -106,9 +108,15 @@ mm_config *mm_config_load()
 		free(n);
 		fclose(f);
 	}
+	if (mm_confs[MM_POS_REMISE].val &&
+	    mm_confs[MM_POS_COLORS].val < mm_confs[MM_POS_HOLES].val) {
+		// ensure colors are no less then holes on remise mode
+		mm_confs[MM_POS_COLORS].val = mm_confs[MM_POS_HOLES].val;
+	}
 	config->guesses = (uint8_t)mm_confs[MM_POS_GUESSES].val;
 	config->colors = (uint8_t)mm_confs[MM_POS_COLORS].val;
 	config->holes = (uint8_t)mm_confs[MM_POS_HOLES].val;
+	config->remise = (uint8_t)mm_confs[MM_POS_REMISE].val;
 	return config;
 }
 /* save global config on the config file
@@ -157,7 +165,9 @@ mm_secret *mm_secret_new(mm_config *conf)
 	for (i = 0; i < conf->colors; i++)
 		sec->freq[i] = 0;
 	for (i = 0; i < conf->holes; i++) {
-		sec->val[i] = random() % conf->colors;
+		do {
+			sec->val[i] = random() % conf->colors;
+		} while (conf->remise && sec->freq[sec->val[i]] > 0);
 		sec->freq[sec->val[i]]++;
 	}
 	return sec;
@@ -190,11 +200,12 @@ void mm_scores_save(mm_session *session)
 		mm_scores_load();
 	score = mm_score(session);
 	i = 0;
-	if (mm_scores.len && mm_scores.T[mm_scores.len - 1] > score)
+	if (mm_scores.len && mm_scores.T[mm_scores.len - 1] > score) {
 		if (mm_scores.len == mm_scores.max)
 			return;
 		else
 			i = mm_scores.len;
+	}
 	// find where to insert score
 	while (i < mm_scores.len && mm_scores.T[i] > score)
 		i++;
@@ -239,7 +250,8 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 	G->inplace = 0;
 	G->insecret = 0;
 	for (i = 0; i < session->config->holes; i++) {
-		if (T[i] >= session->config->colors) {
+		if (T[i] >= session->config->colors ||
+		    (session->config->remise && freq[T[i]] > 0)) {
 			free(freq);
 			return 1;
 		}
@@ -384,6 +396,7 @@ unsigned int mm_session_save(mm_session *session)
 	 * [ mm_config->guesses           ]
 	 * [ mm_config->colors            ]
 	 * [ mm_config->holes             ]
+	 * [ mm_config->remise            ]
 	 * [............mm_secret->val.............] // 8 bits x config.holes
 	 * [............mm_secret->freq............] // 8 bits x config.colors
 	 * [...mm_session->panel[0].combination....] // 8 bits x config.holes

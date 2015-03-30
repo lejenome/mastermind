@@ -13,6 +13,7 @@ typedef struct {
 	uint8_t guesses; // max guesses on panel
 	uint8_t colors;  // max nbre of colors
 	uint8_t holes;   // nbre of holes (items) in a combination
+	uint8_t remise;  // do/don't repeat color on combination
 } mm_config;
 typedef struct {
 	uint8_t *combination; // given combination (guess)
@@ -42,7 +43,7 @@ typedef struct {
 	unsigned len;
 } mm_scores_t;
 
-extern mm_conf_t mm_confs[5];
+extern mm_conf_t mm_confs[6];
 
 mm_session *mm_session_new();
 mm_session *mm_session_restore();

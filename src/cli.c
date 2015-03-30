@@ -310,9 +310,9 @@ int main()
 			printf(_("Restoring old session\n"));
 		}
 		printf(_("Current Config:\n\tguesses: %d\n\tcolors: "
-			 "%d\n\tholes: %d\n"),
+			 "%d\n\tholes: %d\n\tremise: %d\n"),
 		       session->config->guesses, session->config->colors,
-		       session->config->holes);
+		       session->config->holes, session->config->remise);
 		do {
 			printf(_("Current State:\n\tGuessed: %d\n"),
 			       session->guessed);
