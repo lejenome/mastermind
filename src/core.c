@@ -184,22 +184,25 @@ const mm_scores_t *mm_scores_get()
 void mm_scores_save(mm_session *session)
 {
 	long unsigned score;
-	unsigned i;
+	unsigned i, j;
 	FILE *f;
 	if (mm_scores.T == NULL)
 		mm_scores_load();
 	score = mm_score(session);
-	if (mm_scores.len == mm_scores.max) {
-		if (mm_scores.T[mm_scores.len - 1] < score)
-			mm_scores.len--;
-		else
+	i = 0;
+	if (mm_scores.len && mm_scores.T[mm_scores.len - 1] > score)
+		if (mm_scores.len == mm_scores.max)
 			return;
-	}
-	i = mm_scores.len;
-	while (i > 0 && score > mm_scores.T[i - 1]) {
-		mm_scores.T[i] = mm_scores.T[i - 1];
-		i--;
-	}
+		else
+			i = mm_scores.len;
+	// find where to insert score
+	while (i < mm_scores.len && mm_scores.T[i] > score)
+		i++;
+	if (mm_scores.T[i] == score)
+		return;
+	// unshift position of the rest (scores lower than score)
+	for (j = i; j < mm_scores.len; j++)
+		mm_scores.T[j + 1] = mm_scores.T[j];
 	mm_scores.T[i] = score;
 	mm_scores.len++;
 	f = fopen(mm_score_path, "w+");

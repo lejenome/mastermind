@@ -79,8 +79,8 @@ int cmd_score(const char argc, const char **argv, mm_session *session)
 {
 	unsigned i;
 	const mm_scores_t *scores = mm_scores_get();
-	if(scores->len == 0)
-		printf(_("No scores yet!\n"));
+	if (scores->len == 0)
+		printf(_("No score yet!\n"));
 	for (i = 0; i < scores->len; i++)
 		printf("%-2d) %ld\n", i, scores->T[i]);
 	return 0;
