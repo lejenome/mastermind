@@ -77,7 +77,12 @@ int cmd_help(const char argc, const char **argv, mm_session *session)
 }
 int cmd_score(const char argc, const char **argv, mm_session *session)
 {
-	printf("You're the best!\nNo, I'm just kidding!!!\n");
+	unsigned i;
+	const mm_scores_t *scores = mm_scores_get();
+	if(scores->len == 0)
+		printf(_("No scores yet!\n"));
+	for (i = 0; i < scores->len; i++)
+		printf("%-2d) %ld\n", i, scores->T[i]);
 	return 0;
 }
 int cmd_reset(const char argc, const char **argv, mm_session *session)

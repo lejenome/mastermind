@@ -45,6 +45,7 @@ mm_conf_t mm_confs[5] = {
 			      .min = 0,
 			      .max = 1},
 };
+mm_scores_t mm_scores = {.T = NULL, .max = 20, .len = 0};
 #ifndef POSIX
 #define srandom(var) srand(var)
 #define random() rand()
@@ -161,40 +162,51 @@ mm_secret *mm_secret_new(mm_config *conf)
 	}
 	return sec;
 }
-void mm_score_save(mm_session *session)
+void mm_scores_load()
 {
 	FILE *f;
-	long unsigned scores[20], score;
-	unsigned l = 0, i = 0;
-	f = fopen(mm_score_path, "r+");
+	mm_scores.T =
+	    (long unsigned *)malloc(sizeof(long unsigned) * mm_scores.max);
+	f = fopen(mm_score_path, "r");
 	if (f == NULL)
 		return;
-	while (l < 20 && fscanf(f, "%ld", scores + l) != EOF)
-		l++;
+	while (mm_scores.len < mm_scores.max &&
+	       fscanf(f, "%ld", mm_scores.T + mm_scores.len) != EOF)
+		mm_scores.len++;
+	fclose(f);
+}
+const mm_scores_t *mm_scores_get()
+{
+	if (mm_scores.T == NULL)
+		mm_scores_load();
+	return &mm_scores;
+}
+void mm_scores_save(mm_session *session)
+{
+	long unsigned score;
+	unsigned i;
+	FILE *f;
+	if (mm_scores.T == NULL)
+		mm_scores_load();
 	score = mm_score(session);
-	i = l;
-	if (l == 0) {
-		scores[0] = score;
-		goto done;
-	} else if (score <= scores[l - 1] && l == 20) {
-		goto abort;
-	} else if (l == 20) {
+	if (mm_scores.len == mm_scores.max) {
+		if (mm_scores.T[mm_scores.len - 1] < score)
+			mm_scores.len--;
+		else
+			return;
+	}
+	i = mm_scores.len;
+	while (i > 0 && score > mm_scores.T[i - 1]) {
+		mm_scores.T[i] = mm_scores.T[i - 1];
 		i--;
-		scores[i - 1] = scores[i];
 	}
-	while (--i > 0 && score > scores[i])
-		scores[i] = scores[i - 1];
-	scores[i] = score;
-done:
-	l++;
-	rewind(f);
-	for (i = 0; i < l; i++) {
-		fprintf(f, "%ld\n", scores[i]);
-#ifdef DEBUG
-		printf("scores[%d] = %ld\n", i, scores[i]);
-#endif
-	}
-abort:
+	mm_scores.T[i] = score;
+	mm_scores.len++;
+	f = fopen(mm_score_path, "w+");
+	if (f == NULL)
+		return;
+	for (i = 0; i < mm_scores.len; i++)
+		fprintf(f, "%ld\n", mm_scores.T[i]);
 	fclose(f);
 }
 /* This function is the most important function in the code
@@ -245,7 +257,7 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 	if (mm_confs[MM_POS_SAVE_PLAY].val == 1)
 		mm_session_save(session);
 	if (session->state == MM_SUCCESS)
-		mm_score_save(session);
+		mm_scores_save(session);
 	return 0;
 }
 long unsigned mm_score(mm_session *session)
@@ -257,8 +269,8 @@ long unsigned mm_score(mm_session *session)
 			      ((float)session->config->colors * 1.5F);
 	// TODO: do/don't repeat color support
 	for (i = 0; i < session->guessed; i++)
-		score *= session->panel[i].inplace * 4 +
-			 session->panel[i].insecret * 2;
+		score *= (2 / (session->panel[i].inplace + 1)) +
+			 (1 / (session->panel[i].insecret + 1)) + 1;
 	return score;
 }
 /* get last gusess objet

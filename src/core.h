@@ -36,6 +36,11 @@ typedef struct {
 	int min;  // min value it can take
 	int max;  // max value it can take
 } mm_conf_t;
+typedef struct {
+	long unsigned *T;
+	unsigned max;
+	unsigned len;
+} mm_scores_t;
 
 extern mm_conf_t mm_confs[5];
 
@@ -49,8 +54,10 @@ mm_config *mm_config_load();
 void mm_config_save();
 unsigned mm_config_set(const char *, const int);
 
+const mm_scores_t *mm_scores_get();
+long unsigned mm_score(mm_session *session);
+
 mm_secret *mm_secret_new(mm_config *);
 unsigned mm_play(mm_session *, uint8_t *);
-long unsigned mm_score(mm_session *session);
 void mm_init();
 #endif
