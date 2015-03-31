@@ -72,7 +72,7 @@ typedef struct {
 
 extern mm_conf_t mm_confs[7];
 
-mm_session *mm_session_new(char *account);
+mm_session *mm_session_new();
 mm_session *mm_session_restore();
 unsigned int mm_session_save(mm_session *);
 void mm_session_free(mm_session *);

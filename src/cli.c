@@ -301,7 +301,7 @@ int main()
 		if (!session) {
 			// FIXME: use last account name with account cmd
 			printf(_("Starting new session\n"));
-			session = mm_session_new(NULL);
+			session = mm_session_new();
 		} else {
 			printf(_("Restoring old session\n"));
 		}

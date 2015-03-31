@@ -59,15 +59,12 @@ mm_scores_t mm_scores = {.T = NULL, .max = 20, .len = 0};
 /* create new mastermind session and initialize viables && config
  * return: mm_session* : new session object
  */
-mm_session *mm_session_new(char *account)
+mm_session *mm_session_new()
 {
 	mm_session *session = (mm_session *)malloc(sizeof(mm_session));
 	session->config = mm_config_load();
 	session->guessed = 0;
-	if (account)
-		session->account = strndup(account, 20);
-	else
-		session->account = strdup(mm_confs[MM_POS_ACCOUNT].str.val);
+	session->account = mm_confs[MM_POS_ACCOUNT].str.val;
 	session->secret = mm_secret_new(session->config);
 	session->state = MM_NEW;
 	session->panel =
