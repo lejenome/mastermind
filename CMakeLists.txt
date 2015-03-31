@@ -4,8 +4,8 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
 Project(MasterMind VERSION 0.1.0 LANGUAGES C)
 set(PROJECT_WEBSITE "https://github.com/lejenome/mastermind")
 
-add_executable(mastermindcli src/core.c src/cli-cmd.c src/cli.c)
-add_executable(mastermindsdl src/core.c src/sdl.c)
+add_executable(mastermindcli src/lib.c src/core.c src/cli-cmd.c src/cli.c)
+add_executable(mastermindsdl src/lib.c src/core.c src/sdl.c)
 
 if(MINGW)
 	#LIST(APPEND CMAKE_INCLUDE_PATH

@@ -3,7 +3,7 @@
 #include "lib.h"
 
 #ifndef POSIX
-char *strndup(const char *buf, size_t len);
+char *strndup(const char *buf, size_t len)
 {
 	size_t i = strlen(buf);
 	if (i < len)
