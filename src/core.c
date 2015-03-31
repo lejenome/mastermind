@@ -4,6 +4,7 @@
 #include <string.h>
 #include <assert.h>
 #include <stdint.h>
+#include "lib.h"
 #include "core.h"
 #ifdef POSIX
 #include <unistd.h>
@@ -48,10 +49,6 @@ mm_conf_t mm_confs[6] = {
 			      .max = 1},
 };
 mm_scores_t mm_scores = {.T = NULL, .max = 20, .len = 0};
-#ifndef POSIX
-#define srandom(var) srand(var)
-#define random() rand()
-#endif
 /* create new mastermind session and initialize viables && config
  * return: mm_session* : new session object
  */
@@ -61,9 +58,9 @@ mm_session *mm_session_new(char *account)
 	session->config = mm_config_load();
 	session->guessed = 0;
 	if (account)
-		session->account = (uint8_t *)account;
+		session->account = strndup(account, 20);
 	else
-		session->account = (uint8_t *)"(default)";
+		session->account = strdup("(default)");
 	session->secret = mm_secret_new(session->config);
 	session->state = MM_NEW;
 	session->panel =

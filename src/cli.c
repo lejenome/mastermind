@@ -8,7 +8,7 @@
 #include <readline/history.h>
 #endif // DISABLE_READLINE
 
-#include "../config.h"
+#include "lib.h"
 #include "cli-cmd.h"
 #include "core.h"
 
@@ -55,19 +55,6 @@ void printPanel()
 	printf("  +-----+-----+-----+");
 	putchar('\n');
 }
-#ifdef WINDOWS
-char *strndup(const char *buf, size_t len)
-{
-	size_t i = strlen(buf);
-	if (i < len)
-		len = i;
-	char *s = (char *)malloc(sizeof(char) * (len + 1));
-	for (i = 0; i < len; i++)
-		s[i] = buf[i];
-	s[i] = '\0';
-	return s;
-}
-#endif
 char **parseBuf(char *buf, unsigned *argc)
 {
 	char *start = NULL;

@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL.h>
 #include <string.h>
-#include "../config.h"
+#include "lib.h"
 #include "core.h"
 
 #define SCREEN_HEIGHT 640

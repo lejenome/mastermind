@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../config.h"
+#include "lib.h"
 #include "core.h"
 #include "cli-cmd.h"
 

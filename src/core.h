@@ -27,7 +27,7 @@ typedef struct {
 typedef struct {
 	uint8_t guessed;   // nbre of user guessed combination
 	uint8_t state;     // current state of session
-	uint8_t *account;  // account name or NULL for default account
+	char *account;     // account name or NULL for default account
 	mm_secret *secret; // secret combination to guess
 	mm_config *config; // session config
 	mm_guess *panel;   // session panel

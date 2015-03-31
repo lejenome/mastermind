@@ -8,10 +8,10 @@
 - [x] MM_{GUESSES,COLORS,HOLES}_MAX support
 - [x] \(do/don't\) repeat colors on combination (remise / sans remise)
 - [x] saving scores, history
+- [x] account support
 - [ ] cli colored output
 - [ ] ncurses backend
 - [ ] build for linux/Mac/Win/Android/iOS/...
 - [ ] package it for ubuntu/archlinux/windows/android
-- [ ] account support
 - [ ] multiplayer support
 - [ ] cli backend table design themes support
