@@ -59,9 +59,14 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 int cmd_restart(const char argc, const char **argv, mm_session *s)
 {
 	//  FIXME: find better and standard way to reset session object
+	char *user;
+	if (s->account == NULL)
+		user = NULL;
+	else
+		strdup((char *)s->account);
 	extern mm_session *session;
 	mm_session_free(session);
-	session = mm_session_new();
+	session = mm_session_new(user);
 	return 1;
 }
 int cmd_help(const char argc, const char **argv, mm_session *session)
@@ -83,19 +88,23 @@ int cmd_score(const char argc, const char **argv, mm_session *session)
 	if (scores->len == 0)
 		printf(_("No score yet!\n"));
 	for (i = 0; i < scores->len; i++)
-		printf("%-2d) %ld\n", i, scores->T[i]);
-	return 0;
-}
-int cmd_reset(const char argc, const char **argv, mm_session *session)
-{
-	printf("sudo rm -rf /\n");
+		printf("%-2d) %-15ld %s\n", i, scores->T[i].score,
+		       scores->T[i].account);
 	return 0;
 }
 int cmd_account(const char argc, const char **argv, mm_session *session)
 {
-	printf("sudo useradd --home-dir=/dev/null --gid root --shell "
-	       "/dev/rondom\n");
-	return 0;
+	if (argc == 1) {
+		printf(_("current account: %s\n"), session->account);
+		return 0;
+	} else if (argc == 2) {
+		char *user = strdup(argv[1]);
+		extern mm_session *session;
+		mm_session_free(session);
+		session = mm_session_new(user);
+		return 1;
+	}
+	return -1;
 }
 int cmd_version(const char argc, const char **argv, mm_session *session)
 {

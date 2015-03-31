@@ -27,6 +27,7 @@ typedef struct {
 typedef struct {
 	uint8_t guessed;   // nbre of user guessed combination
 	uint8_t state;     // current state of session
+	uint8_t *account;  // account name or NULL for default account
 	mm_secret *secret; // secret combination to guess
 	mm_config *config; // session config
 	mm_guess *panel;   // session panel
@@ -38,14 +39,18 @@ typedef struct {
 	int max;  // max value it can take
 } mm_conf_t;
 typedef struct {
-	long unsigned *T;
+	long unsigned score;
+	char *account;
+} mm_score_t;
+typedef struct {
+	mm_score_t *T;
 	unsigned max;
 	unsigned len;
 } mm_scores_t;
 
 extern mm_conf_t mm_confs[6];
 
-mm_session *mm_session_new();
+mm_session *mm_session_new(char *account);
 mm_session *mm_session_restore();
 unsigned int mm_session_save(mm_session *);
 void mm_session_free(mm_session *);

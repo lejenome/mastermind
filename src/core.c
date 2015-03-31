@@ -55,11 +55,15 @@ mm_scores_t mm_scores = {.T = NULL, .max = 20, .len = 0};
 /* create new mastermind session and initialize viables && config
  * return: mm_session* : new session object
  */
-mm_session *mm_session_new()
+mm_session *mm_session_new(char *account)
 {
 	mm_session *session = (mm_session *)malloc(sizeof(mm_session));
 	session->config = mm_config_load();
 	session->guessed = 0;
+	if (account)
+		session->account = (uint8_t *)account;
+	else
+		session->account = (uint8_t *)"(default)";
 	session->secret = mm_secret_new(session->config);
 	session->state = MM_NEW;
 	session->panel =
@@ -175,13 +179,16 @@ mm_secret *mm_secret_new(mm_config *conf)
 void mm_scores_load()
 {
 	FILE *f;
-	mm_scores.T =
-	    (long unsigned *)malloc(sizeof(long unsigned) * mm_scores.max);
+	unsigned i;
+	mm_scores.T = (mm_score_t *)malloc(sizeof(mm_score_t) * mm_scores.max);
+	for (i = 0; i < mm_scores.max; i++)
+		mm_scores.T[i].account = (char *)malloc(sizeof(char) * 20);
 	f = fopen(mm_score_path, "r");
 	if (f == NULL)
 		return;
 	while (mm_scores.len < mm_scores.max &&
-	       fscanf(f, "%ld", mm_scores.T + mm_scores.len) != EOF)
+	       fscanf(f, "%ld %20s", &mm_scores.T[mm_scores.len].score,
+		      mm_scores.T[mm_scores.len].account) != EOF)
 		mm_scores.len++;
 	fclose(f);
 }
@@ -200,27 +207,29 @@ void mm_scores_save(mm_session *session)
 		mm_scores_load();
 	score = mm_score(session);
 	i = 0;
-	if (mm_scores.len && mm_scores.T[mm_scores.len - 1] >= score) {
+	if (mm_scores.len && mm_scores.T[mm_scores.len - 1].score >= score) {
 		if (mm_scores.len == mm_scores.max)
 			return;
 		else
 			i = mm_scores.len;
 	}
 	// find where to insert score
-	while (i < mm_scores.len && mm_scores.T[i] > score)
+	while (i < mm_scores.len && mm_scores.T[i].score > score)
 		i++;
-	if (mm_scores.T[i] == score)
+	if (mm_scores.T[i].score == score)
 		return;
 	// unshift position of the rest (scores lower than score)
 	for (j = i; j < mm_scores.len; j++)
 		mm_scores.T[j + 1] = mm_scores.T[j];
-	mm_scores.T[i] = score;
+	mm_scores.T[i].score = score;
+	mm_scores.T[i].account = (char *)session->account;
 	mm_scores.len++;
 	f = fopen(mm_score_path, "w+");
 	if (f == NULL)
 		return;
 	for (i = 0; i < mm_scores.len; i++)
-		fprintf(f, "%ld\n", mm_scores.T[i]);
+		fprintf(f, "%-15ld %s\n", mm_scores.T[i].score,
+			mm_scores.T[i].account);
 	fclose(f);
 }
 /* This function is the most important function in the code
@@ -278,12 +287,16 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 long unsigned mm_score(mm_session *session)
 {
 	unsigned i;
-	long unsigned score =
-	    session->config->holes * session->config->colors * MM_GUESSES_MAX;
+	// Max score it can get on current session config
+	long unsigned score = session->config->holes * session->config->colors *
+			      MM_GUESSES_MAX * 2;
+	// for each played guess, 1 time minus on secret but on wrong place and
+	// 2 time minus not on scecret at all
 	for (i = 0; i < session->guessed; i++)
 		score -=
 		    (session->config->holes * 2) -
 		    (session->panel[i].inplace + session->panel[i].insecret);
+	// -%25 for remise mode
 	if (session->config->remise)
 		score *= 0.75;
 	return score;
@@ -403,6 +416,7 @@ unsigned int mm_session_save(mm_session *session)
 	 * [ mm_session->panel[0].inplace ]
 	 * [ mm_session->panel[0].secret  ]
 	 * [ ............ ] // panel[0] ... panel[session.guessed - 1]
+	 * [ mm_session->account                 ] // [0..18] bits + '\n'
 	 */
 	unsigned i;
 	FILE *f = fopen(mm_store_path, "wb");
@@ -421,6 +435,7 @@ unsigned int mm_session_save(mm_session *session)
 		fwrite(&session->panel[i].inplace, sizeof(uint8_t), 1, f);
 		fwrite(&session->panel[i].insecret, sizeof(uint8_t), 1, f);
 	}
+	fprintf(f, "%20s\n", session->account);
 	fclose(f);
 	return 0;
 }
@@ -466,6 +481,8 @@ mm_session *mm_session_restore()
 		    !fread(&session->panel[i].insecret, sizeof(uint8_t), 1, f))
 			goto guess_err;
 	}
+	session->account = (char *)malloc(sizeof(char) * 20);
+	fscanf(f, "%20s", session->account);
 	fclose(f);
 	remove(mm_store_path);
 	return session;

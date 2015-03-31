@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 	init_sdl();
 	session = mm_session_restore();
 	if (session == NULL)
-		session = mm_session_new();
+		session = mm_session_new(NULL);
 	for (;;) {
 		setBg();
 		w = SCREEN_WIDTH / (session->config->holes + 4),
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 		}
 		SDL_RenderClear(rend);
 		mm_session_free(session);
-		session = mm_session_new();
+		session = mm_session_new(NULL);
 		SDL_Delay(2000);
 	}
 	clean();

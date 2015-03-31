@@ -20,7 +20,6 @@ cmd_t cmds[] = {
     {.n = "restart", .e = cmd_restart},
     {.n = "savegame", .e = cmd_savegame},
     {.n = "score", .e = cmd_score},
-    {.n = "reset", .e = cmd_reset},
     {.n = "help", .e = cmd_help},
     {.n = "account", .e = cmd_account},
     {.n = "version", .e = cmd_version},
@@ -304,8 +303,9 @@ int main()
 	session = mm_session_restore();
 	do {
 		if (!session) {
+			// FIXME: use last account name with account cmd
 			printf(_("Starting new session\n"));
-			session = mm_session_new();
+			session = mm_session_new(NULL);
 		} else {
 			printf(_("Restoring old session\n"));
 		}
