@@ -158,23 +158,32 @@ static char **completeCombination(const char *txt, int start, int end)
 	if (cmpltCmd && strcmp(cmpltCmd->n, "set") == 0) {
 		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs);
 		     conf++, l++)
-			T[l] = strdup(conf->nm);
+			T[l] = strdup(conf->str.name);
 	}
 	if (argc == 2 && strcmp(args[0], "set") == 0) {
 		j = l;
 		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++) {
-			if (strstr(conf->nm, args[1]) == conf->nm) {
-				if (strcmp(conf->nm, args[1]) == 0)
+			if (strstr(conf->str.name, args[1]) == conf->str.name) {
+				if (strcmp(conf->str.name, args[1]) == 0)
 					cmpltCnf = conf;
 				else
-					T[l++] = strdup(conf->nm);
+					T[l++] = strdup(conf->str.name);
 			}
 		}
 		if (l == j + 1)
 			output = T[j];
 		if (cmpltCnf) {
-			output = (char *)malloc(sizeof(char) * 4);
-			sprintf(output, "%d", cmpltCnf->val);
+			output = (char *)malloc(sizeof(char) * 20);
+			switch (conf->type) {
+			case MM_CONF_INT:
+				sprintf(output, "%d", cmpltCnf->nbre.val);
+				break;
+			case MM_CONF_BOOL:
+				sprintf(output, "%u", cmpltCnf->bool.val);
+				break;
+			case MM_CONF_STR:
+				strcpy(output, cmpltCnf->str.val);
+			}
 		}
 	}
 no_more:

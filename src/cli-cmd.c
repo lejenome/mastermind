@@ -28,7 +28,20 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 	case 1:
 		printf(_("Global configs:\n"));
 		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++)
-			printf("\t%s = %d\n", conf->nm, conf->val);
+			switch (conf->type) {
+			case MM_CONF_INT:
+				printf("\t%s = %d\n", conf->nbre.name,
+				       conf->nbre.val);
+				break;
+			case MM_CONF_BOOL:
+				printf("\t%s = %u\n", conf->bool.name,
+				       conf->bool.val);
+				break;
+			case MM_CONF_STR:
+				printf("\t%s = %s\n", conf->str.name,
+				       conf->str.val);
+				break;
+			}
 		printf(_("Session configs:\n"));
 		printf("\tguesses = %d\n\tcolors = %d\n\tholes = %d\n\tremise "
 		       "= %d\n",
@@ -38,16 +51,28 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 	case 2:
 		conf = mm_confs;
 		while (conf < mm_confs + LEN(mm_confs) &&
-		       strcmp(conf->nm, argv[1]) != 0)
+		       strcmp(conf->str.name, argv[1]) != 0)
 			conf++;
 		if (conf < mm_confs + LEN(mm_confs))
-			printf(_("Global config: %s = %d\n"), conf->nm,
-			       conf->val);
+			switch (conf->type) {
+			case MM_CONF_INT:
+				printf("\t%s = %d\n", conf->nbre.name,
+				       conf->nbre.val);
+				break;
+			case MM_CONF_BOOL:
+				printf("\t%s = %u\n", conf->bool.name,
+				       conf->bool.val);
+				break;
+			case MM_CONF_STR:
+				printf("\t%s = %s\n", conf->str.name,
+				       conf->str.val);
+				break;
+			}
 		else
 			printf(_("Global config not supported!!\n"));
 		break;
 	case 3:
-		mm_config_set(argv[1], atoi(argv[2]));
+		mm_config_set(argv[1], argv[2]);
 		break;
 	default:
 		printf(_("Command format error!\n"
@@ -59,14 +84,9 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 int cmd_restart(const char argc, const char **argv, mm_session *s)
 {
 	//  FIXME: find better and standard way to reset session object
-	char *user;
-	if (s->account == NULL)
-		user = NULL;
-	else
-		strdup((char *)s->account);
 	extern mm_session *session;
 	mm_session_free(session);
-	session = mm_session_new(user);
+	session = mm_session_new(NULL);
 	return 1;
 }
 int cmd_help(const char argc, const char **argv, mm_session *session)
@@ -98,10 +118,12 @@ int cmd_account(const char argc, const char **argv, mm_session *session)
 		printf(_("current account: %s\n"), session->account);
 		return 0;
 	} else if (argc == 2) {
-		char *user = strdup(argv[1]);
-		extern mm_session *session;
-		mm_session_free(session);
-		session = mm_session_new(user);
+		const char *args[3];
+		args[0] = "set";
+		args[1] = "account";
+		args[2] = argv[1];
+		cmd_set(3, args, session);
+		cmd_restart(1, (const char * [1]){"restart"}, session);
 		return 1;
 	}
 	return -1;

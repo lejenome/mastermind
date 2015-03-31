@@ -23,30 +23,37 @@ char *mm_store_path = NULL;
 #define MM_POS_COLORS 1
 #define MM_POS_HOLES 2
 #define MM_POS_REMISE 3
-#define MM_POS_SAVE_EXIT 4
-#define MM_POS_SAVE_PLAY 5
-mm_conf_t mm_confs[6] = {
-	[MM_POS_GUESSES] = {.nm = "guesses",
-			    .val = MM_GUESSES,
-			    .min = 2,
-			    .max = MM_GUESSES_MAX},
-	[MM_POS_COLORS] = {.nm = "colors",
-			   .val = MM_COLORS,
-			   .min = 2,
-			   .max = MM_COLORS_MAX},
-	[MM_POS_HOLES] = {.nm = "holes",
-			  .val = MM_HOLES,
-			  .min = 2,
-			  .max = MM_HOLES_MAX},
-	[MM_POS_REMISE] = {.nm = "remise", .val = 0, .min = 0, .max = 1},
-	[MM_POS_SAVE_EXIT] = {.nm = "save_on_exit",
-			      .val = 0,
-			      .min = 0,
-			      .max = 1},
-	[MM_POS_SAVE_PLAY] = {.nm = "save_on_play",
-			      .val = 0,
-			      .min = 0,
-			      .max = 1},
+#define MM_POS_ACCOUNT 4
+#define MM_POS_SAVE_EXIT 5
+#define MM_POS_SAVE_PLAY 6
+mm_conf_t mm_confs[7] = {
+	[MM_POS_GUESSES] = {.nbre = {.name = "guesses",
+				     .type = MM_CONF_INT,
+				     .val = MM_GUESSES,
+				     .min = 2,
+				     .max = MM_GUESSES_MAX}},
+	[MM_POS_COLORS] = {.nbre = {.type = MM_CONF_INT,
+				    .name = "colors",
+				    .val = MM_COLORS,
+				    .min = 2,
+				    .max = MM_COLORS_MAX}},
+	[MM_POS_HOLES] = {.nbre = {.type = MM_CONF_INT,
+				   .name = "holes",
+				   .val = MM_HOLES,
+				   .min = 2,
+				   .max = MM_HOLES_MAX}},
+	[MM_POS_REMISE] = {.bool = {.type = MM_CONF_BOOL,
+				    .name = "remise",
+				    .val = 0}},
+	[MM_POS_ACCOUNT] = {.str = {.type = MM_CONF_STR,
+				    .name = "account",
+				    .val = "(default)"}},
+	[MM_POS_SAVE_EXIT] = {.bool = {.type = MM_CONF_BOOL,
+				       .name = "save_on_exit",
+				       .val = 0}},
+	[MM_POS_SAVE_PLAY] = {.bool = {.type = MM_CONF_BOOL,
+				       .name = "save_on_play",
+				       .val = 0}},
 };
 mm_scores_t mm_scores = {.T = NULL, .max = 20, .len = 0};
 /* create new mastermind session and initialize viables && config
@@ -60,7 +67,7 @@ mm_session *mm_session_new(char *account)
 	if (account)
 		session->account = strndup(account, 20);
 	else
-		session->account = strdup("(default)");
+		session->account = strdup(mm_confs[MM_POS_ACCOUNT].str.val);
 	session->secret = mm_secret_new(session->config);
 	session->state = MM_NEW;
 	session->panel =
@@ -75,18 +82,19 @@ mm_config *mm_config_load()
 {
 	mm_config *config;
 	mm_conf_t *conf;
-	char *n;
-	int d;
+	char *n, *v;
 	FILE *f;
+	int i;
 	if (!mm_config_path)
 		mm_init();
 	config = (mm_config *)malloc(sizeof(mm_config));
 	if ((f = fopen(mm_config_path, "r"))) {
 		n = (char *)malloc(sizeof(char) * 40);
-		while (fscanf(f, "%s %d", n, &d) != EOF) {
+		v = (char *)malloc(sizeof(char) * 20);
+		while (fscanf(f, "%s %20s", n, v) != EOF) {
 			conf = mm_confs;
 			while (conf < mm_confs + LEN(mm_confs) &&
-			       strcmp(n, conf->nm) != 0)
+			       strcmp(n, conf->str.name) != 0)
 				conf++;
 			if (conf == mm_confs + LEN(mm_confs)) {
 #ifdef DEBUG
@@ -96,28 +104,37 @@ mm_config *mm_config_load()
 #endif
 				continue;
 			}
-			if (d >= conf->min && d <= conf->max)
-				conf->val = d;
-#ifdef DEBUG
-			else
-				printf(
-				    _("Error: config option value invalid: %s "
-				      "= %d\n"),
-				    n, d);
-#endif
+			switch (conf->type) {
+			case MM_CONF_INT:
+				i = atoi(v);
+				if (i >= conf->nbre.min && i <= conf->nbre.max)
+					conf->nbre.val = i;
+				break;
+			case MM_CONF_BOOL:
+				i = atoi(v);
+				if (i == 1 || i == 0)
+					conf->bool.val = (uint8_t)i;
+				break;
+			case MM_CONF_STR:
+				conf->str.val = strdup(v);
+				break;
+			}
 		}
 		free(n);
+		free(v);
 		fclose(f);
 	}
-	if (mm_confs[MM_POS_REMISE].val &&
-	    mm_confs[MM_POS_COLORS].val < mm_confs[MM_POS_HOLES].val) {
+	if (mm_confs[MM_POS_REMISE].nbre.val &&
+	    mm_confs[MM_POS_COLORS].nbre.val <
+		mm_confs[MM_POS_HOLES].nbre.val) {
 		// ensure colors are no less then holes on remise mode
-		mm_confs[MM_POS_COLORS].val = mm_confs[MM_POS_HOLES].val;
+		mm_confs[MM_POS_COLORS].nbre.val =
+		    mm_confs[MM_POS_HOLES].nbre.val;
 	}
-	config->guesses = (uint8_t)mm_confs[MM_POS_GUESSES].val;
-	config->colors = (uint8_t)mm_confs[MM_POS_COLORS].val;
-	config->holes = (uint8_t)mm_confs[MM_POS_HOLES].val;
-	config->remise = (uint8_t)mm_confs[MM_POS_REMISE].val;
+	config->guesses = (uint8_t)mm_confs[MM_POS_GUESSES].nbre.val;
+	config->colors = (uint8_t)mm_confs[MM_POS_COLORS].nbre.val;
+	config->holes = (uint8_t)mm_confs[MM_POS_HOLES].nbre.val;
+	config->remise = (uint8_t)mm_confs[MM_POS_REMISE].bool.val;
 	return config;
 }
 /* save global config on the config file
@@ -128,7 +145,20 @@ void mm_config_save()
 	mm_conf_t *conf;
 	if (f) {
 		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++)
-			fprintf(f, "%s %d\n", conf->nm, conf->val);
+			switch (conf->type) {
+			case MM_CONF_INT:
+				fprintf(f, "%s %d\n", conf->nbre.name,
+					conf->nbre.val);
+				break;
+			case MM_CONF_BOOL:
+				fprintf(f, "%s %u\n", conf->bool.name,
+					conf->bool.val);
+				break;
+			case MM_CONF_STR:
+				fprintf(f, "%s %s\n", conf->str.name,
+					conf->str.val);
+				break;
+			}
 		fclose(f);
 	}
 }
@@ -138,16 +168,34 @@ void mm_config_save()
  * return: unsigned : 0 on success , 1 if conf option not found, 2 if conf
  *         value is not valid
  */
-unsigned mm_config_set(const char *name, const int value)
+unsigned mm_config_set(const char *name, const char *value)
 {
+	int i;
 	mm_conf_t *conf = mm_confs;
-	while (conf < mm_confs + LEN(mm_confs) && strcmp(conf->nm, name) != 0)
+	while (conf < mm_confs + LEN(mm_confs) &&
+	       strcmp(conf->str.name, name) != 0)
 		conf++;
 	if (conf == mm_confs + LEN(mm_confs))
 		return 1;
-	if (value < conf->min || value > conf->max)
-		return 2;
-	conf->val = value;
+	switch (conf->type) {
+	case MM_CONF_INT:
+		i = atoi(value);
+		if (i < conf->nbre.min || i > conf->nbre.max)
+			return 2;
+		else
+			conf->nbre.val = i;
+		break;
+	case MM_CONF_BOOL:
+		i = atoi(value);
+		if (i == 0 || i == 1)
+			conf->bool.val = (uint8_t)i;
+		else
+			return 2;
+		break;
+	case MM_CONF_STR:
+		conf->str.val = strdup(value);
+		break;
+	}
 	mm_config_save();
 	return 0;
 }
@@ -275,7 +323,7 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 	else
 		session->state = MM_PLAYING;
 	free(freq);
-	if (mm_confs[MM_POS_SAVE_PLAY].val == 1)
+	if (mm_confs[MM_POS_SAVE_PLAY].bool.val == 1)
 		mm_session_save(session);
 	if (session->state == MM_SUCCESS)
 		mm_scores_save(session);
@@ -390,7 +438,8 @@ void mm_session_free(mm_session *session)
  */
 void mm_session_exit(mm_session *session)
 {
-	if (session->state == MM_PLAYING && mm_confs[MM_POS_SAVE_EXIT].val == 1)
+	if (session->state == MM_PLAYING &&
+	    mm_confs[MM_POS_SAVE_EXIT].bool.val == 1)
 		mm_session_save(session);
 	mm_session_free(session);
 }

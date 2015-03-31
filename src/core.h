@@ -9,6 +9,10 @@
 #define MM_SUCCESS 2
 #define MM_FAIL 4
 
+#define MM_CONF_INT 0
+#define MM_CONF_STR 1
+#define MM_CONF_BOOL 2
+
 typedef struct {
 	uint8_t guesses; // max guesses on panel
 	uint8_t colors;  // max nbre of colors
@@ -33,10 +37,28 @@ typedef struct {
 	mm_guess *panel;   // session panel
 } mm_session;
 typedef struct {
-	char *nm; // config name
-	int val;  // value (number)
-	int min;  // min value it can take
-	int max;  // max value it can take
+	uint8_t type;
+	char *name;
+	int val;
+	int min;
+	int max;
+} mm_conf_int_t;
+typedef struct {
+	uint8_t type;
+	char *name;
+	char *val;
+	uint8_t len;
+} mm_conf_str_t;
+typedef struct {
+	uint8_t type;
+	char *name;
+	uint8_t val;
+} mm_conf_bool_t;
+typedef union {
+	uint8_t type;
+	mm_conf_str_t str;
+	mm_conf_bool_t bool;
+	mm_conf_int_t nbre;
 } mm_conf_t;
 typedef struct {
 	long unsigned score;
@@ -48,7 +70,7 @@ typedef struct {
 	unsigned len;
 } mm_scores_t;
 
-extern mm_conf_t mm_confs[6];
+extern mm_conf_t mm_confs[7];
 
 mm_session *mm_session_new(char *account);
 mm_session *mm_session_restore();
@@ -58,7 +80,7 @@ void mm_session_exit(mm_session *);
 
 mm_config *mm_config_load();
 void mm_config_save();
-unsigned mm_config_set(const char *, const int);
+unsigned mm_config_set(const char *, const char *);
 
 const mm_scores_t *mm_scores_get();
 long unsigned mm_score(mm_session *session);
