@@ -47,7 +47,7 @@ mm_conf_t mm_confs[7] = {
 				    .val = 0}},
 	[MM_POS_ACCOUNT] = {.str = {.type = MM_CONF_STR,
 				    .name = "account",
-				    .val = "(default)"}},
+				    .val = "default"}},
 	[MM_POS_SAVE_EXIT] = {.bool = {.type = MM_CONF_BOOL,
 				       .name = "save_on_exit",
 				       .val = 0}},
@@ -249,7 +249,7 @@ void mm_scores_save(mm_session *session)
 		mm_scores_load();
 	score = mm_score(session);
 	i = 0;
-	if (mm_scores.len && mm_scores.T[mm_scores.len - 1].score >= score) {
+	if (mm_scores.len && mm_scores.T[mm_scores.len - 1].score > score) {
 		if (mm_scores.len == mm_scores.max)
 			return;
 		else
@@ -258,11 +258,15 @@ void mm_scores_save(mm_session *session)
 	// find where to insert score
 	while (i < mm_scores.len && mm_scores.T[i].score > score)
 		i++;
-	if (mm_scores.T[i].score == score)
+	while (i < mm_scores.len && mm_scores.T[i].score == score &&
+	       strcmp(mm_scores.T[i].account, session->account) != 0)
+		i++;
+	if (mm_scores.T[i].score == score &&
+	    strcmp(mm_scores.T[i].account, session->account) == 0)
 		return;
 	// unshift position of the rest (scores lower than score)
-	for (j = i; j < mm_scores.len; j++)
-		mm_scores.T[j + 1] = mm_scores.T[j];
+	for (j = mm_scores.len; j > i; j--)
+		mm_scores.T[j] = mm_scores.T[j - 1];
 	mm_scores.T[i].score = score;
 	mm_scores.T[i].account = (char *)session->account;
 	mm_scores.len++;
