@@ -200,7 +200,7 @@ void mm_scores_save(mm_session *session)
 		mm_scores_load();
 	score = mm_score(session);
 	i = 0;
-	if (mm_scores.len && mm_scores.T[mm_scores.len - 1] > score) {
+	if (mm_scores.len && mm_scores.T[mm_scores.len - 1] >= score) {
 		if (mm_scores.len == mm_scores.max)
 			return;
 		else
@@ -278,14 +278,14 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 long unsigned mm_score(mm_session *session)
 {
 	unsigned i;
-	long unsigned score = (1.0F / (float)session->guessed) *
-			      (1.5F / (float)session->config->guesses + 1) *
-			      ((float)session->config->holes * 1.5F) *
-			      ((float)session->config->colors * 1.5F);
-	// TODO: do/don't repeat color support
+	long unsigned score =
+	    session->config->holes * session->config->colors * MM_GUESSES_MAX;
 	for (i = 0; i < session->guessed; i++)
-		score *= (2 / (session->panel[i].inplace + 1)) +
-			 (1 / (session->panel[i].insecret + 1)) + 1;
+		score -=
+		    (session->config->holes * 2) -
+		    (session->panel[i].inplace + session->panel[i].insecret);
+	if (session->config->remise)
+		score *= 0.75;
 	return score;
 }
 /* get last gusess objet
