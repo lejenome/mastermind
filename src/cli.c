@@ -7,44 +7,50 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #endif // DISABLE_READLINE
+#ifndef DISABLE_GETOPT
+#include <getopt.h>
+#endif
 
 #include "lib.h"
 #include "cli-cmd.h"
 #include "core.h"
 
-#ifdef POSIX
-#include <unistd.h>
-#endif
-
 mm_session *session;
 cmd_t cmds[] = {
-    {.n = "quit", .e = cmd_quit, .s = 0, .l = NULL},
-    {.n = "set", .e = cmd_set, .s = 's', .l = "set", .a = 2},
-    {.n = "restart", .e = cmd_restart, .s = 0, .l = NULL},
-    {.n = "savegame", .e = cmd_savegame, .s = 0, .l = NULL},
-    {.n = "score", .e = cmd_score, .s = 'c', .l = "score", .a = 0},
-    {.n = "help", .e = cmd_help, .s = 'h', .l = "help", .a = 1},
-    {.n = "account", .e = cmd_account, .s = 'a', .l = "account", .a = 1},
-    {.n = "version", .e = cmd_version, .s = 'v', .l = "version", .a = 0},
+    {.n = "quit", .e = cmd_quit, .s = 0},
+    {.n = "set", .e = cmd_set, .s = 's', .a = 2},
+    {.n = "restart", .e = cmd_restart, .s = 0},
+    {.n = "savegame", .e = cmd_savegame, .s = 0},
+    {.n = "score", .e = cmd_score, .s = 'c', .a = 0},
+    {.n = "help", .e = cmd_help, .s = 'h', .a = 1},
+    {.n = "account", .e = cmd_account, .s = 'a', .a = 1},
+    {.n = "version", .e = cmd_version, .s = 'v', .a = 0},
 }; // "connect", "server", "disconnect"
 int execArgs(int argc, char *argv[], mm_session *session)
 {
 	if (argc == 1)
 		return MM_CMD_SUCCESS;
 	char c, *args;
+	struct option *ops;
 	unsigned i = 0, ret = MM_CMD_SUCCESS;
 	cmd_t *cmd;
 	args = (char *)malloc(sizeof(char) * (LEN(cmds) * 3 + 1));
+	ops = (struct option *)malloc(sizeof(struct option) * (LEN(cmds) + 1));
 	for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++) {
 		if (cmd->s == 0)
 			continue;
-		args[i] = cmd->s;
-		args[i + 1] = ':';
-		args[i + 2] = ':';
-		i += 3;
+		args[i * 3] = cmd->s;
+		args[i * 3 + 1] = ':';
+		args[i * 3 + 2] = ':';
+		ops[i] = (struct option){.name = cmd->n,
+					 .has_arg = optional_argument,
+					 .flag = NULL,
+					 .val = cmd->s};
+		i++;
 	}
-	args[i] = '\0';
-	while ((c = getopt(argc, argv, args)) != -1) {
+	ops[i] = (struct option){NULL, 0, NULL, 0};
+	args[i * 3] = '\0';
+	while ((c = getopt_long(argc, argv, args, ops, NULL)) != -1) {
 		cmd = cmds;
 		if (c == '?' || c == ':')
 			return MM_CMD_ERROR;
@@ -67,6 +73,7 @@ int execArgs(int argc, char *argv[], mm_session *session)
 	}
 
 	free(args);
+	free(ops);
 	return ret;
 }
 void printPanel()

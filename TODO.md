@@ -9,9 +9,11 @@
 - [x] \(do/don't\) repeat colors on combination (remise / sans remise)
 - [x] saving scores, history
 - [x] account support
+- [x] cli options support
 - [ ] cli colored output
 - [ ] ncurses backend
 - [ ] build for linux/Mac/Win/Android/iOS/...
 - [ ] package it for ubuntu/archlinux/windows/android
 - [ ] multiplayer support
 - [ ] cli backend table design themes support
+- [ ] zsh & bash completion
