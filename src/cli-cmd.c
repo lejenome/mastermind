@@ -5,6 +5,7 @@
 #include "core.h"
 #include "cli-cmd.h"
 
+uint8_t mm_cmd_mode = MM_CMD_MODE_OPT;
 int cmd_quit(const char argc, const char **argv, mm_session *session)
 {
 	mm_session_exit(session);
@@ -24,27 +25,38 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 	mm_conf_t *conf;
 	switch (argc) {
 	case 1:
-		printf(_("Global configs:\n"));
+		if (mm_cmd_mode != MM_CMD_MODE_OPT)
+			printf(_("Global configs:\n"));
 		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++)
 			switch (conf->type) {
 			case MM_CONF_INT:
-				printf("\t%s = %d\n", conf->nbre.name,
-				       conf->nbre.val);
+				printf("%s%s = %d\n",
+				       mm_cmd_mode == MM_CMD_MODE_OPT ? ""
+								      : "\t",
+				       conf->nbre.name, conf->nbre.val);
 				break;
 			case MM_CONF_BOOL:
-				printf("\t%s = %u\n", conf->bool.name,
-				       conf->bool.val);
+				printf("%s%s = %u\n",
+				       mm_cmd_mode == MM_CMD_MODE_OPT ? ""
+								      : "\t",
+				       conf->bool.name, conf->bool.val);
 				break;
 			case MM_CONF_STR:
-				printf("\t%s = %s\n", conf->str.name,
-				       conf->str.val);
+				printf("%s%s = %s\n",
+				       mm_cmd_mode == MM_CMD_MODE_OPT ? ""
+								      : "\t",
+				       conf->str.name, conf->str.val);
 				break;
 			}
-		printf(_("Session configs:\n"));
-		printf("\tguesses = %d\n\tcolors = %d\n\tholes = %d\n\tremise "
-		       "= %d\n",
-		       session->config->guesses, session->config->colors,
-		       session->config->holes, session->config->remise);
+		if (mm_cmd_mode != MM_CMD_MODE_OPT) {
+			printf(_("Session configs:\n"));
+			printf("\tguesses = %d\n\tcolors = %d\n\tholes = "
+			       "%d\n\tremise "
+			       "= %d\n",
+			       session->config->guesses,
+			       session->config->colors, session->config->holes,
+			       session->config->remise);
+		}
 		break;
 	case 2:
 		conf = mm_confs;
@@ -54,15 +66,15 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 		if (conf < mm_confs + LEN(mm_confs))
 			switch (conf->type) {
 			case MM_CONF_INT:
-				printf("\t%s = %d\n", conf->nbre.name,
+				printf("%s = %d\n", conf->nbre.name,
 				       conf->nbre.val);
 				break;
 			case MM_CONF_BOOL:
-				printf("\t%s = %u\n", conf->bool.name,
+				printf("%s = %u\n", conf->bool.name,
 				       conf->bool.val);
 				break;
 			case MM_CONF_STR:
-				printf("\t%s = %s\n", conf->str.name,
+				printf("%s = %s\n", conf->str.name,
 				       conf->str.val);
 				break;
 			}

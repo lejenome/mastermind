@@ -51,6 +51,7 @@ int execArgs(int argc, char *argv[], mm_session *session)
 	ops[i] = (struct option){NULL, 0, NULL, 0};
 	args[i * 3] = '\0';
 	while ((c = getopt_long(argc, argv, args, ops, NULL)) != -1) {
+		// FIXME: support --opt=val & -oval
 		cmd = cmds;
 		if (c == '?' || c == ':')
 			return MM_CMD_ERROR;
@@ -365,6 +366,7 @@ int main(int argc, char *argv[])
 	}
 	if (ret & MM_CMD_NEW_SESSION)
 		session = mm_session_new();
+	mm_cmd_mode = MM_CMD_MODE_CLI;
 	do {
 		printf(_("Current Config:\n\tguesses: %d\n\tcolors: "
 			 "%d\n\tholes: %d\n\tremise: %d\n"),

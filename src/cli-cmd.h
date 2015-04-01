@@ -2,13 +2,19 @@
 
 #ifndef __MM_CLI_CMD_H
 #define __MM_CLI_CMD_H
-
+// cmds return values
 #define MM_CMD_SUCCESS 0x000      // cmd succeded
 #define MM_CMD_ERROR 0x0001       // their was an error
 #define MM_CMD_NEW_SESSION 0x0010 // new session needed
 #define MM_CMD_REDESIGN 0x0100    // redesign the panel is needed
 #define MM_CMD_OPT_EXIT                                                        \
 	0x1000 // just exit the program if cmd executed from option
+// mode cmds are executed on (to modify the output style)
+#define MM_CMD_MODE_OPT 0
+#define MM_CMD_MODE_CLI 1
+#define MM_CMD_MODE_GUI 2
+uint8_t
+    mm_cmd_mode; // set this var to current exec mode (default: MM_CMD_MODE_OPT)
 typedef struct {
 	char *n;					   // name of command
 	int (*e)(const char, const char **, mm_session *); // function to excute
