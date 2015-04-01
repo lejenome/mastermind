@@ -30,4 +30,7 @@ int cmd_score(const char, const char **, mm_session *);
 int cmd_help(const char, const char **, mm_session *);
 int cmd_account(const char, const char **, mm_session *);
 int cmd_version(const char, const char **, mm_session *);
-#endif
+#ifndef DISABLE_GETOPT
+int execArgs(int argc, char *argv[], cmd_t *cmds, size_t len, mm_session *);
+#endif // DISABLE_GETOPT
+#endif // __MM_CLI_CMD_H

@@ -51,6 +51,11 @@ else(USE_READLINE)
 	add_definitions(-DDISABLE_READLINE)
 endif(USE_READLINE)
 
+option(USE_GETOPT "Enable getopt options parsing support" ON)
+if(NOT USE_GETOPT)
+	add_definitions(-DDISABLE_GETOPT)
+endif(NOT USE_GETOPT)
+
 option(USE_LOCALE "Enable internationalization support" ON)
 if(USE_LOCALE)
 	find_package(Intl)

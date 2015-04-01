@@ -4,8 +4,66 @@
 #include "lib.h"
 #include "core.h"
 #include "cli-cmd.h"
+#ifndef DISABLE_GETOPT
+#include <getopt.h>
+#endif
 
 uint8_t mm_cmd_mode = MM_CMD_MODE_OPT;
+#ifndef DISABLE_GETOPT
+int execArgs(int argc, char *argv[], cmd_t *cmds, size_t len,
+	     mm_session *session)
+{
+	if (argc == 1)
+		return MM_CMD_SUCCESS;
+	char c, *args;
+	struct option *ops;
+	unsigned i = 0, ret = MM_CMD_SUCCESS;
+	cmd_t *cmd;
+	mm_cmd_mode = MM_CMD_MODE_OPT;
+	args = (char *)malloc(sizeof(char) * (len * 3 + 1));
+	ops = (struct option *)malloc(sizeof(struct option) * (len + 1));
+	for (cmd = cmds; cmd < cmds + len; cmd++) {
+		if (cmd->s == 0)
+			continue;
+		args[i * 3] = cmd->s;
+		args[i * 3 + 1] = ':';
+		args[i * 3 + 2] = ':';
+		ops[i] = (struct option){.name = cmd->n,
+					 .has_arg = optional_argument,
+					 .flag = NULL,
+					 .val = cmd->s};
+		i++;
+	}
+	ops[i] = (struct option){NULL, 0, NULL, 0};
+	args[i * 3] = '\0';
+	while ((c = getopt_long(argc, argv, args, ops, NULL)) != -1) {
+		// FIXME: support --opt=val & -oval
+		cmd = cmds;
+		if (c == '?' || c == ':')
+			return MM_CMD_ERROR;
+		while (cmd < cmds + len && c != cmd->s) {
+			cmd++;
+		}
+		if (cmd == cmds + len)
+			return MM_CMD_ERROR;
+		i = 1;
+		const char **a =
+		    (const char **)malloc(sizeof(char) * (cmds->a + 1));
+		a[0] = cmd->n;
+		while (i < cmd->a + 1 && i < argc - optind + 1 &&
+		       argv[i + optind - 1][0] != '-') {
+			a[i] = argv[i + optind - 1];
+			i++;
+		}
+		ret |= cmd->e(i, a, session);
+		free(a);
+	}
+
+	free(args);
+	free(ops);
+	return ret;
+}
+#endif // DISABLE_GETOPT
 int cmd_quit(const char argc, const char **argv, mm_session *session)
 {
 	mm_session_exit(session);

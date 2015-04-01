@@ -7,9 +7,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #endif // DISABLE_READLINE
-#ifndef DISABLE_GETOPT
-#include <getopt.h>
-#endif
 
 #include "lib.h"
 #include "cli-cmd.h"
@@ -26,57 +23,6 @@ cmd_t cmds[] = {
     {.n = "account", .e = cmd_account, .s = 'a', .a = 1},
     {.n = "version", .e = cmd_version, .s = 'v', .a = 0},
 }; // "connect", "server", "disconnect"
-int execArgs(int argc, char *argv[], mm_session *session)
-{
-	if (argc == 1)
-		return MM_CMD_SUCCESS;
-	char c, *args;
-	struct option *ops;
-	unsigned i = 0, ret = MM_CMD_SUCCESS;
-	cmd_t *cmd;
-	args = (char *)malloc(sizeof(char) * (LEN(cmds) * 3 + 1));
-	ops = (struct option *)malloc(sizeof(struct option) * (LEN(cmds) + 1));
-	for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++) {
-		if (cmd->s == 0)
-			continue;
-		args[i * 3] = cmd->s;
-		args[i * 3 + 1] = ':';
-		args[i * 3 + 2] = ':';
-		ops[i] = (struct option){.name = cmd->n,
-					 .has_arg = optional_argument,
-					 .flag = NULL,
-					 .val = cmd->s};
-		i++;
-	}
-	ops[i] = (struct option){NULL, 0, NULL, 0};
-	args[i * 3] = '\0';
-	while ((c = getopt_long(argc, argv, args, ops, NULL)) != -1) {
-		// FIXME: support --opt=val & -oval
-		cmd = cmds;
-		if (c == '?' || c == ':')
-			return MM_CMD_ERROR;
-		while (cmd < cmds + LEN(cmds) && c != cmd->s) {
-			cmd++;
-		}
-		if (cmd == cmds + LEN(cmds))
-			return MM_CMD_ERROR;
-		i = 1;
-		const char **a =
-		    (const char **)malloc(sizeof(char) * (cmds->a + 1));
-		a[0] = cmd->n;
-		while (i < cmd->a + 1 && i < argc - optind + 1 &&
-		       argv[i + optind - 1][0] != '-') {
-			a[i] = argv[i + optind - 1];
-			i++;
-		}
-		ret |= cmd->e(i, a, session);
-		free(a);
-	}
-
-	free(args);
-	free(ops);
-	return ret;
-}
 void printPanel()
 {
 	unsigned i, j;
@@ -351,13 +297,14 @@ int main(int argc, char *argv[])
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
-#endif
+#endif // DISABLE_LOCALE
 	session = mm_session_restore();
 	if (session == NULL)
 		session = mm_session_new();
 	else
 		printf(_("Restoring old session\n"));
-	ret = execArgs(argc, argv, session);
+#ifndef DISABLE_GETOPT
+	ret = execArgs(argc, argv, cmds, LEN(cmds), session);
 	if (ret & MM_CMD_ERROR) {
 		exit(EXIT_FAILURE);
 		goto quit;
@@ -366,6 +313,7 @@ int main(int argc, char *argv[])
 	}
 	if (ret & MM_CMD_NEW_SESSION)
 		session = mm_session_new();
+#endif // DISABLE_GETOPT
 	mm_cmd_mode = MM_CMD_MODE_CLI;
 	do {
 		printf(_("Current Config:\n\tguesses: %d\n\tcolors: "
