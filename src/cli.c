@@ -12,17 +12,63 @@
 #include "cli-cmd.h"
 #include "core.h"
 
+#ifdef POSIX
+#include <unistd.h>
+#endif
+
 mm_session *session;
 cmd_t cmds[] = {
-    {.n = "quit", .e = cmd_quit},
-    {.n = "set", .e = cmd_set},
-    {.n = "restart", .e = cmd_restart},
-    {.n = "savegame", .e = cmd_savegame},
-    {.n = "score", .e = cmd_score},
-    {.n = "help", .e = cmd_help},
-    {.n = "account", .e = cmd_account},
-    {.n = "version", .e = cmd_version},
-}; // "connect", "server", "disconnect", "version"
+    {.n = "quit", .e = cmd_quit, .s = 0, .l = NULL},
+    {.n = "set", .e = cmd_set, .s = 's', .l = "set", .a = 2},
+    {.n = "restart", .e = cmd_restart, .s = 0, .l = NULL},
+    {.n = "savegame", .e = cmd_savegame, .s = 0, .l = NULL},
+    {.n = "score", .e = cmd_score, .s = 'c', .l = "score", .a = 0},
+    {.n = "help", .e = cmd_help, .s = 'h', .l = "help", .a = 1},
+    {.n = "account", .e = cmd_account, .s = 'a', .l = "account", .a = 1},
+    {.n = "version", .e = cmd_version, .s = 'v', .l = "version", .a = 0},
+}; // "connect", "server", "disconnect"
+int execArgs(int argc, char *argv[], mm_session *session)
+{
+	if (argc == 1)
+		return MM_CMD_SUCCESS;
+	char c, *args;
+	unsigned i = 0, ret = MM_CMD_SUCCESS;
+	cmd_t *cmd;
+	args = (char *)malloc(sizeof(char) * (LEN(cmds) * 3 + 1));
+	for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++) {
+		if (cmd->s == 0)
+			continue;
+		args[i] = cmd->s;
+		args[i + 1] = ':';
+		args[i + 2] = ':';
+		i += 3;
+	}
+	args[i] = '\0';
+	while ((c = getopt(argc, argv, args)) != -1) {
+		cmd = cmds;
+		if (c == '?' || c == ':')
+			return MM_CMD_ERROR;
+		while (cmd < cmds + LEN(cmds) && c != cmd->s) {
+			cmd++;
+		}
+		if (cmd == cmds + LEN(cmds))
+			return MM_CMD_ERROR;
+		i = 1;
+		const char **a =
+		    (const char **)malloc(sizeof(char) * (cmds->a + 1));
+		a[0] = cmd->n;
+		while (i < cmd->a + 1 && i < argc - optind + 1 &&
+		       argv[i + optind - 1][0] != '-') {
+			a[i] = argv[i + optind - 1];
+			i++;
+		}
+		ret |= cmd->e(i, a, session);
+		free(a);
+	}
+
+	free(args);
+	return ret;
+}
 void printPanel()
 {
 	unsigned i, j;
@@ -246,7 +292,9 @@ int getCombination(uint8_t *T)
 #ifndef DISABLE_READLINE
 			add_history(strdup(input));
 #endif // DISABLE_READLINE
-			ret = ret == 1 ? 2 : 1;
+			if (ret & MM_CMD_NEW_SESSION)
+				session = mm_session_new();
+			ret = (ret & MM_CMD_REDESIGN) ? 2 : 1;
 		} else {
 			printf(_("Command unsupported '%s'\n"), args[0]);
 			goto input_err;
@@ -287,7 +335,7 @@ cmd_execed:
 	free(args);
 	return ret;
 }
-int main()
+int main(int argc, char *argv[])
 {
 	uint8_t *T = NULL, c;
 	unsigned ret;
@@ -297,21 +345,25 @@ int main()
 	textdomain(PACKAGE);
 #endif
 	session = mm_session_restore();
+	if (session == NULL)
+		session = mm_session_new();
+	else
+		printf(_("Restoring old session\n"));
+	ret = execArgs(argc, argv, session);
+	if (ret & MM_CMD_ERROR) {
+		exit(EXIT_FAILURE);
+		goto quit;
+	} else if (ret & MM_CMD_OPT_EXIT) {
+		exit(EXIT_SUCCESS);
+	}
+	if (ret & MM_CMD_NEW_SESSION)
+		session = mm_session_new();
 	do {
-		if (!session) {
-			// FIXME: use last account name with account cmd
-			printf(_("Starting new session\n"));
-			session = mm_session_new();
-		} else {
-			printf(_("Restoring old session\n"));
-		}
 		printf(_("Current Config:\n\tguesses: %d\n\tcolors: "
 			 "%d\n\tholes: %d\n\tremise: %d\n"),
 		       session->config->guesses, session->config->colors,
 		       session->config->holes, session->config->remise);
 		do {
-			printf(_("Current State:\n\tGuessed: %d\n"),
-			       session->guessed);
 			printPanel();
 			T = (uint8_t *)malloc(sizeof(uint8_t) *
 					      session->config->holes);
@@ -338,9 +390,11 @@ int main()
 			putchar('0' + session->secret->val[c]);
 		putchar('\n');
 		mm_session_free(session);
-		session = NULL;
+		session = mm_session_new();
 		printf(_("restart? (Y/N): "));
 		scanf("%c", &c);
 	} while (c == 'y' || c == 'Y');
+quit:
+	mm_session_free(session);
 	return 0;
 }

@@ -5,21 +5,19 @@
 #include "core.h"
 #include "cli-cmd.h"
 
-#define LEN(a) (sizeof(a) / sizeof(a[0]))
-
 int cmd_quit(const char argc, const char **argv, mm_session *session)
 {
 	mm_session_exit(session);
 	printf(_("Bye!\n"));
 	exit(0);
-	return 0;
+	return MM_CMD_SUCCESS | MM_CMD_OPT_EXIT;
 }
 
 int cmd_savegame(const char argc, const char **argv, mm_session *session)
 {
 	printf(_("Saving session\n"));
 	mm_session_save(session);
-	return 0;
+	return MM_CMD_SUCCESS;
 }
 int cmd_set(const char argc, const char **argv, mm_session *session)
 {
@@ -77,17 +75,15 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 	default:
 		printf(_("Command format error!\n"
 			 "set [config_name [config_value]]\n"));
-		return -1;
+		return MM_CMD_ERROR | MM_CMD_OPT_EXIT;
 	}
-	return 0;
+	return MM_CMD_SUCCESS | MM_CMD_OPT_EXIT;
 }
-int cmd_restart(const char argc, const char **argv, mm_session *s)
+int cmd_restart(const char argc, const char **argv, mm_session *session)
 {
 	//  FIXME: find better and standard way to reset session object
-	extern mm_session *session;
 	mm_session_free(session);
-	session = mm_session_new();
-	return 1;
+	return MM_CMD_SUCCESS | MM_CMD_NEW_SESSION | MM_CMD_REDESIGN;
 }
 int cmd_help(const char argc, const char **argv, mm_session *session)
 {
@@ -99,7 +95,7 @@ int cmd_help(const char argc, const char **argv, mm_session *session)
 		 "RTFM: "
 		 "http://en.wikipedia.org/wiki/"
 		 "Mastermind_%%28board_game%%29#Gameplay_and_rules\n"));
-	return 0;
+	return MM_CMD_SUCCESS | MM_CMD_OPT_EXIT;
 }
 int cmd_score(const char argc, const char **argv, mm_session *session)
 {
@@ -110,26 +106,25 @@ int cmd_score(const char argc, const char **argv, mm_session *session)
 	for (i = 0; i < scores->len; i++)
 		printf("%-2d) %-15ld %s\n", i, scores->T[i].score,
 		       scores->T[i].account);
-	return 0;
+	return MM_CMD_SUCCESS | MM_CMD_OPT_EXIT;
 }
 int cmd_account(const char argc, const char **argv, mm_session *session)
 {
 	if (argc == 1) {
 		printf(_("current account: %s\n"), session->account);
-		return 0;
+		return MM_CMD_SUCCESS | MM_CMD_OPT_EXIT;
 	} else if (argc == 2) {
 		const char *args[3];
 		args[0] = "set";
 		args[1] = "account";
 		args[2] = argv[1];
-		cmd_set(3, args, session);
-		cmd_restart(1, (const char * [1]){"restart"}, session);
-		return 1;
+		return cmd_set(3, args, session) |
+		       cmd_restart(1, (const char * [1]){"restart"}, session);
 	}
-	return -1;
+	return MM_CMD_ERROR | MM_CMD_OPT_EXIT;
 }
 int cmd_version(const char argc, const char **argv, mm_session *session)
 {
 	printf("%s - v%s\nSite: %s\n", PACKAGE, PROGRAM_VERSION, PROGRAM_URL);
-	return 0;
+	return MM_CMD_SUCCESS | MM_CMD_OPT_EXIT;
 }
