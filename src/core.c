@@ -14,7 +14,7 @@
 #include <windows.h>
 #endif
 
-#define LEN(a) (sizeof(a) / sizeof(a[0]))
+mm_scores_t mm_scores = {.T = NULL, .max = 20, .len = 0};
 char *mm_config_path = NULL;
 char *mm_score_path = NULL;
 char *mm_store_path = NULL;
@@ -55,7 +55,6 @@ mm_conf_t mm_confs[7] = {
 				       .name = "save_on_play",
 				       .val = 0}},
 };
-mm_scores_t mm_scores = {.T = NULL, .max = 20, .len = 0};
 /* create new mastermind session and initialize viables && config
  * return: mm_session* : new session object
  */

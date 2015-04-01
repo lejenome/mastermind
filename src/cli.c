@@ -12,7 +12,6 @@
 #include "cli-cmd.h"
 #include "core.h"
 
-#define LEN(a) (sizeof(a) / sizeof(a[0]))
 mm_session *session;
 cmd_t cmds[] = {
     {.n = "quit", .e = cmd_quit},
@@ -174,7 +173,7 @@ static char **completeCombination(const char *txt, int start, int end)
 			output = T[j];
 		if (cmpltCnf) {
 			output = (char *)malloc(sizeof(char) * 20);
-			switch (conf->type) {
+			switch (cmpltCnf->type) {
 			case MM_CONF_INT:
 				sprintf(output, "%d", cmpltCnf->nbre.val);
 				break;
@@ -183,6 +182,7 @@ static char **completeCombination(const char *txt, int start, int end)
 				break;
 			case MM_CONF_STR:
 				strcpy(output, cmpltCnf->str.val);
+				break;
 			}
 		}
 	}
