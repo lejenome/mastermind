@@ -164,11 +164,14 @@ void drawCombination(SDL_Table *T, SDL_Table *R, uint8_t *G, unsigned p,
 	rect.w = it_w / 3;
 	rect.x = T->x + rect.w;
 	rect.y = T->y + rect.h * (p * 3 + 1);
+	char c[2] = "0";
 	for (i = 0; i < T->cols; i++) {
 		SDL_SetRenderDrawColor(rend, 255 / (G[i] + 1),
 				       (150 * G[i]) % 200, 100 / (G[i] % 3 + 1),
 				       255);
 		SDL_RenderFillRect(rend, &rect);
+		c[0] = 'a' + G[i];
+		sdl_print(c, rect.x + rect.w / 2, rect.y - rect.h / 4);
 		rect.x += it_w;
 	}
 	if (drawState) {
