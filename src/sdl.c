@@ -29,6 +29,7 @@ TTF_Font *font = NULL;
 mm_session *session;
 SDL_Table panel, state, control, play;
 unsigned it_w, it_h, it2_w;
+uint8_t *curGuess = NULL;
 
 void init_sdl()
 {
@@ -188,10 +189,13 @@ void drawSelector()
 	unsigned y, x, i;
 	x = it_w;
 	y = it_h / 2 + it_h / 3 + it_h * session->guessed;
+	char c[2] = "0";
 	for (i = 0; i < session->config->holes; i++) {
 		printf("x = %d, y = %d\n", x, y);
 		sdl_print("-", x, y);
-		sdl_print("0", x, y + it_h / 2);
+		if (curGuess)
+			c[0] = curGuess[i] + 'a';
+		sdl_print(c, x, y + it_h / 2);
 		sdl_print("-", x, y + it_h);
 		x += it_w;
 	}
@@ -225,12 +229,28 @@ void redraw()
 		drawSecret();
 	SDL_RenderPresent(rend);
 }
+void onMouseUp(SDL_MouseButtonEvent e)
+{
+	unsigned i, n = 0;
+	if (e.x > panel.x && e.x < panel.x + panel.w &&
+	    e.y > panel.y + it_h * session->guessed &&
+	    e.y < panel.y + it_h * (session->guessed + 2)) {
+		i = (e.x - panel.x) / it_w;
+		if (e.y < panel.y + it_h * (session->guessed + 1)) {
+			if (curGuess[i] < session->config->colors - 1)
+				curGuess[i]++;
+		} else {
+			if (curGuess[i] > 0)
+				curGuess[i]--;
+		}
+		redraw();
+	}
+}
 uint8_t *getGuess()
 {
 	SDL_Event event;
 	uint8_t *str;
 	unsigned i = 0;
-	str = (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
 	while (i < session->config->holes && SDL_WaitEvent(&event) > -1) {
 		// SDL_PollEvent returns either 0 or 1
 		switch (event.type) {
@@ -242,9 +262,10 @@ uint8_t *getGuess()
 			if (event.key.keysym.sym >= SDLK_a &&
 			    event.key.keysym.sym <=
 				(session->config->colors + SDLK_a))
-				str[i++] = event.key.keysym.sym - SDLK_a;
+				curGuess[i++] = event.key.keysym.sym - SDLK_a;
 			printf("Key down event: %d (%c) \n",
 			       event.key.keysym.sym, event.key.keysym.sym);
+			redraw();
 			break;
 		case SDL_WINDOWEVENT:
 			printf("Window Event: id: %d, event: %d\n",
@@ -261,14 +282,19 @@ uint8_t *getGuess()
 			printf("MouseButtonEvent: button: %d, x= %d, y= %d\n",
 			       event.button.button, event.button.x,
 			       event.button.y);
+			onMouseUp(event.button);
 			break;
 		}
 	}
+	str = (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
+	for (i = 0; i < session->config->holes; i++)
+		str[i] = curGuess[i];
 	return str;
 }
 int main(int argc, char *argv[])
 {
 	uint8_t *g;
+	unsigned i;
 	init_sdl();
 	session = mm_session_restore();
 	if (session == NULL)
@@ -276,6 +302,10 @@ int main(int argc, char *argv[])
 	initTables(session);
 	for (;;) {
 		redraw();
+		curGuess =
+		    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
+		for (i = 0; i < session->config->holes; i++)
+			curGuess[i] = 0;
 		while (session->state == MM_PLAYING ||
 		       session->state == MM_NEW) {
 			do {
@@ -286,6 +316,8 @@ int main(int argc, char *argv[])
 		SDL_RenderClear(rend);
 		mm_session_free(session);
 		SDL_Delay(2000);
+		free(curGuess);
+		curGuess = NULL;
 		session = mm_session_new();
 		initTables(session);
 	}
