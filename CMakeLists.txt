@@ -93,6 +93,8 @@ if(CLANG_FORMAT_FOUND)
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif(CLANG_FORMAT_FOUND)
 
+install(FILES extra/ProFont_r400-29.pcf DESTINATION share/fonts)
+
 install(TARGETS mastermindcli DESTINATION bin)
 install(TARGETS mastermindsdl DESTINATION bin)
 INCLUDE(mm_cpack)
