@@ -210,6 +210,43 @@ IF(MINGW)
 	SET(MINGW32_LIBRARY mingw32 CACHE STRING "mwindows for MinGW")
 ENDIF(MINGW)
 
+IF(SDL2_SEARCH_TTF)
+	# Lookup the 64 bit libs on x64
+	IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+		FIND_LIBRARY(SDL2_TTF_LIBRARY SDL2_ttf
+			HINTS
+			${SDL2}
+			$ENV{SDL2}
+			PATH_SUFFIXES lib64 lib
+			lib/x64
+			x86_64-w64-mingw32/lib
+			PATHS
+			/sw
+			/opt/local
+			/opt/csw
+			/opt
+			)
+		# On 32bit build find the 32bit libs
+	ELSE(CMAKE_SIZEOF_VOID_P EQUAL 8)
+		FIND_LIBRARY(SDL2_TTF_LIBRARY SDL2_ttf
+			HINTS
+			${SDL2}
+			$ENV{SDL2}
+			PATH_SUFFIXES lib
+			lib/x86
+			i686-w64-mingw32/lib
+			PATHS
+			/sw
+			/opt/local
+			/opt/csw
+			/opt
+			)
+	ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	if(SDL2_TTF_LIBRARY)
+		SET(SDL2_LIBRARY_TEMP ${SDL2_TTF_LIBRARY} ${SDL2_LIBRARY_TEMP})
+	endif(SDL2_TTF_LIBRARY)
+ENDIF(SDL2_SEARCH_TTF)
+
 SET(SDL2_FOUND "NO")
 	IF(SDL2_LIBRARY_TEMP)
 		# For SDL2main
