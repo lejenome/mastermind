@@ -84,7 +84,7 @@ SDL_Texture *sdl_print(char *s, int x, int y)
 		clean();
 		exit(1);
 	}
-	SDL_SetTextureColorMod(tex, 0, 0, 0);
+	// SDL_SetTextureColorMod(tex, 0, 0, 0);
 	rect = (SDL_Rect){x - tmp->w / 2, y, tmp->w, tmp->h};
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
 	SDL_FreeSurface(tmp);
@@ -139,7 +139,6 @@ int drawTable(SDL_Table *T)
 	for (i = 0; i <= T->cols; i++)
 		SDL_RenderDrawLine(rend, T->x + (w * i), T->y, T->x + (w * i),
 				   T->y + T->h);
-	SDL_RenderPresent(rend);
 	return 0;
 }
 void drawTableTop(SDL_Table *T)
@@ -155,32 +154,57 @@ void drawTableTop(SDL_Table *T)
 	for (i = 0; i <= T->cols + 1; i++)
 		SDL_RenderDrawLine(rend, T->x + (it_w * i), T->y,
 				   T->x + (it_w * i), T->y + T->h);
-	SDL_RenderPresent(rend);
 }
-int drawGuess(SDL_Table *T, SDL_Table *R, unsigned p)
+void drawCombination(SDL_Table *T, SDL_Table *R, uint8_t *G, unsigned p,
+		     unsigned drawState)
 {
 	unsigned i;
-	uint8_t *G = session->panel[p].combination;
 	SDL_Rect rect;
-	rect.h = T->h / ((T->rows + 1) * 3);
-	rect.w = T->w / (T->cols * 3);
-	rect.x = T->x + (T->w / (T->cols * 3));
-	rect.y = T->y + ((it_h / 3) * (p * 3 + 1));
+	rect.h = it_h / 3;
+	rect.w = it_w / 3;
+	rect.x = T->x + rect.w;
+	rect.y = T->y + rect.h * (p * 3 + 1);
 	for (i = 0; i < T->cols; i++) {
 		SDL_SetRenderDrawColor(rend, 255 / (G[i] + 1),
 				       (150 * G[i]) % 200, 100 / (G[i] % 3 + 1),
 				       255);
 		SDL_RenderFillRect(rend, &rect);
-		rect.x += T->w / T->cols;
+		rect.x += it_w;
 	}
-	char s[2];
-	sprintf(s, "%d", session->panel[p].inplace);
-	sdl_print(s, R->x + R->w / 4, rect.y);
-	sprintf(s, "%d",
-		session->panel[p].insecret - session->panel[p].inplace);
-	sdl_print(s, R->x + (R->w / 4) * 3, rect.y);
-	SDL_RenderPresent(rend);
-	return 0;
+	if (drawState) {
+		char s[2];
+		sprintf(s, "%d", session->panel[p].inplace);
+		sdl_print(s, R->x + R->w / 4, rect.y);
+		sprintf(s, "%d",
+			session->panel[p].insecret - session->panel[p].inplace);
+		sdl_print(s, R->x + (R->w / 4) * 3, rect.y);
+	}
+}
+void drawSelector()
+{
+	unsigned y, x, i;
+	x = it_w;
+	y = it_h / 2 + it_h / 3 + it_h * session->guessed;
+	for (i = 0; i < session->config->holes; i++) {
+		printf("x = %d, y = %d\n", x, y);
+		sdl_print("-", x, y);
+		sdl_print("0", x, y + it_h / 2);
+		sdl_print("-", x, y + it_h);
+		x += it_w;
+	}
+}
+void drawSecret()
+{
+	drawCombination(&panel, &state, session->secret->val,
+			session->config->guesses, 0);
+	SDL_RenderDrawLine(rend, panel.x, panel.y + panel.h, panel.x + panel.w,
+			   panel.y + panel.h);
+	SDL_RenderDrawLine(rend, state.x, state.y + state.h, state.x + state.w,
+			   state.y + state.h);
+}
+void drawGuess(unsigned p)
+{
+	drawCombination(&panel, &state, session->panel[p].combination, p, 1);
 }
 void redraw()
 {
@@ -191,7 +215,12 @@ void redraw()
 	drawTable(&control);
 	drawTable(&play);
 	for (i = 0; i < session->guessed; i++)
-		drawGuess(&panel, &state, i);
+		drawGuess(i);
+	if (session->state == MM_NEW || session->state == MM_PLAYING)
+		drawSelector();
+	else
+		drawSecret();
+	SDL_RenderPresent(rend);
 }
 uint8_t *getGuess()
 {
@@ -240,17 +269,16 @@ int main(int argc, char *argv[])
 	init_sdl();
 	session = mm_session_restore();
 	if (session == NULL)
-		;
-	session = mm_session_new();
+		session = mm_session_new();
 	initTables(session);
 	for (;;) {
-		redraw(session);
+		redraw();
 		while (session->state == MM_PLAYING ||
 		       session->state == MM_NEW) {
 			do {
-				g = getGuess(session);
+				g = getGuess();
 			} while (mm_play(session, g));
-			redraw(session);
+			redraw();
 		}
 		SDL_RenderClear(rend);
 		mm_session_free(session);
