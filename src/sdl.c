@@ -147,7 +147,8 @@ void drawTableTop(SDL_Table *T)
 	unsigned i;
 	SDL_SetRenderDrawColor(rend, 0x00, 0x00, 0x00, 0x00);
 	for (i = 0; i <= T->rows + 1; i++) {
-		if (i == session->guessed + 1)
+		if (i == session->guessed + 1 && session->state != MM_SUCCESS &&
+		    session->state != MM_FAIL)
 			continue;
 		SDL_RenderDrawLine(rend, T->x, T->y + (it_h * i), T->x + T->w,
 				   T->y + (it_h * i));
@@ -189,9 +190,8 @@ void drawSelector()
 	unsigned y, x, i;
 	x = it_w;
 	y = it_h / 2 + it_h / 3 + it_h * session->guessed;
-	char c[2] = "0";
+	char c[2] = "a";
 	for (i = 0; i < session->config->holes; i++) {
-		printf("x = %d, y = %d\n", x, y);
 		sdl_print("-", x, y);
 		if (curGuess)
 			c[0] = curGuess[i] + 'a';
@@ -204,10 +204,6 @@ void drawSecret()
 {
 	drawCombination(&panel, &state, session->secret->val,
 			session->config->guesses, 0);
-	SDL_RenderDrawLine(rend, panel.x, panel.y + panel.h, panel.x + panel.w,
-			   panel.y + panel.h);
-	SDL_RenderDrawLine(rend, state.x, state.y + state.h, state.x + state.w,
-			   state.y + state.h);
 }
 void drawGuess(unsigned p)
 {
@@ -221,6 +217,11 @@ void redraw()
 	drawTableTop(&state);
 	drawTable(&control);
 	drawTable(&play);
+	sdl_print("!", control.x + it2_w * 0.5, control.y + it_h / 4);
+	sdl_print("Op", control.x + it2_w * 1.5, control.y + it_h / 4);
+	sdl_print("Sc", control.x + it2_w * 2.5, control.y + it_h / 4);
+	sdl_print("rest", play.x + it2_w, play.y + it_h / 4);
+	sdl_print("play", play.x + it2_w * 3, play.y + it_h / 4);
 	for (i = 0; i < session->guessed; i++)
 		drawGuess(i);
 	if (session->state == MM_NEW || session->state == MM_PLAYING)
@@ -229,9 +230,9 @@ void redraw()
 		drawSecret();
 	SDL_RenderPresent(rend);
 }
-void onMouseUp(SDL_MouseButtonEvent e)
+unsigned onMouseUp(SDL_MouseButtonEvent e)
 {
-	unsigned i, n = 0;
+	unsigned i;
 	if (e.x > panel.x && e.x < panel.x + panel.w &&
 	    e.y > panel.y + it_h * session->guessed &&
 	    e.y < panel.y + it_h * (session->guessed + 2)) {
@@ -245,13 +246,18 @@ void onMouseUp(SDL_MouseButtonEvent e)
 		}
 		redraw();
 	}
+	if (e.x > play.x && e.x < play.x + play.w && e.y > play.y &&
+	    e.y < play.y + play.h)
+		return (e.x < play.x + play.w / 2) ? 0 : 2;
+	return 1;
 }
-uint8_t *getGuess()
+uint8_t *getGuess(unsigned *play)
 {
 	SDL_Event event;
 	uint8_t *str;
 	unsigned i = 0;
-	while (i < session->config->holes && SDL_WaitEvent(&event) > -1) {
+	while (i < session->config->holes && SDL_WaitEvent(&event) > -1 &&
+	       *play) {
 		// SDL_PollEvent returns either 0 or 1
 		switch (event.type) {
 		case SDL_QUIT:
@@ -282,10 +288,13 @@ uint8_t *getGuess()
 			printf("MouseButtonEvent: button: %d, x= %d, y= %d\n",
 			       event.button.button, event.button.x,
 			       event.button.y);
-			onMouseUp(event.button);
+			*play = onMouseUp(event.button);
+			if (*play == 2)
+				goto done;
 			break;
 		}
 	}
+done:
 	str = (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
 	for (i = 0; i < session->config->holes; i++)
 		str[i] = curGuess[i];
@@ -294,7 +303,7 @@ uint8_t *getGuess()
 int main(int argc, char *argv[])
 {
 	uint8_t *g;
-	unsigned i;
+	unsigned i, play;
 	init_sdl();
 	session = mm_session_restore();
 	if (session == NULL)
@@ -306,16 +315,20 @@ int main(int argc, char *argv[])
 		    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
 		for (i = 0; i < session->config->holes; i++)
 			curGuess[i] = 0;
-		while (session->state == MM_PLAYING ||
-		       session->state == MM_NEW) {
+		play = 1;
+		while ((session->state == MM_PLAYING ||
+			session->state == MM_NEW) &&
+		       play) {
 			do {
-				g = getGuess();
-			} while (mm_play(session, g));
+				play = 1;
+				g = getGuess(&play);
+			} while (mm_play(session, g) && play);
 			redraw();
 		}
+		while (play && getGuess(&play))
+			;
 		SDL_RenderClear(rend);
 		mm_session_free(session);
-		SDL_Delay(2000);
 		free(curGuess);
 		curGuess = NULL;
 		session = mm_session_new();
