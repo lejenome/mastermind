@@ -76,7 +76,7 @@ SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
 	SDL_Texture *tex;
 	SDL_Rect rect;
 	SDL_Surface *surf = TTF_RenderUTF8_Solid(
-	    font, s, (color == NULL) ? (SDL_Color){0, 0, 0} : *color);
+	    font, s, (color == NULL) ? (SDL_Color)fg_text : *color);
 	if (surf == NULL) {
 		printf("Unable to load font! Error: %s\n", TTF_GetError());
 		clean();
@@ -97,7 +97,8 @@ SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
 }
 int setBg()
 {
-	SDL_SetRenderDrawColor(rend, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_Color bg = bg_color;
+	SDL_SetRenderDrawColor(rend, bg.r, bg.g, bg.b, bg.a);
 	SDL_RenderFillRect(rend, NULL);
 	return 0;
 }
@@ -138,7 +139,11 @@ void initColors(mm_session *session)
 		free(colors);
 	colors =
 	    (SDL_Color *)malloc(sizeof(SDL_Color) * session->config->colors);
-	for (i = 0; i < session->config->colors; i++)
+	SDL_Color cl[] = {fg_red,  fg_green,   fg_yellow,
+			  fg_blue, fg_magenta, fg_cyan};
+	for (i = 0; i < session->config->colors && i < LEN(cl); i++)
+		colors[i] = (SDL_Color){cl[i].r, cl[i].g, cl[i].b, cl[i].a};
+	for (; i < session->config->colors; i++)
 		colors[i] = (SDL_Color){255 / (i + 1), (150 * 2) % 200,
 					100 / (i % 3 + 1), 255};
 }
@@ -158,7 +163,8 @@ int drawTableBottom(SDL_Table *T)
 void drawTableTop(SDL_Table *T)
 {
 	unsigned i;
-	SDL_SetRenderDrawColor(rend, 0x00, 0x00, 0x00, 0x00);
+	SDL_Color br = (SDL_Color)br_color;
+	SDL_SetRenderDrawColor(rend, br.r, br.g, br.b, br.a);
 	for (i = 0; i <= T->rows + 1; i++) {
 		if (i == session->guessed + 1 && session->state != MM_SUCCESS &&
 		    session->state != MM_FAIL)
@@ -179,8 +185,8 @@ void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 	rect.x = panel.x + rect.w;
 	rect.y = panel.y + case_h * p + case_h / 3;
 	SDL_Color green, yellow;
-	green = (SDL_Color){144, 168, 94, 255};
-	yellow = (SDL_Color){225, 170, 93, 255};
+	green = (SDL_Color)fg_green;
+	yellow = (SDL_Color)fg_yellow;
 	char c[2] = "0";
 	for (i = 0; i < panel.cols; i++) {
 		SDL_SetRenderDrawColor(rend, colors[G[i]].r, colors[G[i]].g,
@@ -286,7 +292,7 @@ uint8_t *getGuess(unsigned *play)
 			break;
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym >= SDLK_a &&
-			    event.key.keysym.sym <=
+			    event.key.keysym.sym <
 				(session->config->colors + SDLK_a)) {
 				curGuess[i++] = event.key.keysym.sym - SDLK_a;
 				redraw();
