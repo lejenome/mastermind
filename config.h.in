@@ -20,9 +20,7 @@
 #define LOCALEDIR "intl"
 #endif // LOCALEDIR
 
-// sdl version sdl_color's
-#define default_color solarized_dark
-#if (default_color == solarized_dark)
+// solarized dark color scheme for sdl version
 #define fg_black                                                               \
 	{                                                                      \
 		0x07, 0x36, 0x42, 0xff                                         \
@@ -91,11 +89,10 @@
 #define fg_text fg_black  // default text fg color
 #define br_color fg_black // borders color
 
-#else // default_color == ?
-
+/*
 #define fg_black                                                               \
 	{                                                                      \
-		0x00, 0x00, 0x00, 0xFF                                         \
+		0x10, 0x10, 0x10, 0xFF                                         \
 	}
 #define fg_red                                                                 \
 	{                                                                      \
@@ -123,12 +120,15 @@
 	}
 #define fg_white                                                               \
 	{                                                                      \
-		0xFF, 0xFF, 0xFF, 0xFF                                         \
+		0xD7, 0xD7, 0xD7, 0xFF                                         \
 	}
-#define bg_color fg_black // window backgroud color
-#define fg_text fg_black  // default text fg color
-#define br_color fg_black // borders color
-
-#endif // default_color == ?
+#define bg_black                                                               \
+	{                                                                      \
+		0x15, 0x15, 0x15, 0xFF                                         \
+	}
+#define bg_color bg_black // window backgroud color
+#define fg_text fg_white  // default text fg color
+#define br_color fg_white // borders color
+*/
 
 #endif //__MASTERMIN_CONFIG_H
