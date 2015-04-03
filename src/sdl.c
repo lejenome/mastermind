@@ -80,7 +80,7 @@ SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
 	SDL_Texture *tex;
 	SDL_Rect rect;
 	SDL_Surface *surf = TTF_RenderUTF8_Solid(
-	    font, s, (color == NULL) ? (SDL_Color)fg_text : *color);
+	    font, s, (color == NULL) ? (SDL_Color)fg_color : *color);
 	if (surf == NULL) {
 		printf("Unable to load font! Error: %s\n", TTF_GetError());
 		clean();
@@ -191,12 +191,14 @@ void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 	yellow = (SDL_Color)fg_yellow;
 	char c[2] = "0";
 	for (i = 0; i < panel.cols; i++) {
+		/*
 		SDL_SetRenderDrawColor(rend, colors[G[i]].r, colors[G[i]].g,
 				       colors[G[i]].b, colors[G[i]].a);
 		SDL_RenderFillRect(rend, &rect);
+		*/
 		c[0] = 'a' + G[i];
 		sdl_print_center(c, rect.x + rect.w / 2, rect.y + rect.h / 3,
-				 NULL);
+				 colors + G[i]);
 		rect.x += case_w;
 	}
 	if (drawState) {

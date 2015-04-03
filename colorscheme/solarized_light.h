@@ -64,5 +64,5 @@
 		0xfd, 0xf6, 0xe3, 0xff                                         \
 	}
 #define bg_color bg_white // window backgroud color
-#define fg_text fg_black  // default text fg color
+#define fg_color fg_black // default text fg color
 #define br_color fg_black // borders color

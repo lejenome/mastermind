@@ -69,8 +69,8 @@
 	{                                                                      \
 		0x57, 0x57, 0x57, 0xFF                                         \
 	}
-#define fg_text                                                                \
+#define fg_color                                                               \
 	{                                                                      \
 		0xdc, 0xdc, 0xcc, 0xFF                                         \
 	}
-#define br_color fg_text
+#define br_color fg_color

@@ -1,4 +1,4 @@
-#define fg_text                                                                \
+#define fg_color                                                               \
 	{                                                                      \
 		0xCC, 0xCC, 0xCC, 0xFF                                         \
 	}
@@ -6,7 +6,7 @@
 	{                                                                      \
 		0x4B, 0x5D, 0x7E, 0xFF                                         \
 	}
-#define br_color fg_text
+#define br_color fg_color
 
 #define fg_black                                                               \
 	{                                                                      \

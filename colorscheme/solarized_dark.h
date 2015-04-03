@@ -64,5 +64,5 @@
 		0xfd, 0xf6, 0xe3, 0xff                                         \
 	}
 #define bg_color bg_black
-#define fg_text fg_white
+#define fg_color fg_white
 #define br_color fg_white

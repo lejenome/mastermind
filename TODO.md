@@ -10,6 +10,7 @@
 - [x] saving scores, history
 - [x] account support
 - [x] cli options support
+- [x] color scheme support on sdl
 - [ ] cli colored output
 - [ ] ncurses backend
 - [ ] build for linux/Mac/Win/Android/iOS/...

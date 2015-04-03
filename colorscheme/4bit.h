@@ -4,11 +4,11 @@
 	{                                                                      \
 		0x0d, 0x19, 0x26, 0xFF                                         \
 	}
-#define fg_text                                                                \
+#define fg_color                                                               \
 	{                                                                      \
 		0xd9, 0xe6, 0xf2, 0xFF                                         \
 	}
-#define br_color fg_text
+#define br_color fg_color
 
 #define fg_black                                                               \
 	{                                                                      \
