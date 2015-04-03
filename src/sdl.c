@@ -69,7 +69,7 @@ void clean()
 	TTF_Quit();
 	SDL_Quit();
 }
-SDL_Texture *sdl_print(char *s, int x, int y)
+SDL_Texture *sdl_print_center(char *s, int x, int y)
 {
 	SDL_Texture *tex;
 	SDL_Rect rect;
@@ -86,7 +86,7 @@ SDL_Texture *sdl_print(char *s, int x, int y)
 		exit(1);
 	}
 	// SDL_SetTextureColorMod(tex, 0, 0, 0);
-	rect = (SDL_Rect){x - tmp->w / 2, y, tmp->w, tmp->h};
+	rect = (SDL_Rect){x - tmp->w / 2, y - tmp->h / 2, tmp->w, tmp->h};
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
 	SDL_FreeSurface(tmp);
 	SDL_DestroyTexture(tex);
@@ -173,30 +173,30 @@ void drawCombination(SDL_Table *T, SDL_Table *R, uint8_t *G, unsigned p,
 				       255);
 		SDL_RenderFillRect(rend, &rect);
 		c[0] = 'a' + G[i];
-		sdl_print(c, rect.x + rect.w / 2, rect.y - rect.h / 4);
+		sdl_print_center(c, rect.x + rect.w / 2, rect.y + rect.h / 3);
 		rect.x += it_w;
 	}
 	if (drawState) {
 		char s[2];
 		sprintf(s, "%d", session->panel[p].inplace);
-		sdl_print(s, R->x + R->w / 4, rect.y);
+		sdl_print_center(s, R->x + R->w / 4, rect.y + rect.h / 3);
 		sprintf(s, "%d",
 			session->panel[p].insecret - session->panel[p].inplace);
-		sdl_print(s, R->x + (R->w / 4) * 3, rect.y);
+		sdl_print_center(s, R->x + (R->w / 4) * 3, rect.y + rect.h / 3);
 	}
 }
 void drawSelector()
 {
 	unsigned y, x, i;
 	x = it_w;
-	y = it_h / 2 + it_h / 3 + it_h * session->guessed;
+	y = it_h * (session->guessed + 1);
 	char c[2] = "a";
 	for (i = 0; i < session->config->holes; i++) {
-		sdl_print("-", x, y);
+		sdl_print_center("-", x, y);
 		if (curGuess)
 			c[0] = curGuess[i] + 'a';
-		sdl_print(c, x, y + it_h / 2);
-		sdl_print("-", x, y + it_h);
+		sdl_print_center(c, x, y + it_h / 2);
+		sdl_print_center("-", x, y + it_h);
 		x += it_w;
 	}
 }
@@ -217,11 +217,11 @@ void redraw()
 	drawTableTop(&state);
 	drawTable(&control);
 	drawTable(&play);
-	sdl_print("!", control.x + it2_w * 0.5, control.y + it_h / 4);
-	sdl_print("Op", control.x + it2_w * 1.5, control.y + it_h / 4);
-	sdl_print("Sc", control.x + it2_w * 2.5, control.y + it_h / 4);
-	sdl_print("rest", play.x + it2_w, play.y + it_h / 4);
-	sdl_print("play", play.x + it2_w * 3, play.y + it_h / 4);
+	sdl_print_center("!", control.x + it2_w * 0.5, control.y + it_h / 2);
+	sdl_print_center("Op", control.x + it2_w * 1.5, control.y + it_h / 2);
+	sdl_print_center("Sc", control.x + it2_w * 2.5, control.y + it_h / 2);
+	sdl_print_center("rest", play.x + it2_w, play.y + it_h / 2);
+	sdl_print_center("play", play.x + it2_w * 3, play.y + it_h / 2);
 	for (i = 0; i < session->guessed; i++)
 		drawGuess(i);
 	if (session->state == MM_NEW || session->state == MM_PLAYING)
@@ -267,11 +267,12 @@ uint8_t *getGuess(unsigned *play)
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym >= SDLK_a &&
 			    event.key.keysym.sym <=
-				(session->config->colors + SDLK_a))
+				(session->config->colors + SDLK_a)) {
 				curGuess[i++] = event.key.keysym.sym - SDLK_a;
+				redraw();
+			}
 			printf("Key down event: %d (%c) \n",
 			       event.key.keysym.sym, event.key.keysym.sym);
-			redraw();
 			break;
 		case SDL_WINDOWEVENT:
 			printf("Window Event: id: %d, event: %d\n",
