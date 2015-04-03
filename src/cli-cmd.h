@@ -4,11 +4,11 @@
 #define __MM_CLI_CMD_H
 // cmds return values
 #define MM_CMD_SUCCESS 0x00     // cmd succeded
-#define MM_CMD_ERROR 0x02       // their was an error
-#define MM_CMD_NEW_SESSION 0x04 // new session needed
-#define MM_CMD_REDESIGN 0x08    // redesign the panel is needed
+#define MM_CMD_ERROR 0x01       // their was an error
+#define MM_CMD_NEW_SESSION 0x02 // new session needed
+#define MM_CMD_REDESIGN 0x04    // redesign the panel is needed
 #define MM_CMD_OPT_EXIT                                                        \
-	0x0F // just exit the program if cmd executed from option
+	0x08 // just exit the program if cmd executed from option
 // mode cmds are executed on (to modify the output style)
 #define MM_CMD_MODE_OPT 0
 #define MM_CMD_MODE_CLI 1
