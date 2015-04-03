@@ -25,5 +25,8 @@
 //#include "colorscheme/solarized_dark.h"
 //#include "colorscheme/my_urxvt.h"
 //#include "colorscheme/jellybeans.h"
+//#include "colorscheme/rainbow_simple.h"
+//#include "colorscheme/rcg_term.h"
+//#include "colorscheme/4bit.h"
 
 #endif //__MASTERMIN_CONFIG_H
