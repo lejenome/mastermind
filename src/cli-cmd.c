@@ -17,7 +17,7 @@ int execArgs(int argc, char *argv[], cmd_t *cmds, size_t len,
 		return MM_CMD_SUCCESS;
 	char c, *args;
 	struct option *ops;
-	unsigned i = 0, ret = MM_CMD_SUCCESS;
+	unsigned i = 0, j, ret = MM_CMD_SUCCESS;
 	cmd_t *cmd;
 	mm_cmd_mode = MM_CMD_MODE_OPT;
 	args = (char *)malloc(sizeof(char) * (len * 3 + 1));
@@ -37,7 +37,6 @@ int execArgs(int argc, char *argv[], cmd_t *cmds, size_t len,
 	ops[i] = (struct option){NULL, 0, NULL, 0};
 	args[i * 3] = '\0';
 	while ((c = getopt_long(argc, argv, args, ops, NULL)) != -1) {
-		// FIXME: support --opt=val & -oval
 		cmd = cmds;
 		if (c == '?' || c == ':')
 			return MM_CMD_ERROR;
@@ -50,11 +49,11 @@ int execArgs(int argc, char *argv[], cmd_t *cmds, size_t len,
 		const char **a =
 		    (const char **)malloc(sizeof(char) * (cmds->a + 1));
 		a[0] = cmd->n;
-		while (i < cmd->a + 1 && i < argc - optind + 1 &&
-		       argv[i + optind - 1][0] != '-') {
-			a[i] = argv[i + optind - 1];
-			i++;
-		}
+		if (cmd->a > 0 && optarg)
+			a[i++] = optarg;
+		j = optind;
+		while (i <= cmd->a && j < argc && argv[j][0] != '-')
+			a[i++] = argv[j++];
 		ret |= cmd->e(i, a, session);
 		free(a);
 	}
