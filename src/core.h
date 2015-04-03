@@ -78,7 +78,8 @@ unsigned int mm_session_save(mm_session *);
 void mm_session_free(mm_session *);
 void mm_session_exit(mm_session *);
 
-mm_config *mm_config_load();
+mm_config *mm_config_new();
+void mm_config_load();
 void mm_config_save();
 unsigned mm_config_set(const char *, const char *);
 

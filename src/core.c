@@ -62,7 +62,7 @@ mm_conf_t mm_confs[7] = {
 mm_session *mm_session_new()
 {
 	mm_session *session = (mm_session *)malloc(sizeof(mm_session));
-	session->config = mm_config_load();
+	session->config = mm_config_new();
 	session->guessed = 0;
 	session->account = mm_confs[MM_POS_ACCOUNT].str.val;
 	session->secret = mm_secret_new(session->config);
@@ -75,16 +75,14 @@ mm_session *mm_session_new()
  * on global config
  * return: mm_config* : new session config object
  */
-mm_config *mm_config_load()
+void mm_config_load()
 {
-	mm_config *config;
 	mm_conf_t *conf;
 	char *n, *v, *t;
 	FILE *f;
 	int i;
 	if (!mm_config_path)
 		mm_init();
-	config = (mm_config *)malloc(sizeof(mm_config));
 	if ((f = fopen(mm_config_path, "r"))) {
 		n = (char *)malloc(sizeof(char) * 40);
 		v = (char *)malloc(sizeof(char) * 20);
@@ -131,6 +129,12 @@ mm_config *mm_config_load()
 		mm_confs[MM_POS_COLORS].nbre.val =
 		    mm_confs[MM_POS_HOLES].nbre.val;
 	}
+}
+mm_config *mm_config_new()
+{
+	mm_config *config;
+	mm_config_load();
+	config = (mm_config *)malloc(sizeof(mm_config));
 	config->guesses = (uint8_t)mm_confs[MM_POS_GUESSES].nbre.val;
 	config->colors = (uint8_t)mm_confs[MM_POS_COLORS].nbre.val;
 	config->holes = (uint8_t)mm_confs[MM_POS_HOLES].nbre.val;
@@ -537,6 +541,7 @@ mm_session *mm_session_restore()
 	fscanf(f, "%20s", session->account);
 	fclose(f);
 	remove(mm_store_path);
+	mm_config_load();
 	return session;
 
 guess_err:
