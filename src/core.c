@@ -4,6 +4,7 @@
 #include <string.h>
 #include <assert.h>
 #include <stdint.h>
+#include <errno.h>
 #include "lib.h"
 #include "core.h"
 #ifdef POSIX
@@ -78,7 +79,7 @@ mm_config *mm_config_load()
 {
 	mm_config *config;
 	mm_conf_t *conf;
-	char *n, *v;
+	char *n, *v, *t;
 	FILE *f;
 	int i;
 	if (!mm_config_path)
@@ -100,15 +101,18 @@ mm_config *mm_config_load()
 #endif
 				continue;
 			}
+			errno = 0;
 			switch (conf->type) {
 			case MM_CONF_INT:
-				i = atoi(v);
-				if (i >= conf->nbre.min && i <= conf->nbre.max)
+				i = strtol(v, &t, 10);
+				if (t != NULL && errno != ERANGE &&
+				    i >= conf->nbre.min && i <= conf->nbre.max)
 					conf->nbre.val = i;
 				break;
 			case MM_CONF_BOOL:
-				i = atoi(v);
-				if (i == 1 || i == 0)
+				i = strtol(v, &t, 10);
+				if (t != NULL && errno != ERANGE &&
+				    (i == 1 || i == 0))
 					conf->bool.val = (uint8_t)i;
 				break;
 			case MM_CONF_STR:
@@ -167,6 +171,7 @@ void mm_config_save()
 unsigned mm_config_set(const char *name, const char *value)
 {
 	int i;
+	char *t;
 	mm_conf_t *conf = mm_confs;
 	while (conf < mm_confs + LEN(mm_confs) &&
 	       strcmp(conf->str.name, name) != 0)
@@ -175,15 +180,16 @@ unsigned mm_config_set(const char *name, const char *value)
 		return 1;
 	switch (conf->type) {
 	case MM_CONF_INT:
-		i = atoi(value);
-		if (i < conf->nbre.min || i > conf->nbre.max)
+		i = strtol(value, &t, 10);
+		if (t != NULL && errno != ERANGE &&
+		    (i < conf->nbre.min || i > conf->nbre.max))
 			return 2;
 		else
 			conf->nbre.val = i;
 		break;
 	case MM_CONF_BOOL:
-		i = atoi(value);
-		if (i == 0 || i == 1)
+		i = strtol(value, &t, 10);
+		if (t != NULL && errno != ERANGE && (i == 0 || i == 1))
 			conf->bool.val = (uint8_t)i;
 		else
 			return 2;
