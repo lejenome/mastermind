@@ -11,6 +11,10 @@
 #include "lib.h"
 #include "core.h"
 
+#define drawSecret()                                                           \
+	drawCombination(session->secret->val, session->config->guesses, 0)
+#define drawGuess(p) drawCombination(session->panel[p].combination, p, 1)
+
 int SCREEN_HEIGHT = 640;
 int SCREEN_WIDTH = 480;
 typedef struct {
@@ -97,8 +101,9 @@ SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
 }
 int setBg()
 {
-	SDL_Color bg = bg_color;
-	SDL_SetRenderDrawColor(rend, bg.r, bg.g, bg.b, bg.a);
+	SDL_SetRenderDrawColor(rend, (SDL_Color)bg_color.r,
+			       (SDL_Color)bg_color.g, (SDL_Color)bg_color.b,
+			       (SDL_Color)bg_color.a);
 	SDL_RenderFillRect(rend, NULL);
 	return 0;
 }
@@ -132,7 +137,7 @@ void initTables()
 			   .rows = 1,
 			   .cols = 2};
 }
-void initColors(mm_session *session)
+void initColors()
 {
 	unsigned i;
 	if (colors)
@@ -151,7 +156,6 @@ int drawTableBottom(SDL_Table *T)
 {
 	unsigned i, w;
 	w = T->w / T->cols;
-	SDL_SetRenderDrawColor(rend, 0x00, 0x00, 0x00, 0x00);
 	for (i = 0; i <= T->rows; i++)
 		SDL_RenderDrawLine(rend, T->x, T->y + (case_h * i), T->x + T->w,
 				   T->y + (case_h * i));
@@ -163,8 +167,6 @@ int drawTableBottom(SDL_Table *T)
 void drawTableTop(SDL_Table *T)
 {
 	unsigned i;
-	SDL_Color br = (SDL_Color)br_color;
-	SDL_SetRenderDrawColor(rend, br.r, br.g, br.b, br.a);
 	for (i = 0; i <= T->rows + 1; i++) {
 		if (i == session->guessed + 1 && session->state != MM_SUCCESS &&
 		    session->state != MM_FAIL)
@@ -223,18 +225,13 @@ void drawSelector()
 		x += case_w;
 	}
 }
-void drawSecret()
-{
-	drawCombination(session->secret->val, session->config->guesses, 0);
-}
-void drawGuess(unsigned p)
-{
-	drawCombination(session->panel[p].combination, p, 1);
-}
 void redraw()
 {
 	unsigned i;
 	setBg();
+	SDL_SetRenderDrawColor(rend, (SDL_Color)br_color.r,
+			       (SDL_Color)br_color.g, (SDL_Color)br_color.b,
+			       (SDL_Color)br_color.a);
 	drawTableTop(&panel);
 	drawTableTop(&state);
 	drawTableBottom(&control);
@@ -307,8 +304,8 @@ uint8_t *getGuess(unsigned *play)
 			    event.window.event == SDL_WINDOWEVENT_EXPOSED) {
 				SDL_GetWindowSize(win, &SCREEN_WIDTH,
 						  &SCREEN_HEIGHT);
-				initTables(session);
-				redraw(session);
+				initTables();
+				redraw();
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
@@ -335,8 +332,8 @@ int main(int argc, char *argv[])
 	session = mm_session_restore();
 	if (session == NULL)
 		session = mm_session_new();
-	initTables(session);
-	initColors(session);
+	initTables();
+	initColors();
 	for (;;) {
 		redraw();
 		curGuess =
@@ -360,8 +357,8 @@ int main(int argc, char *argv[])
 		free(curGuess);
 		curGuess = NULL;
 		session = mm_session_new();
-		initTables(session);
-		initColors(session);
+		initTables();
+		initColors();
 	}
 	clean();
 	return 0;
