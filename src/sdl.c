@@ -23,13 +23,13 @@ typedef struct {
 } SDL_Table;
 
 SDL_Window *win = NULL;
-// SDL_Surface *surf = NULL;
 SDL_Renderer *rend = NULL;
 TTF_Font *font = NULL;
-mm_session *session;
+mm_session *session = NULL;
+uint8_t *curGuess = NULL; // combination of last guess combination
 SDL_Table panel, state, control, play;
-unsigned it_w, it_h, it2_w;
-uint8_t *curGuess = NULL;
+unsigned case_w, case_h, button_w;
+SDL_Color *colors = NULL;
 
 void init_sdl()
 {
@@ -62,6 +62,8 @@ void clean()
 	if (session) {
 		mm_session_exit(session);
 	}
+	if (curGuess)
+		free(curGuess);
 	TTF_CloseFont(font);
 	SDL_DestroyRenderer(rend);
 	// SDL_FreeSurface(surf);
@@ -69,26 +71,27 @@ void clean()
 	TTF_Quit();
 	SDL_Quit();
 }
-SDL_Texture *sdl_print_center(char *s, int x, int y)
+SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
 {
 	SDL_Texture *tex;
 	SDL_Rect rect;
-	SDL_Surface *tmp = TTF_RenderUTF8_Solid(font, s, (SDL_Color){0, 0, 0});
-	if (tmp == NULL) {
+	SDL_Surface *surf = TTF_RenderUTF8_Solid(
+	    font, s, (color == NULL) ? (SDL_Color){0, 0, 0} : *color);
+	if (surf == NULL) {
 		printf("Unable to load font! Error: %s\n", TTF_GetError());
 		clean();
 		exit(1);
 	}
-	tex = SDL_CreateTextureFromSurface(rend, tmp);
+	tex = SDL_CreateTextureFromSurface(rend, surf);
 	if (tex == NULL) {
 		printf("Unable to create texture! Error: %s\n", SDL_GetError());
 		clean();
 		exit(1);
 	}
 	// SDL_SetTextureColorMod(tex, 0, 0, 0);
-	rect = (SDL_Rect){x - tmp->w / 2, y - tmp->h / 2, tmp->w, tmp->h};
+	rect = (SDL_Rect){x - surf->w / 2, y - surf->h / 2, surf->w, surf->h};
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
-	SDL_FreeSurface(tmp);
+	SDL_FreeSurface(surf);
 	SDL_DestroyTexture(tex);
 	return tex;
 }
@@ -100,43 +103,53 @@ int setBg()
 }
 void initTables()
 {
-	it_w = SCREEN_WIDTH / (session->config->holes + 4),
-	it_h = SCREEN_HEIGHT / (session->config->guesses + 4);
-	it2_w = (SCREEN_WIDTH - it_w) / 9;
-	panel = (SDL_Table){.x = it_w / 2,
-			    .y = it_h / 2,
-			    .w = it_w * session->config->holes,
-			    .h = it_h * (session->config->guesses + 1),
+	case_w = SCREEN_WIDTH / (session->config->holes + 4);
+	case_h = SCREEN_HEIGHT / (session->config->guesses + 4);
+	button_w = (SCREEN_WIDTH - case_w) / 9;
+	panel = (SDL_Table){.x = case_w / 2,
+			    .y = case_h / 2,
+			    .w = case_w * session->config->holes,
+			    .h = case_h * (session->config->guesses + 1),
 			    .rows = session->config->guesses,
 			    .cols = session->config->holes};
-	state = (SDL_Table){.x = it_w / 2 + ((panel.cols + 1) * it_w),
-			    .y = it_h / 2,
-			    .w = it_w * 2,
-			    .h = it_h * (session->config->guesses + 1),
+	state = (SDL_Table){.x = case_w / 2 + ((panel.cols + 1) * case_w),
+			    .y = case_h / 2,
+			    .w = case_w * 2,
+			    .h = panel.h,
 			    .rows = session->config->guesses,
 			    .cols = 2};
-	control = (SDL_Table){.x = it_w / 2,
-			      .y = SCREEN_HEIGHT - (it_h * 1.5F),
-			      .w = it2_w * 3,
-			      .h = it_h,
+	control = (SDL_Table){.x = case_w / 2,
+			      .y = SCREEN_HEIGHT - (case_h * 1.5F),
+			      .w = button_w * 3,
+			      .h = case_h,
 			      .rows = 1,
 			      .cols = 3};
-	play = (SDL_Table){.x = it_w / 2 + it2_w * 5,
-			   .y = SCREEN_HEIGHT - (it_h * 1.5F),
-			   .w = it2_w * 4,
-			   .h = it_h,
+	play = (SDL_Table){.x = case_w / 2 + button_w * 5,
+			   .y = control.y,
+			   .w = button_w * 4,
+			   .h = case_h,
 			   .rows = 1,
 			   .cols = 2};
 }
-int drawTable(SDL_Table *T)
+void initColors(mm_session *session)
 {
-	unsigned i, h, w;
-	h = T->h / T->rows;
+	unsigned i;
+	if (colors)
+		free(colors);
+	colors =
+	    (SDL_Color *)malloc(sizeof(SDL_Color) * session->config->colors);
+	for (i = 0; i < session->config->colors; i++)
+		colors[i] = (SDL_Color){255 / (i + 1), (150 * 2) % 200,
+					100 / (i % 3 + 1), 255};
+}
+int drawTableBottom(SDL_Table *T)
+{
+	unsigned i, w;
 	w = T->w / T->cols;
 	SDL_SetRenderDrawColor(rend, 0x00, 0x00, 0x00, 0x00);
 	for (i = 0; i <= T->rows; i++)
-		SDL_RenderDrawLine(rend, T->x, T->y + (h * i), T->x + T->w,
-				   T->y + (h * i));
+		SDL_RenderDrawLine(rend, T->x, T->y + (case_h * i), T->x + T->w,
+				   T->y + (case_h * i));
 	for (i = 0; i <= T->cols; i++)
 		SDL_RenderDrawLine(rend, T->x + (w * i), T->y, T->x + (w * i),
 				   T->y + T->h);
@@ -150,64 +163,67 @@ void drawTableTop(SDL_Table *T)
 		if (i == session->guessed + 1 && session->state != MM_SUCCESS &&
 		    session->state != MM_FAIL)
 			continue;
-		SDL_RenderDrawLine(rend, T->x, T->y + (it_h * i), T->x + T->w,
-				   T->y + (it_h * i));
+		SDL_RenderDrawLine(rend, T->x, T->y + (case_h * i), T->x + T->w,
+				   T->y + (case_h * i));
 	}
 	for (i = 0; i <= T->cols + 1; i++)
-		SDL_RenderDrawLine(rend, T->x + (it_w * i), T->y,
-				   T->x + (it_w * i), T->y + T->h);
+		SDL_RenderDrawLine(rend, T->x + (case_w * i), T->y,
+				   T->x + (case_w * i), T->y + T->h);
 }
-void drawCombination(SDL_Table *T, SDL_Table *R, uint8_t *G, unsigned p,
-		     unsigned drawState)
+void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 {
 	unsigned i;
 	SDL_Rect rect;
-	rect.h = it_h / 3;
-	rect.w = it_w / 3;
-	rect.x = T->x + rect.w;
-	rect.y = T->y + rect.h * (p * 3 + 1);
+	rect.h = case_h / 3;
+	rect.w = case_w / 3;
+	rect.x = panel.x + rect.w;
+	rect.y = panel.y + case_h * p + case_h / 3;
+	SDL_Color green, yellow;
+	green = (SDL_Color){144, 168, 94, 255};
+	yellow = (SDL_Color){225, 170, 93, 255};
 	char c[2] = "0";
-	for (i = 0; i < T->cols; i++) {
-		SDL_SetRenderDrawColor(rend, 255 / (G[i] + 1),
-				       (150 * G[i]) % 200, 100 / (G[i] % 3 + 1),
-				       255);
+	for (i = 0; i < panel.cols; i++) {
+		SDL_SetRenderDrawColor(rend, colors[G[i]].r, colors[G[i]].g,
+				       colors[G[i]].b, colors[G[i]].a);
 		SDL_RenderFillRect(rend, &rect);
 		c[0] = 'a' + G[i];
-		sdl_print_center(c, rect.x + rect.w / 2, rect.y + rect.h / 3);
-		rect.x += it_w;
+		sdl_print_center(c, rect.x + rect.w / 2, rect.y + rect.h / 3,
+				 NULL);
+		rect.x += case_w;
 	}
 	if (drawState) {
 		char s[2];
 		sprintf(s, "%d", session->panel[p].inplace);
-		sdl_print_center(s, R->x + R->w / 4, rect.y + rect.h / 3);
+		sdl_print_center(s, state.x + state.w / 4, rect.y + rect.h / 3,
+				 &green);
 		sprintf(s, "%d",
 			session->panel[p].insecret - session->panel[p].inplace);
-		sdl_print_center(s, R->x + (R->w / 4) * 3, rect.y + rect.h / 3);
+		sdl_print_center(s, state.x + (state.w / 4) * 3,
+				 rect.y + rect.h / 3, &yellow);
 	}
 }
 void drawSelector()
 {
 	unsigned y, x, i;
-	x = it_w;
-	y = it_h * (session->guessed + 1);
+	x = case_w;
+	y = case_h * (session->guessed + 1);
 	char c[2] = "a";
 	for (i = 0; i < session->config->holes; i++) {
-		sdl_print_center("-", x, y);
+		sdl_print_center("-", x, y, NULL);
 		if (curGuess)
 			c[0] = curGuess[i] + 'a';
-		sdl_print_center(c, x, y + it_h / 2);
-		sdl_print_center("-", x, y + it_h);
-		x += it_w;
+		sdl_print_center(c, x, y + case_h / 2, &colors[c[0] - 'a']);
+		sdl_print_center("-", x, y + case_h, NULL);
+		x += case_w;
 	}
 }
 void drawSecret()
 {
-	drawCombination(&panel, &state, session->secret->val,
-			session->config->guesses, 0);
+	drawCombination(session->secret->val, session->config->guesses, 0);
 }
 void drawGuess(unsigned p)
 {
-	drawCombination(&panel, &state, session->panel[p].combination, p, 1);
+	drawCombination(session->panel[p].combination, p, 1);
 }
 void redraw()
 {
@@ -215,13 +231,17 @@ void redraw()
 	setBg();
 	drawTableTop(&panel);
 	drawTableTop(&state);
-	drawTable(&control);
-	drawTable(&play);
-	sdl_print_center("!", control.x + it2_w * 0.5, control.y + it_h / 2);
-	sdl_print_center("Op", control.x + it2_w * 1.5, control.y + it_h / 2);
-	sdl_print_center("Sc", control.x + it2_w * 2.5, control.y + it_h / 2);
-	sdl_print_center("rest", play.x + it2_w, play.y + it_h / 2);
-	sdl_print_center("play", play.x + it2_w * 3, play.y + it_h / 2);
+	drawTableBottom(&control);
+	drawTableBottom(&play);
+	sdl_print_center("!", control.x + button_w * 0.5,
+			 control.y + case_h / 2, NULL);
+	sdl_print_center("Op", control.x + button_w * 1.5,
+			 control.y + case_h / 2, NULL);
+	sdl_print_center("Sc", control.x + button_w * 2.5,
+			 control.y + case_h / 2, NULL);
+	sdl_print_center("rest", play.x + button_w, play.y + case_h / 2, NULL);
+	sdl_print_center("play", play.x + button_w * 3, play.y + case_h / 2,
+			 NULL);
 	for (i = 0; i < session->guessed; i++)
 		drawGuess(i);
 	if (session->state == MM_NEW || session->state == MM_PLAYING)
@@ -234,10 +254,10 @@ unsigned onMouseUp(SDL_MouseButtonEvent e)
 {
 	unsigned i;
 	if (e.x > panel.x && e.x < panel.x + panel.w &&
-	    e.y > panel.y + it_h * session->guessed &&
-	    e.y < panel.y + it_h * (session->guessed + 2)) {
-		i = (e.x - panel.x) / it_w;
-		if (e.y < panel.y + it_h * (session->guessed + 1)) {
+	    e.y > panel.y + case_h * session->guessed &&
+	    e.y < panel.y + case_h * (session->guessed + 2)) {
+		i = (e.x - panel.x) / case_w;
+		if (e.y < panel.y + case_h * (session->guessed + 1)) {
 			if (curGuess[i] < session->config->colors - 1)
 				curGuess[i]++;
 		} else {
@@ -310,6 +330,7 @@ int main(int argc, char *argv[])
 	if (session == NULL)
 		session = mm_session_new();
 	initTables(session);
+	initColors(session);
 	for (;;) {
 		redraw();
 		curGuess =
@@ -334,6 +355,7 @@ int main(int argc, char *argv[])
 		curGuess = NULL;
 		session = mm_session_new();
 		initTables(session);
+		initColors(session);
 	}
 	clean();
 	return 0;
