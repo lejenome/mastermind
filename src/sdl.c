@@ -189,7 +189,7 @@ void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 	SDL_Color green, yellow;
 	green = (SDL_Color)fg_green;
 	yellow = (SDL_Color)fg_yellow;
-	char c[2] = "0";
+	char c[2] = "a";
 	for (i = 0; i < panel.cols; i++) {
 		/*
 		SDL_SetRenderDrawColor(rend, colors[G[i]].r, colors[G[i]].g,
@@ -230,6 +230,7 @@ void drawSelector()
 void redraw()
 {
 	unsigned i;
+	SDL_RenderClear(rend);
 	setBg();
 	SDL_SetRenderDrawColor(rend, (SDL_Color)br_color.r,
 			       (SDL_Color)br_color.g, (SDL_Color)br_color.b,
