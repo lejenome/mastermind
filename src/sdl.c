@@ -34,7 +34,7 @@ mm_session *session = NULL;
 uint8_t *curGuess = NULL; // combination of last guess combination
 SDL_Table panel, state, control, play;
 unsigned case_w, case_h, button_w;
-SDL_Color *colors = NULL;
+SDL_Color *colors = NULL; // colors used on drawing combinations
 
 void init_sdl()
 {
@@ -212,14 +212,14 @@ void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 	SDL_Color green, yellow;
 	green = (SDL_Color)fg_green;
 	yellow = (SDL_Color)fg_yellow;
-	char c[2] = "a";
+	// char c[2] = "a";
 	for (i = 0; i < panel.cols; i++) {
 		/*
 		SDL_SetRenderDrawColor(rend, colors[G[i]].r, colors[G[i]].g,
 				       colors[G[i]].b, colors[G[i]].a);
 		SDL_RenderFillRect(rend, &rect);
 		*/
-		c[0] = 'a' + G[i];
+		// c[0] = 'a' + G[i];
 		sdl_print_icon(0xF111, rect.x + rect.w / 2, rect.y + rect.h / 3,
 			       colors + G[i]);
 		// sdl_print_center(c, rect.x + rect.w / 2, rect.y + rect.h / 3,
@@ -296,10 +296,39 @@ unsigned onMouseUp(SDL_MouseButtonEvent e)
 				curGuess[i]--;
 		}
 		redraw();
-	}
-	if (e.x > play.x && e.x < play.x + play.w && e.y > play.y &&
-	    e.y < play.y + play.h)
+	} else if (e.x > play.x && e.x < play.x + play.w && e.y > play.y &&
+		   e.y < play.y + play.h) {
 		return (e.x < play.x + play.w / 2) ? 0 : 2;
+	} else if (e.x > control.x && e.x < control.x + control.w &&
+		   e.y > control.y && e.y < control.y + control.h) {
+		if (e.x < control.x + button_w) {
+			SDL_ShowSimpleMessageBox(
+			    SDL_MESSAGEBOX_INFORMATION, _("Help"),
+			    _(PACKAGE ": Simple mastermind implemetation"),
+			    win);
+		} else if (e.x < control.x + button_w * 2) {
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
+						 _("Settings"),
+						 _("Not implemeted yet"), win);
+		} else {
+			const mm_scores_t *scores = mm_scores_get();
+			char *s;
+			int j = 0;
+			if (scores->len == 0)
+				s = _("No score yet!\n");
+			else
+				s = (char *)malloc(sizeof(char) * 42 *
+						   scores->len);
+			for (i = 0; i < scores->len; i++)
+				j += snprintf(s + j, 42, "%-2d) %-15ld %s\n", i,
+					      scores->T[i].score,
+					      scores->T[i].account);
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
+						 _("Scores"), s, NULL);
+			if (scores->len)
+				free(s);
+		}
+	}
 	return 1;
 }
 uint8_t *getGuess(unsigned *play)
