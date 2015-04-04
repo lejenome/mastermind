@@ -305,12 +305,10 @@ int main(int argc, char *argv[])
 		printf(_("Restoring old session\n"));
 #ifndef DISABLE_GETOPT
 	ret = execArgs(argc, argv, cmds, LEN(cmds), session);
-	if (ret & MM_CMD_ERROR) {
+	if (ret & MM_CMD_ERROR)
 		exit(EXIT_FAILURE);
+	else if (ret & MM_CMD_OPT_EXIT)
 		goto quit;
-	} else if (ret & MM_CMD_OPT_EXIT) {
-		exit(EXIT_SUCCESS);
-	}
 	if (ret & MM_CMD_NEW_SESSION)
 		session = mm_session_new();
 #endif // DISABLE_GETOPT
@@ -353,5 +351,5 @@ int main(int argc, char *argv[])
 	} while (c == 'y' || c == 'Y');
 quit:
 	mm_session_free(session);
-	return 0;
+	exit(EXIT_SUCCESS);
 }

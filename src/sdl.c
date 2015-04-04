@@ -41,24 +41,24 @@ void init_sdl()
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		printf("SDL could not be initialize! Error: %s\n",
 		       SDL_GetError());
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT,
 					SDL_WINDOW_SHOWN, &win, &rend)) {
 		printf("Error on creating window and gettings renderer! Error: "
 		       "%s\n",
 		       SDL_GetError());
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	if (TTF_Init() == -1) {
 		printf("SDL_ttf cannont intialize! Erro: %s\n", TTF_GetError());
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	font = TTF_OpenFont("share/fonts/ProFont_r400-29.pcf", 28);
 	icons = TTF_OpenFont("share/fonts/fontawesome-webfont.ttf", 31);
 	if (font == NULL || icons == NULL) {
 		printf("Failed to load font! Error: %s\n", TTF_GetError());
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	// surf = SDL_GetWindowSurface(win);
 }
@@ -85,13 +85,13 @@ SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
 	if (surf == NULL) {
 		printf("Unable to render font! Error: %s\n", TTF_GetError());
 		clean();
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	tex = SDL_CreateTextureFromSurface(rend, surf);
 	if (tex == NULL) {
 		printf("Unable to create texture! Error: %s\n", SDL_GetError());
 		clean();
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	rect = (SDL_Rect){x - surf->w / 2, y - surf->h / 2, surf->w, surf->h};
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
@@ -108,13 +108,13 @@ SDL_Texture *sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 	if (surf == NULL) {
 		printf("Unable to render font! Error: %s\n", TTF_GetError());
 		clean();
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	tex = SDL_CreateTextureFromSurface(rend, surf);
 	if (tex == NULL) {
 		printf("Unable to create texture! Error: %s\n", SDL_GetError());
 		clean();
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	rect = (SDL_Rect){x - surf->w / 2, y - surf->h / 2, surf->w, surf->h};
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
@@ -245,8 +245,7 @@ void drawSelector()
 	char c[2] = "a";
 	for (i = 0; i < session->config->holes; i++) {
 		sdl_print_icon(0xF0DE, x, y, NULL);
-		if (curGuess)
-			c[0] = curGuess[i] + 'a';
+		c[0] = curGuess[i] + 'a';
 		sdl_print_icon(0xF111, x, y + case_h / 2, &colors[c[0] - 'a']);
 		// sdl_print_center(c, x, y + case_h / 2, NULL);
 		sdl_print_icon(0xF0DD, x, y + case_h, NULL);
@@ -314,7 +313,7 @@ uint8_t *getGuess(unsigned *play)
 		switch (event.type) {
 		case SDL_QUIT:
 			clean();
-			exit(0);
+			exit(EXIT_SUCCESS);
 			break;
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym >= SDLK_a &&
@@ -364,11 +363,11 @@ int main(int argc, char *argv[])
 	initTables();
 	initColors();
 	for (;;) {
-		redraw();
 		curGuess =
 		    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
 		for (i = 0; i < session->config->holes; i++)
 			curGuess[i] = 0;
+		redraw();
 		play = 1;
 		while ((session->state == MM_PLAYING ||
 			session->state == MM_NEW) &&
@@ -390,5 +389,5 @@ int main(int argc, char *argv[])
 		initColors();
 	}
 	clean();
-	return 0;
+	exit(EXIT_SUCCESS);
 }
