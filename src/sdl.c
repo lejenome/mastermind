@@ -28,7 +28,8 @@ typedef struct {
 
 SDL_Window *win = NULL;
 SDL_Renderer *rend = NULL;
-TTF_Font *font = NULL;
+TTF_Font *font = NULL, *icons = NULL;
+;
 mm_session *session = NULL;
 uint8_t *curGuess = NULL; // combination of last guess combination
 SDL_Table panel, state, control, play;
@@ -53,9 +54,9 @@ void init_sdl()
 		printf("SDL_ttf cannont intialize! Erro: %s\n", TTF_GetError());
 		exit(1);
 	}
-	// font = TTF_OpenFont("extra/Anonymous Pro B.ttf", 28);
-	font = TTF_OpenFont("share/fonts/ProFont_r400-29.pcf", 29);
-	if (font == NULL) {
+	font = TTF_OpenFont("share/fonts/ProFont_r400-29.pcf", 28);
+	icons = TTF_OpenFont("share/fonts/fontawesome-webfont.ttf", 31);
+	if (font == NULL || icons == NULL) {
 		printf("Failed to load font! Error: %s\n", TTF_GetError());
 		exit(1);
 	}
@@ -82,7 +83,7 @@ SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
 	SDL_Surface *surf = TTF_RenderUTF8_Solid(
 	    font, s, (color == NULL) ? (SDL_Color)fg_color : *color);
 	if (surf == NULL) {
-		printf("Unable to load font! Error: %s\n", TTF_GetError());
+		printf("Unable to render font! Error: %s\n", TTF_GetError());
 		clean();
 		exit(1);
 	}
@@ -92,7 +93,29 @@ SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
 		clean();
 		exit(1);
 	}
-	// SDL_SetTextureColorMod(tex, 0, 0, 0);
+	rect = (SDL_Rect){x - surf->w / 2, y - surf->h / 2, surf->w, surf->h};
+	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
+	SDL_FreeSurface(surf);
+	SDL_DestroyTexture(tex);
+	return tex;
+}
+SDL_Texture *sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
+{
+	SDL_Texture *tex;
+	SDL_Rect rect;
+	SDL_Surface *surf = TTF_RenderGlyph_Blended(
+	    icons, c, (color == NULL) ? (SDL_Color)fg_color : *color);
+	if (surf == NULL) {
+		printf("Unable to render font! Error: %s\n", TTF_GetError());
+		clean();
+		exit(1);
+	}
+	tex = SDL_CreateTextureFromSurface(rend, surf);
+	if (tex == NULL) {
+		printf("Unable to create texture! Error: %s\n", SDL_GetError());
+		clean();
+		exit(1);
+	}
 	rect = (SDL_Rect){x - surf->w / 2, y - surf->h / 2, surf->w, surf->h};
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
 	SDL_FreeSurface(surf);
@@ -197,8 +220,10 @@ void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 		SDL_RenderFillRect(rend, &rect);
 		*/
 		c[0] = 'a' + G[i];
-		sdl_print_center(c, rect.x + rect.w / 2, rect.y + rect.h / 3,
-				 colors + G[i]);
+		sdl_print_icon(0xF111, rect.x + rect.w / 2, rect.y + rect.h / 3,
+			       colors + G[i]);
+		// sdl_print_center(c, rect.x + rect.w / 2, rect.y + rect.h / 3,
+		//		 NULL);
 		rect.x += case_w;
 	}
 	if (drawState) {
@@ -219,11 +244,12 @@ void drawSelector()
 	y = case_h * (session->guessed + 1);
 	char c[2] = "a";
 	for (i = 0; i < session->config->holes; i++) {
-		sdl_print_center("-", x, y, NULL);
+		sdl_print_icon(0xF0DE, x, y, NULL);
 		if (curGuess)
 			c[0] = curGuess[i] + 'a';
-		sdl_print_center(c, x, y + case_h / 2, &colors[c[0] - 'a']);
-		sdl_print_center("-", x, y + case_h, NULL);
+		sdl_print_icon(0xF111, x, y + case_h / 2, &colors[c[0] - 'a']);
+		// sdl_print_center(c, x, y + case_h / 2, NULL);
+		sdl_print_icon(0xF0DD, x, y + case_h, NULL);
 		x += case_w;
 	}
 }
@@ -239,12 +265,12 @@ void redraw()
 	drawTableTop(&state);
 	drawTableBottom(&control);
 	drawTableBottom(&play);
-	sdl_print_center("!", control.x + button_w * 0.5,
-			 control.y + case_h / 2, NULL);
-	sdl_print_center("Op", control.x + button_w * 1.5,
-			 control.y + case_h / 2, NULL);
-	sdl_print_center("Sc", control.x + button_w * 2.5,
-			 control.y + case_h / 2, NULL);
+	sdl_print_icon(0xF05A, control.x + button_w * 0.5,
+		       control.y + case_h / 2, NULL);
+	sdl_print_icon(0xF085, control.x + button_w * 1.5,
+		       control.y + case_h / 2, NULL); // 0xF013
+	sdl_print_icon(0xF097, control.x + button_w * 2.5,
+		       control.y + case_h / 2, NULL);
 	sdl_print_center("rest", play.x + button_w, play.y + case_h / 2, NULL);
 	sdl_print_center("play", play.x + button_w * 3, play.y + case_h / 2,
 			 NULL);
