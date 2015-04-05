@@ -351,8 +351,9 @@ uint8_t *getGuess(unsigned *play)
 				curGuess[i++] = event.key.keysym.sym - SDLK_a;
 				redraw();
 			}
-			printf("Key down event: %d (%c) \n",
-			       event.key.keysym.sym, event.key.keysym.sym);
+			printf("Key down event: %d (%c) name: %s\n",
+			       event.key.keysym.sym, event.key.keysym.sym,
+			       SDL_GetKeyName(event.key.keysym.sym));
 			break;
 		case SDL_WINDOWEVENT:
 			printf("Window Event: id: %d, event: %d\n",
