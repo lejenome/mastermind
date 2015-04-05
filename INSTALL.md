@@ -59,8 +59,8 @@ src/org/libsdl/app/SDLActivity.java
 then run:
 ```shell
 ndk-build
-mkdir -p assert/share/fonts
-cp jni/src/mastermind/extra/*.{ttf,pcf} assert/share/fonts
+mkdir -p assets/share/fonts
+cp jni/src/mastermind/extra/*.{ttf,pcf} assets/share/fonts
 ant release
 keytool -genkey -v -keystore my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore bin/SDLActivity-release-unsigned.apk alias_name

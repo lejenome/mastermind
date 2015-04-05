@@ -39,25 +39,25 @@ SDL_Color *colors = NULL; // colors used on drawing combinations
 void init_sdl()
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		printf("SDL could not be initialize! Error: %s\n",
+		SDL_Log("SDL could not be initialize! Error: %s\n",
 		       SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
 	if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT,
 					SDL_WINDOW_SHOWN, &win, &rend)) {
-		printf("Error on creating window and gettings renderer! Error: "
+		SDL_Log("Error on creating window and gettings renderer! Error: "
 		       "%s\n",
 		       SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
 	if (TTF_Init() == -1) {
-		printf("SDL_ttf cannont intialize! Erro: %s\n", TTF_GetError());
+		SDL_Log("SDL_ttf cannont intialize! Erro: %s\n", TTF_GetError());
 		exit(EXIT_FAILURE);
 	}
 	font = TTF_OpenFont("share/fonts/ProFont_r400-29.pcf", 28);
 	icons = TTF_OpenFont("share/fonts/fontawesome-webfont.ttf", 31);
 	if (font == NULL || icons == NULL) {
-		printf("Failed to load font! Error: %s\n", TTF_GetError());
+		SDL_Log("Failed to load font! Error: %s\n", TTF_GetError());
 		exit(EXIT_FAILURE);
 	}
 	// surf = SDL_GetWindowSurface(win);
@@ -83,13 +83,13 @@ SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
 	SDL_Surface *surf = TTF_RenderUTF8_Solid(
 	    font, s, (color == NULL) ? (SDL_Color)fg_color : *color);
 	if (surf == NULL) {
-		printf("Unable to render font! Error: %s\n", TTF_GetError());
+		SDL_Log("Unable to render font! Error: %s\n", TTF_GetError());
 		clean();
 		exit(EXIT_FAILURE);
 	}
 	tex = SDL_CreateTextureFromSurface(rend, surf);
 	if (tex == NULL) {
-		printf("Unable to create texture! Error: %s\n", SDL_GetError());
+		SDL_Log("Unable to create texture! Error: %s\n", SDL_GetError());
 		clean();
 		exit(EXIT_FAILURE);
 	}
@@ -106,13 +106,13 @@ SDL_Texture *sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 	SDL_Surface *surf = TTF_RenderGlyph_Blended(
 	    icons, c, (color == NULL) ? (SDL_Color)fg_color : *color);
 	if (surf == NULL) {
-		printf("Unable to render font! Error: %s\n", TTF_GetError());
+		SDL_Log("Unable to render font! Error: %s\n", TTF_GetError());
 		clean();
 		exit(EXIT_FAILURE);
 	}
 	tex = SDL_CreateTextureFromSurface(rend, surf);
 	if (tex == NULL) {
-		printf("Unable to create texture! Error: %s\n", SDL_GetError());
+		SDL_Log("Unable to create texture! Error: %s\n", SDL_GetError());
 		clean();
 		exit(EXIT_FAILURE);
 	}
@@ -351,12 +351,12 @@ uint8_t *getGuess(unsigned *play)
 				curGuess[i++] = event.key.keysym.sym - SDLK_a;
 				redraw();
 			}
-			printf("Key down event: %d (%c) name: %s\n",
+			SDL_Log("Key down event: %d (%c) name: %s\n",
 			       event.key.keysym.sym, event.key.keysym.sym,
 			       SDL_GetKeyName(event.key.keysym.sym));
 			break;
 		case SDL_WINDOWEVENT:
-			printf("Window Event: id: %d, event: %d\n",
+			SDL_Log("Window Event: id: %d, event: %d\n",
 			       event.window.windowID, event.window.event);
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED ||
 			    event.window.event == SDL_WINDOWEVENT_EXPOSED) {
@@ -367,7 +367,7 @@ uint8_t *getGuess(unsigned *play)
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
-			printf("MouseButtonEvent: button: %d, x= %d, y= %d\n",
+			SDL_Log("MouseButtonEvent: button: %d, x= %d, y= %d\n",
 			       event.button.button, event.button.x,
 			       event.button.y);
 			*play = onMouseUp(event.button);
