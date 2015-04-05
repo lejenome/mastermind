@@ -48,7 +48,7 @@ source dir inside jni/src/.
 
 Edit jni/src/Android.mk file:
 - add `$(LOCAL_PATH)/../SDL_ttf` to LOCAL_C_INCLUDES
-- replace YouMainFile.c on LOCAL_SRC_FILES with
+- replace YourSourceHere.c on LOCAL_SRC_FILES with
 `mastermind/src/lib.c mastermind/src/core.c mastermind/src/sdl.c`
 - add `SDL2_ttf` to LOCAL_SHARED_LIBRARIES
 - add `LOCAL_CFLAGS += -DDISABLE_LOCALE` to the end of file
@@ -56,11 +56,15 @@ Edit jni/src/Android.mk file:
 uncomment `System.loadLibrary("SDL2_ttf");` on
 src/org/libsdl/app/SDLActivity.java
 
+then run cmake against mastermind directory to get config.h file needed on
+Android build
+
 then run:
 ```shell
 ndk-build
 mkdir -p assets/share/fonts
 cp jni/src/mastermind/extra/*.{ttf,pcf} assets/share/fonts
+android update project -p . -t android-20
 ant release
 keytool -genkey -v -keystore my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore bin/SDLActivity-release-unsigned.apk alias_name

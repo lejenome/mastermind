@@ -40,18 +40,20 @@ void init_sdl()
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		SDL_Log("SDL could not be initialize! Error: %s\n",
-		       SDL_GetError());
+			SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
 	if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT,
 					SDL_WINDOW_SHOWN, &win, &rend)) {
-		SDL_Log("Error on creating window and gettings renderer! Error: "
-		       "%s\n",
-		       SDL_GetError());
+		SDL_Log(
+		    "Error on creating window and gettings renderer! Error: "
+		    "%s\n",
+		    SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
 	if (TTF_Init() == -1) {
-		SDL_Log("SDL_ttf cannont intialize! Erro: %s\n", TTF_GetError());
+		SDL_Log("SDL_ttf cannont intialize! Erro: %s\n",
+			TTF_GetError());
 		exit(EXIT_FAILURE);
 	}
 	font = TTF_OpenFont("share/fonts/ProFont_r400-29.pcf", 28);
@@ -89,7 +91,8 @@ SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
 	}
 	tex = SDL_CreateTextureFromSurface(rend, surf);
 	if (tex == NULL) {
-		SDL_Log("Unable to create texture! Error: %s\n", SDL_GetError());
+		SDL_Log("Unable to create texture! Error: %s\n",
+			SDL_GetError());
 		clean();
 		exit(EXIT_FAILURE);
 	}
@@ -112,7 +115,8 @@ SDL_Texture *sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 	}
 	tex = SDL_CreateTextureFromSurface(rend, surf);
 	if (tex == NULL) {
-		SDL_Log("Unable to create texture! Error: %s\n", SDL_GetError());
+		SDL_Log("Unable to create texture! Error: %s\n",
+			SDL_GetError());
 		clean();
 		exit(EXIT_FAILURE);
 	}
@@ -352,12 +356,12 @@ uint8_t *getGuess(unsigned *play)
 				redraw();
 			}
 			SDL_Log("Key down event: %d (%c) name: %s\n",
-			       event.key.keysym.sym, event.key.keysym.sym,
-			       SDL_GetKeyName(event.key.keysym.sym));
+				event.key.keysym.sym, event.key.keysym.sym,
+				SDL_GetKeyName(event.key.keysym.sym));
 			break;
 		case SDL_WINDOWEVENT:
 			SDL_Log("Window Event: id: %d, event: %d\n",
-			       event.window.windowID, event.window.event);
+				event.window.windowID, event.window.event);
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED ||
 			    event.window.event == SDL_WINDOWEVENT_EXPOSED) {
 				SDL_GetWindowSize(win, &SCREEN_WIDTH,
@@ -368,8 +372,8 @@ uint8_t *getGuess(unsigned *play)
 			break;
 		case SDL_MOUSEBUTTONUP:
 			SDL_Log("MouseButtonEvent: button: %d, x= %d, y= %d\n",
-			       event.button.button, event.button.x,
-			       event.button.y);
+				event.button.button, event.button.x,
+				event.button.y);
 			*play = onMouseUp(event.button);
 			if (*play == 2)
 				goto done;
