@@ -66,3 +66,4 @@ You may need to set `SDL_VIDEO_RENDER_OGL_ES2` to 0 too :
 ```c
 #define SDL_VIDEO_RENDER_OGL_ES2 0
 ```
+then rebuild libs and apk starting from ndk-build instruction.
