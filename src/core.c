@@ -82,7 +82,7 @@ void mm_config_load()
 	FILE *f;
 	int i;
 	if (!mm_config_path)
-		mm_init();
+		mm_init(NULL);
 	if ((f = fopen(mm_config_path, "r"))) {
 		n = (char *)malloc(sizeof(char) * 40);
 		v = (char *)malloc(sizeof(char) * 20);
@@ -369,12 +369,22 @@ mm_guess mm_play_last(mm_session *session)
  * and core default standard
  * NOTE : this is an internal function
  */
-void mm_init()
+void mm_init(const char *data_dir)
 {
 	mm_score_path = (char *)malloc(sizeof(char) * 2000);
 	mm_config_path = (char *)malloc(sizeof(char) * 2000);
 	mm_store_path = (char *)malloc(sizeof(char) * 2000);
 	srandom(time(NULL));
+	if (data_dir
+#ifdef POSIX
+	    && access(data_dir, R_OK | W_OK | X_OK) == 0
+#endif // POSIX
+	    ) {
+		strcpy(mm_config_path, data_dir);
+		strcpy(mm_score_path, data_dir);
+		strcpy(mm_store_path, data_dir);
+		goto done;
+	}
 #ifdef POSIX
 	struct utsname unm;
 	char *home = getenv("HOME");
@@ -425,6 +435,7 @@ void mm_init()
 		strcpy(mm_score_path, ".");
 	}
 #endif
+done:
 	sprintf(mm_store_path, "%s%s", mm_score_path, "/store.data");
 	strcat(mm_config_path, "/config");
 	strcat(mm_score_path, "/score.txt");
@@ -502,7 +513,7 @@ unsigned int mm_session_save(mm_session *session)
 mm_session *mm_session_restore()
 {
 	if (!mm_store_path)
-		mm_init();
+		mm_init(NULL);
 	FILE *f = fopen(mm_store_path, "rb");
 	if (!f)
 		return NULL;

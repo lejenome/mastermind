@@ -88,5 +88,5 @@ long unsigned mm_score(mm_session *session);
 
 mm_secret *mm_secret_new(mm_config *);
 unsigned mm_play(mm_session *, uint8_t *);
-void mm_init();
+void mm_init(const char *);
 #endif

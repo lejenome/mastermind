@@ -364,7 +364,8 @@ uint8_t *getGuess(unsigned *play)
 				event.window.windowID, event.window.event);
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED ||
 			    event.window.event == SDL_WINDOWEVENT_EXPOSED ||
-			    event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+			    event.window.event ==
+				SDL_WINDOWEVENT_SIZE_CHANGED) {
 				SDL_GetWindowSize(win, &SCREEN_WIDTH,
 						  &SCREEN_HEIGHT);
 				initTables();
@@ -392,6 +393,10 @@ int main(int argc, char *argv[])
 	uint8_t *g;
 	unsigned i, play;
 	init_sdl();
+#ifdef __ANDROID__
+	// use android app internal path
+	mm_init(SDL_AndroidGetInternalStoragePath());
+#endif
 	session = mm_session_restore();
 	if (session == NULL)
 		session = mm_session_new();
