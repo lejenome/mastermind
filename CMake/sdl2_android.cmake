@@ -1,11 +1,11 @@
 set(PROJECT_ID "me.lejenome.mastermind")
 set(android_project_path "${CMAKE_CURRENT_SOURCE_DIR}/ext/android")
-configure_file("${android_project_path}/AndroidManifest.xml.in" AndroidManifest.xml)
-configure_file("${android_project_path}/build.xml.in" build.xml)
-configure_file(${android_project_path}/jni/src/Android.mk.in jni/src/Android.mk)
+configure_file("${android_project_path}/AndroidManifest.xml.in" AndroidManifest.xml @ONLY)
+configure_file("${android_project_path}/build.xml.in" build.xml @ONLY)
+configure_file(${android_project_path}/jni/src/Android.mk.in jni/src/Android.mk @ONLY)
 configure_file(${android_project_path}/res/values/strings.xml.in
-	res/values/strings.xml)
-configure_file(${android_project_path}/res/layout/main.xml.in res/layout/main.xml)
+	res/values/strings.xml @ONLY)
+configure_file(${android_project_path}/res/layout/main.xml.in res/layout/main.xml @ONLY)
 string(REPLACE "." "/" _src_path ${PROJECT_ID})
 configure_file(${android_project_path}/main.java.in
 	src/${_src_path}/${PROJECT_NAME}.java)
