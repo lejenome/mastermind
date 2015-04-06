@@ -40,7 +40,8 @@ void init_sdl()
 		exit(EXIT_FAILURE);
 	}
 	if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT,
-					SDL_WINDOW_SHOWN, &win, &rend)) {
+					SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE,
+					&win, &rend)) {
 		SDL_ShowSimpleMessageBox(
 		    SDL_MESSAGEBOX_ERROR,
 		    "Error on creating window and gettings renderer",
