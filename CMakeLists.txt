@@ -96,7 +96,12 @@ if(CLANG_FORMAT_FOUND)
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif(CLANG_FORMAT_FOUND)
 
-install(FILES extra/ProFont_r400-29.pcf DESTINATION share/fonts)
+install(FILES extra/fontawesome-webfont.ttf DESTINATION share/fonts/fontawesome-webfont.ttf)
+install(FILES extra/ProFont_r400-29.pcf DESTINATION share/fonts/ProFont_r400-29.pcf)
+
+configure_file(extra/ProFont_r400-29.pcf share/fonts/ProFont_r400-29.pcf COPYONLY)
+configure_file(extra/fontawesome-webfont.ttf share/fonts/fontawesome-webfont.ttf COPYONLY)
+
 INCLUDE(sdl2_android)
 
 install(TARGETS mastermindcli DESTINATION bin)
