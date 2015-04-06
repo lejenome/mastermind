@@ -34,27 +34,31 @@ SDL_Color *colors = NULL; // colors used on drawing combinations
 void init_sdl()
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		SDL_Log("SDL could not be initialize! Error: %s\n",
-			SDL_GetError());
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+					 "SDL could not be initialize",
+					 SDL_GetError(), NULL);
 		exit(EXIT_FAILURE);
 	}
 	if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT,
 					SDL_WINDOW_SHOWN, &win, &rend)) {
-		SDL_Log(
-		    "Error on creating window and gettings renderer! Error: "
-		    "%s\n",
-		    SDL_GetError());
+		SDL_ShowSimpleMessageBox(
+		    SDL_MESSAGEBOX_ERROR,
+		    "Error on creating window and gettings renderer",
+		    SDL_GetError(), NULL);
 		exit(EXIT_FAILURE);
 	}
 	if (TTF_Init() == -1) {
-		SDL_Log("SDL_ttf cannont intialize! Erro: %s\n",
-			TTF_GetError());
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+					 "SDL_ttf cannont intialize",
+					 TTF_GetError(), NULL);
 		exit(EXIT_FAILURE);
 	}
 	font = TTF_OpenFont("share/fonts/ProFont_r400-29.pcf", 28);
 	icons = TTF_OpenFont("share/fonts/fontawesome-webfont.ttf", 31);
 	if (font == NULL || icons == NULL) {
-		SDL_Log("Failed to load font! Error: %s\n", TTF_GetError());
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+					 "Failed to load font", TTF_GetError(),
+					 NULL);
 		exit(EXIT_FAILURE);
 	}
 	// surf = SDL_GetWindowSurface(win);
