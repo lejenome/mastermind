@@ -97,6 +97,7 @@ if(CLANG_FORMAT_FOUND)
 endif(CLANG_FORMAT_FOUND)
 
 install(FILES extra/ProFont_r400-29.pcf DESTINATION share/fonts)
+INCLUDE(sdl2_android)
 
 install(TARGETS mastermindcli DESTINATION bin)
 install(TARGETS mastermindsdl DESTINATION bin)
