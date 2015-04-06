@@ -33,7 +33,7 @@ SDL_Color *colors = NULL; // colors used on drawing combinations
 
 void init_sdl()
 {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
 					 "SDL could not be initialize",
 					 SDL_GetError(), NULL);
@@ -363,7 +363,8 @@ uint8_t *getGuess(unsigned *play)
 			SDL_Log("Window Event: id: %d, event: %d\n",
 				event.window.windowID, event.window.event);
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED ||
-			    event.window.event == SDL_WINDOWEVENT_EXPOSED) {
+			    event.window.event == SDL_WINDOWEVENT_EXPOSED ||
+			    event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
 				SDL_GetWindowSize(win, &SCREEN_WIDTH,
 						  &SCREEN_HEIGHT);
 				initTables();
