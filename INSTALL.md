@@ -55,3 +55,14 @@ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.
 zipalign -v -f 4 bin/MasterMind-release-unaligned.apk bin/MasterMind.apk
 ```
 the final apk file is bin/MasterMind.apk
+
+*NOTE*: There is a known issue on SDL2 code caused by the bad GLES 2.0 support.
+A temporarily solution until it get fixed on SDL2 code, is to disable GLES 2.0
+support, you need to modify `jni/SDL/include/SDL_config_android.h` so `SDL_VIDEO_OPENGL_ES2` is set to 0 :
+```c
+#define SDL_VIDEO_OPENGL_ES2 0
+```
+You may need to set `SDL_VIDEO_RENDER_OGL_ES2` to 0 too :
+```c
+#define SDL_VIDEO_RENDER_OGL_ES2 0
+```
