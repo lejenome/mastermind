@@ -308,7 +308,7 @@ unsigned onMouseUp(SDL_MouseButtonEvent e)
 		if (e.x < control.x + button_w) {
 			SDL_ShowSimpleMessageBox(
 			    SDL_MESSAGEBOX_INFORMATION, _("Help"),
-			    _(PACKAGE ": Simple mastermind implemetation"),
+			    _(PROGRAM_NAME ": Simple mastermind implemetation"),
 			    win);
 		} else if (e.x < control.x + button_w * 2) {
 			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,

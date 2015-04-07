@@ -84,6 +84,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "(Clang|GNU|Intel)")
 	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-char-subscripts")
 endif(CMAKE_C_COMPILER_ID MATCHES "(Clang|GNU|Intel)")
 
+string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 configure_file (
 	"${PROJECT_SOURCE_DIR}/config.h.in"
 	"${PROJECT_SOURCE_DIR}/config.h"

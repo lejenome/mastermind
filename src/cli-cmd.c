@@ -156,7 +156,7 @@ int cmd_restart(const char argc, const char **argv, mm_session *session)
 }
 int cmd_help(const char argc, const char **argv, mm_session *session)
 {
-	printf(_("About " PACKAGE
+	printf(_("About " PROGRAM_NAME
 		 ": \nIs a two players logical game(encoder,decoder)"
 		 "encoder chose one combination compose from four to six color"
 		 "decoder try to find this combination by trying to find color "
@@ -194,6 +194,7 @@ int cmd_account(const char argc, const char **argv, mm_session *session)
 }
 int cmd_version(const char argc, const char **argv, mm_session *session)
 {
-	printf("%s - v%s\nSite: %s\n", PACKAGE, PROGRAM_VERSION, PROGRAM_URL);
+	printf("%s - v%s\nSite: %s\n", PROGRAM_NAME, PROGRAM_VERSION,
+	       PROGRAM_URL);
 	return MM_CMD_SUCCESS | MM_CMD_OPT_EXIT;
 }
