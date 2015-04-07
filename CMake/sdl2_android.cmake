@@ -17,9 +17,9 @@ configure_file("${android_project_path}/project.properties" . COPYONLY)
 configure_file("${android_project_path}/proguard-project.txt" . COPYONLY)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/extra/ProFont_r400-29.pcf"
-	assets/share/fonts/ProFont_r400-29.pcf COPYONLY)
+	assets/fonts/ProFont_r400-29.pcf COPYONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/extra/fontawesome-webfont.ttf"
-	assets/share/fonts/fontawesome-webfont.ttf COPYONLY)
+	assets/fonts/fontawesome-webfont.ttf COPYONLY)
 configure_file(${android_project_path}/jni/src/Android_static.mk jni/src/ COPYONLY)
 configure_file(${android_project_path}/src/org/libsdl/app/SDLActivity.java
 	src/org/libsdl/app/SDLActivity.java COPYONLY)

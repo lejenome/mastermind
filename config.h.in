@@ -16,10 +16,6 @@
 #define MM_COLORS_MAX 12
 #define MM_GUESSES_MAX 20
 
-#ifndef LOCALEDIR
-#define LOCALEDIR "intl"
-#endif // LOCALEDIR
-
 // sdl version color scheme
 #include "colorscheme/solarized_light.h"
 //#include "colorscheme/solarized_dark.h"
@@ -27,5 +23,12 @@
 //#include "colorscheme/rainbow_simple.h"
 //#include "colorscheme/rcg_term.h"
 //#include "colorscheme/4bit.h"
+
+#ifdef __ANDROID__
+#define FONTSDIR "fonts/"
+#else
+#define FONTSDIR "@CMAKE_INSTALL_FULL_DATAROOTDIR@/fonts/"
+#endif
+#define LOCALEDIR "@CMAKE_INSTALL_FULL_LOCALEDIR@/"
 
 #endif //__MASTERMIN_CONFIG_H

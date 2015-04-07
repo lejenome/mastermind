@@ -84,7 +84,22 @@ if(CMAKE_C_COMPILER_ID MATCHES "(Clang|GNU|Intel)")
 	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-char-subscripts")
 endif(CMAKE_C_COMPILER_ID MATCHES "(Clang|GNU|Intel)")
 
+if(WINDOWS)
+elseif(LINUX)
+	INCLUDE(GNUInstallDirs)
+endif(WINDOWS)
+if(NOT CMAKE_INSTALL_DATAROOTDIR)
+	SET(CMAKE_INSTALL_DATAROOTDIR ".")
+endif(NOT CMAKE_INSTALL_DATAROOTDIR)
+if(NOT CMAKE_INSTALL_FULL_DATAROOTDIR)
+	SET(CMAKE_INSTALL_FULL_DATAROOTDIR ${CMAKE_INSTALL_DATAROOTDIR})
+endif(NOT CMAKE_INSTALL_FULL_DATAROOTDIR)
+if(NOT CMAKE_INSTALL_LOCALEDIR)
+	SET(CMAKE_INSTALL_LOCALEDIR "locale")
+	SET(CMAKE_INSTALL_FULL_LOCALEDIR "locale")
+endif(NOT CMAKE_INSTALL_LOCALEDIR)
 string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+
 configure_file (
 	"${PROJECT_SOURCE_DIR}/config.h.in"
 	"${PROJECT_SOURCE_DIR}/config.h"
@@ -97,11 +112,11 @@ if(CLANG_FORMAT_FOUND)
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif(CLANG_FORMAT_FOUND)
 
-install(FILES extra/fontawesome-webfont.ttf DESTINATION share/fonts/fontawesome-webfont.ttf)
-install(FILES extra/ProFont_r400-29.pcf DESTINATION share/fonts/ProFont_r400-29.pcf)
+install(FILES extra/fontawesome-webfont.ttf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/)
+install(FILES extra/ProFont_r400-29.pcf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/)
 
-configure_file(extra/ProFont_r400-29.pcf share/fonts/ProFont_r400-29.pcf COPYONLY)
-configure_file(extra/fontawesome-webfont.ttf share/fonts/fontawesome-webfont.ttf COPYONLY)
+configure_file(extra/ProFont_r400-29.pcf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/ProFont_r400-29.pcf COPYONLY)
+configure_file(extra/fontawesome-webfont.ttf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/fontawesome-webfont.ttf COPYONLY)
 
 INCLUDE(sdl2_android)
 

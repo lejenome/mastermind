@@ -1,5 +1,6 @@
 #ifndef __MASTERMIN_LIB_H
 #define __MASTERMIN_LIB_H
+#include "../config.h"
 
 // Detect POSIX systems:
 // http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system
@@ -30,9 +31,5 @@ char *strndup(const char *buf, size_t len);
 #else
 #define _(str) (str)
 #endif // DISABLE_LOCALE
-
-#ifndef LOCALEDIR
-#define LOCALEDIR "intl"
-#endif // LOCALEDIR
 
 #endif //__MASTERMIN_LIB_H

@@ -54,15 +54,14 @@ void init_sdl()
 					 TTF_GetError(), NULL);
 		exit(EXIT_FAILURE);
 	}
-	font = TTF_OpenFont("share/fonts/ProFont_r400-29.pcf", 28);
-	icons = TTF_OpenFont("share/fonts/fontawesome-webfont.ttf", 31);
+	font = TTF_OpenFont(FONTSDIR "ProFont_r400-29.pcf", 28);
+	icons = TTF_OpenFont(FONTSDIR "fontawesome-webfont.ttf", 31);
 	if (font == NULL || icons == NULL) {
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
 					 "Failed to load font", TTF_GetError(),
 					 NULL);
 		exit(EXIT_FAILURE);
 	}
-	// surf = SDL_GetWindowSurface(win);
 }
 void clean()
 {
@@ -392,6 +391,9 @@ int main(int argc, char *argv[])
 {
 	uint8_t *g;
 	unsigned i, play;
+#ifdef DEBUG
+	SDL_Log("FONTSDIR: " FONTSDIR "\nLOCALEDIR: " LOCALEDIR "\n");
+#endif
 	init_sdl();
 #ifdef __ANDROID__
 	// use android app internal path
