@@ -52,6 +52,7 @@ ant release
 # gen key and sign apk ile with it, or use your own key
 keytool -genkey -v -keystore my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore bin/MasterMind-release-unaligned.apk alias_name
+# or just use android debug key at $HOME/.android/debug.keystore with alias androiddebugkey and password android
 zipalign -v -f 4 bin/MasterMind-release-unaligned.apk bin/MasterMind.apk
 ```
 the final apk file is bin/MasterMind.apk
