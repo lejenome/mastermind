@@ -115,6 +115,7 @@ endif(CLANG_FORMAT_FOUND)
 
 install(FILES extra/fontawesome-webfont.ttf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/)
 install(FILES extra/ProFont_r400-29.pcf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/)
+install(FILES extra/logo.png DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/mastermind.png)
 
 configure_file(extra/ProFont_r400-29.pcf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/ProFont_r400-29.pcf COPYONLY)
 configure_file(extra/fontawesome-webfont.ttf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/fontawesome-webfont.ttf COPYONLY)
