@@ -69,6 +69,6 @@ set(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
 set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
 configure_file(${CMAKE_ROOT}/Modules/CPack.Info.plist.in Info.plist)
 set(CPACK_BUNDLE_PLIST Info.plist)
-set(CPACK_BUNDLE_ICON extra/logo.png)
+set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/extra/logo.icns)
 
 INCLUDE(CPack)
