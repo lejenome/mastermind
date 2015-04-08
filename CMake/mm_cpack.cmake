@@ -66,4 +66,9 @@ set(CPACK_RPM_PACKAGE_GROUP "Amusements/Games")
 set(CPACK_RPM_PACKAGE_REQUIRES "libncurses5, SDL2") # FIXME
 set(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
 
+set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
+configure_file(${CMAKE_ROOT}/Modules/CPack.Info.plist.in Info.plist)
+set(CPACK_BUNDLE_PLIST Info.plist)
+set(CPACK_BUNDLE_ICON extra/logo.png)
+
 INCLUDE(CPack)

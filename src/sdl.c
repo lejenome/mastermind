@@ -10,6 +10,9 @@
 	drawCombination(session->secret->val, session->config->guesses, 0)
 #define drawGuess(p) drawCombination(session->panel[p].combination, p, 1)
 
+#define TAB_GAME (uint8_t)0
+#define TAB_SETTINGS (uint8_t)1
+
 int SCREEN_HEIGHT = 640;
 int SCREEN_WIDTH = 480;
 typedef struct {
@@ -29,7 +32,8 @@ mm_session *session = NULL;
 uint8_t *curGuess = NULL; // combination of last guess combination
 SDL_Table panel, state, control, play;
 unsigned case_w, case_h, button_w;
-SDL_Color *colors = NULL; // colors used on drawing combinations
+SDL_Color *colors = NULL;  // colors used on drawing combinations
+uint8_t curTab = TAB_GAME; // Current tab being drawed
 
 void init_sdl()
 {
@@ -327,7 +331,7 @@ unsigned onMouseUp(SDL_MouseButtonEvent e)
 					      scores->T[i].score,
 					      scores->T[i].account);
 			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
-						 _("Scores"), s, NULL);
+						 _("Scores"), s, win);
 			if (scores->len)
 				free(s);
 		}
@@ -398,7 +402,7 @@ int main(int argc, char *argv[])
 #ifdef __ANDROID__
 	// use android app internal path
 	mm_init(SDL_AndroidGetInternalStoragePath());
-#elif  __IPHONEOS__
+#elif __IPHONEOS__
 	mm_init("../Documents"); // FIXME: "../Library/Prefferences"
 #endif
 	session = mm_session_restore();

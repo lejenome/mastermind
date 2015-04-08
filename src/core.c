@@ -387,6 +387,7 @@ void mm_init(const char *data_dir)
 	}
 #ifdef POSIX
 	struct utsname unm;
+	uname(&unm);
 	char *home = getenv("HOME");
 	if (strcmp(unm.sysname, "Darwin") == 0) { // Mac OS
 		sprintf(mm_config_path, "%s%s", home,
