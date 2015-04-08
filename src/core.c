@@ -391,9 +391,11 @@ void mm_init(const char *data_dir)
 	if (strcmp(unm.sysname, "Darwin") == 0) { // Mac OS
 		sprintf(mm_config_path, "%s%s", home,
 			"/Library/Application Support");
-		if (access(mm_config_path, R_OK | W_OK | X_OK) == 0) {
+		sprintf(mm_score_path, "%s%s", home, "/Library/Caches");
+		if (access(mm_config_path, R_OK | W_OK | X_OK) == 0 &&
+		    access(mm_score_path, R_OK | W_OK | X_OK) == 0) {
 			strcat(mm_config_path, "/" PACKAGE);
-			strcpy(mm_score_path, mm_config_path);
+			strcat(mm_score_path, "/" PACKAGE);
 		} else {
 			sprintf(mm_config_path, "%s%s", home, "/." PACKAGE);
 			strcpy(mm_score_path, mm_config_path);

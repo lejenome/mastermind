@@ -18,3 +18,4 @@
 - [ ] multiplayer support
 - [ ] cli backend table design themes support
 - [ ] zsh & bash completion
+- [ ] compile to NaCL and emscript

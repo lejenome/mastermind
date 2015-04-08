@@ -398,6 +398,8 @@ int main(int argc, char *argv[])
 #ifdef __ANDROID__
 	// use android app internal path
 	mm_init(SDL_AndroidGetInternalStoragePath());
+#elif  __IPHONEOS__
+	mm_init("../Documents"); // FIXME: "../Library/Prefferences"
 #endif
 	session = mm_session_restore();
 	if (session == NULL)
