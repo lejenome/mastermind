@@ -5,6 +5,9 @@
 #include <string.h>
 #include "lib.h"
 #include "core.h"
+#ifdef POSIX
+#include <unistd.h>
+#endif
 
 #define drawSecret()                                                           \
 	drawCombination(session->secret->val, session->config->guesses, 0)
@@ -396,18 +399,29 @@ int main(int argc, char *argv[])
 	uint8_t *g;
 	unsigned i, play;
 #ifdef DEBUG
-	SDL_Log("FONTSDIR: " FONTSDIR "\nLOCALEDIR: " LOCALEDIR "\n");
-#endif
+#ifdef POSIX
+	char pwd[2000];
+	getcwd(pwd, 2000);
+	SDL_Log("PWD: %s\n", pwd);
+#endif // POSIX
+	SDL_Log("FONTSDIR: " FONTSDIR "\n");
+	SDL_Log("LOCALEDIR: " LOCALEDIR "\n");
+#endif // DEBUG
 	init_sdl();
 #ifdef __ANDROID__
 	// use android app internal path
 	mm_init(SDL_AndroidGetInternalStoragePath());
 #elif __IPHONEOS__
 	mm_init("../Documents"); // FIXME: "../Library/Prefferences"
-#endif
+#endif // __IPHONEOS__
 	session = mm_session_restore();
 	if (session == NULL)
 		session = mm_session_new();
+#ifdef DEBUG
+	extern char *mm_config_path, *mm_score_path;
+	SDL_Log("mm_config_path: %s\n", mm_config_path);
+	SDL_Log("mm_score_path: %s\n", mm_score_path);
+#endif // DEBUG
 	initTables();
 	initColors();
 	for (;;) {
