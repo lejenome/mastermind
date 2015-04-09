@@ -12,6 +12,8 @@
 #define drawSecret()                                                           \
 	drawCombination(session->secret->val, session->config->guesses, 0)
 #define drawGuess(p) drawCombination(session->panel[p].combination, p, 1)
+#define sdl_print_center(s, x, y, color) sdl_print(s, x, y, color, 0)
+#define sdl_print_left(s, x, y, color) sdl_print(s, x, y, color, -1)
 
 #define TAB_GAME (uint8_t)0
 #define TAB_SETTINGS (uint8_t)1
@@ -84,7 +86,7 @@ void clean()
 	TTF_Quit();
 	SDL_Quit();
 }
-SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
+unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 {
 	SDL_Texture *tex;
 	SDL_Rect rect;
@@ -102,13 +104,26 @@ SDL_Texture *sdl_print_center(char *s, int x, int y, SDL_Color *color)
 		clean();
 		exit(EXIT_FAILURE);
 	}
-	rect = (SDL_Rect){x - surf->w / 2, y - surf->h / 2, surf->w, surf->h};
+	rect.w = surf->w;
+	rect.h = surf->h;
+	rect.y = y - surf->h / 2;
+	switch (align) {
+	case -1:
+		rect.x = x;
+		break;
+	case 0:
+		rect.x = x - surf->w / 2;
+		break;
+	case 1:
+		rect.x = x - surf->w;
+		break;
+	}
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
 	SDL_FreeSurface(surf);
 	SDL_DestroyTexture(tex);
-	return tex;
+	return rect.w;
 }
-SDL_Texture *sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
+unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 {
 	SDL_Texture *tex;
 	SDL_Rect rect;
@@ -130,7 +145,7 @@ SDL_Texture *sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
 	SDL_FreeSurface(surf);
 	SDL_DestroyTexture(tex);
-	return tex;
+	return rect.w;
 }
 int setBg()
 {
@@ -262,11 +277,53 @@ void drawSelector()
 		x += case_w;
 	}
 }
-void redraw()
+void redraw_settings()
+{
+	unsigned x, y;
+	x = case_w;
+	y = case_h;
+	char str[3];
+	mm_conf_t *conf;
+	SDL_Table button;
+	for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++) {
+		sdl_print_left(conf->str.name, x, y, NULL);
+		switch (conf->type) {
+		case MM_CONF_BOOL:
+			sdl_print_icon((conf->bool.val == 0 ? 0xF204 : 0xF205),
+				       SCREEN_WIDTH - case_w * 2, y, NULL);
+			break;
+		case MM_CONF_INT:
+			sprintf(str, "%d", conf->nbre.val);
+			sdl_print_icon(0xF0D7, SCREEN_WIDTH - case_w * 2.5, y,
+				       NULL);
+			sdl_print_center(str, SCREEN_WIDTH - case_w * 2, y,
+					 NULL);
+			sdl_print_icon(0xF0D8, SCREEN_WIDTH - case_w * 1.5, y,
+				       NULL);
+			break;
+		case MM_CONF_STR:
+			sdl_print_center(conf->str.val,
+					 SCREEN_WIDTH - case_w * 2, y, NULL);
+			break;
+		}
+		y += case_h;
+	}
+	button = (SDL_Table){.x = case_w * 0.5,
+			     .y = SCREEN_HEIGHT - case_h * 1.5,
+			     .w = button_w * 3,
+			     .h = case_h,
+			     .cols = 1,
+			     .rows = 1};
+	SDL_SetRenderDrawColor(rend, (SDL_Color)br_color.r,
+			       (SDL_Color)br_color.g, (SDL_Color)br_color.b,
+			       (SDL_Color)br_color.a);
+	drawTableBottom(&button);
+	sdl_print_center("< back", case_w * 0.5 + button_w * 1.5,
+			 SCREEN_HEIGHT - case_h * 1, NULL);
+}
+void redraw_game()
 {
 	unsigned i;
-	SDL_RenderClear(rend);
-	setBg();
 	SDL_SetRenderDrawColor(rend, (SDL_Color)br_color.r,
 			       (SDL_Color)br_color.g, (SDL_Color)br_color.b,
 			       (SDL_Color)br_color.a);
@@ -289,11 +346,56 @@ void redraw()
 		drawSelector();
 	else
 		drawSecret();
+}
+void redraw()
+{
+	SDL_RenderClear(rend);
+	setBg();
+	switch (curTab) {
+	case TAB_GAME:
+		redraw_game();
+		break;
+	case TAB_SETTINGS:
+		redraw_settings();
+		break;
+	}
 	SDL_RenderPresent(rend);
 }
 unsigned onMouseUp(SDL_MouseButtonEvent e)
 {
 	unsigned i;
+	if (curTab == TAB_SETTINGS) {
+		if (e.x > case_w * 0.5 && e.x < button_w * 3 + case_w * 0.5 &&
+		    e.y > SCREEN_HEIGHT - case_h * 1.5 &&
+		    e.y < SCREEN_HEIGHT - case_h * 0.5) {
+			curTab = TAB_GAME;
+			redraw();
+		} else if (e.x > SCREEN_WIDTH - case_w * 3 &&
+			   e.x < SCREEN_WIDTH - case_w && e.y > case_h * 0.5 &&
+			   e.y < case_h * LEN(mm_confs) + case_h * 0.5) {
+			i = (unsigned)(e.y - case_h * 0.5) / case_h;
+			if (e.y < case_h * (i + 0.75) &&
+			    e.y > case_h * (i + 1.25))
+				return 1;
+			SDL_Log("I'm here! %d\n", i);
+			switch (mm_confs[i].type) {
+			case MM_CONF_BOOL:
+				mm_confs[i].bool.val =
+				    mm_confs[i].bool.val == 0 ? 1 : 0;
+				break;
+			case MM_CONF_INT:
+				if (e.x < SCREEN_WIDTH - case_w * 2 &&
+				    mm_confs[i].nbre.val > mm_confs[i].nbre.min)
+					mm_confs[i].nbre.val--;
+				if (e.x > SCREEN_WIDTH - case_w * 2 &&
+				    mm_confs[i].nbre.val < mm_confs[i].nbre.max)
+					mm_confs[i].nbre.val++;
+			}
+			mm_config_save();
+			redraw();
+		}
+		return 1;
+	}
 	if (e.x > panel.x && e.x < panel.x + panel.w &&
 	    e.y > panel.y + case_h * session->guessed &&
 	    e.y < panel.y + case_h * (session->guessed + 2)) {
@@ -317,9 +419,8 @@ unsigned onMouseUp(SDL_MouseButtonEvent e)
 			    _(PROGRAM_NAME ": Simple mastermind implemetation"),
 			    win);
 		} else if (e.x < control.x + button_w * 2) {
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
-						 _("Settings"),
-						 _("Not implemeted yet"), win);
+			curTab = TAB_SETTINGS;
+			redraw();
 		} else {
 			const mm_scores_t *scores = mm_scores_get();
 			char *s;
@@ -355,10 +456,15 @@ uint8_t *getGuess(unsigned *play)
 			exit(EXIT_SUCCESS);
 			break;
 		case SDL_KEYDOWN:
-			if (event.key.keysym.sym >= SDLK_a &&
+			if (curTab == TAB_GAME &&
+			    event.key.keysym.sym >= SDLK_a &&
 			    event.key.keysym.sym <
 				(session->config->colors + SDLK_a)) {
 				curGuess[i++] = event.key.keysym.sym - SDLK_a;
+				redraw();
+			} else if (curTab == TAB_SETTINGS &&
+				   event.key.keysym.sym == SDLK_ESCAPE) {
+				curTab = TAB_GAME;
 				redraw();
 			}
 			SDL_Log("Key down event: %d (%c) name: %s\n",
