@@ -16,9 +16,9 @@ configure_file("${android_project_path}/default.properties" . COPYONLY)
 configure_file("${android_project_path}/project.properties" . COPYONLY)
 configure_file("${android_project_path}/proguard-project.txt" . COPYONLY)
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/extra/ProFont_r400-29.pcf"
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/res/fonts/ProFont_r400-29.pcf"
 	assets/fonts/ProFont_r400-29.pcf COPYONLY)
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/extra/fontawesome-webfont.ttf"
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/res/fonts/fontawesome-webfont.ttf"
 	assets/fonts/fontawesome-webfont.ttf COPYONLY)
 configure_file(${android_project_path}/jni/src/Android_static.mk jni/src/ COPYONLY)
 configure_file(${android_project_path}/src/org/libsdl/app/SDLActivity.java
@@ -27,5 +27,5 @@ configure_file(${android_project_path}/src/org/libsdl/app/SDLActivity.java
 configure_file(${android_project_path}/jni/Android.mk jni/ COPYONLY)
 configure_file(${android_project_path}/jni/Application.mk jni/ COPYONLY)
 
-configure_file(${android_project_path}/res/drawable-xxhdpi/ic_launcher.png
+configure_file(res/icons/logo-256x256.png
 	res/drawable/ic_launcher.png COPYONLY)

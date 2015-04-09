@@ -75,13 +75,13 @@ set(CPACK_RPM_PACKAGE_REQUIRES "libncurses5, SDL2") # FIXME
 set(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
 
 set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
-set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/extra/logo.icns)
+set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/res/icons/logo.icns)
 configure_file(${CMAKE_ROOT}/Modules/CPack.Info.plist.in Info.plist)
 set(CPACK_BUNDLE_PLIST Info.plist)
 set(CPACK_BUNDLE_STARTUP_COMMAND mastermindsdl)
 
 if(APPLE)
-	install(FILES extra/logo.icns DESTINATION icons)
+	install(FILES res/icons/logo.icns DESTINATION icons)
 endif(APPLE)
 set(CPACK_APPLE_GUI_INFO_STRING ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
 set(CPACK_APPLE_GUI_ICON icons/logo.icns)

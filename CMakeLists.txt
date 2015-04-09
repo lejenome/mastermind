@@ -113,12 +113,12 @@ if(CLANG_FORMAT_FOUND)
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif(CLANG_FORMAT_FOUND)
 
-install(FILES extra/fontawesome-webfont.ttf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/)
-install(FILES extra/ProFont_r400-29.pcf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/)
-install(FILES extra/logo.png DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/ RENAME mastermind.png)
+install(FILES res/fonts/fontawesome-webfont.ttf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/)
+install(FILES res/fonts/ProFont_r400-29.pcf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/)
+install(FILES res/icons/logo.png DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/ RENAME mastermind.png)
 
-configure_file(extra/ProFont_r400-29.pcf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/ProFont_r400-29.pcf COPYONLY)
-configure_file(extra/fontawesome-webfont.ttf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/fontawesome-webfont.ttf COPYONLY)
+configure_file(res/fonts/ProFont_r400-29.pcf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/ProFont_r400-29.pcf COPYONLY)
+configure_file(res/fonts/fontawesome-webfont.ttf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/fontawesome-webfont.ttf COPYONLY)
 
 INCLUDE(sdl2_android)
 
