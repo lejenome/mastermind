@@ -92,8 +92,9 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 {
 	SDL_Texture *tex;
 	SDL_Rect rect;
+	SDL_Color default_color = (SDL_Color)fg_color;
 	SDL_Surface *surf = TTF_RenderUTF8_Solid(
-	    font, s, (color == NULL) ? (SDL_Color)fg_color : *color);
+	    font, s, (color == NULL) ? default_color : *color);
 	if (surf == NULL) {
 		SDL_Log("Unable to render font! Error: %s\n", TTF_GetError());
 		clean();
@@ -511,7 +512,6 @@ int main(int argc, char *argv[])
 {
 	uint8_t *g;
 	unsigned i, play;
-#ifdef DEBUG
 #ifdef POSIX
 	char pwd[2000];
 	getcwd(pwd, 2000);
@@ -519,7 +519,6 @@ int main(int argc, char *argv[])
 #endif // POSIX
 	SDL_Log("FONTSDIR: " FONTSDIR "\n");
 	SDL_Log("LOCALEDIR: " LOCALEDIR "\n");
-#endif // DEBUG
 	init_sdl();
 #ifdef __ANDROID__
 	// use android app internal path
@@ -530,11 +529,9 @@ int main(int argc, char *argv[])
 	session = mm_session_restore();
 	if (session == NULL)
 		session = mm_session_new();
-#ifdef DEBUG
 	extern char *mm_config_path, *mm_score_path;
 	SDL_Log("mm_config_path: %s\n", mm_config_path);
 	SDL_Log("mm_score_path: %s\n", mm_score_path);
-#endif // DEBUG
 	initTables();
 	initColors();
 	for (;;) {
