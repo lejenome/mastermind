@@ -33,7 +33,7 @@ To build and run on same dir, you need to set install prefix to build dir until
 the build instructions are fixed.
 ```shell
 mkdir -f build && cd build
-cmake -DCMAKE_INSTALL_PREFIX ..
+cmake -DCMAKE_INSTALL_PREFIX=. ..
 make
 ./mastermindcli
 ./mastermindsdl
