@@ -20,6 +20,8 @@
 
 int SCREEN_HEIGHT = 640;
 int SCREEN_WIDTH = 480;
+int SCREEN_HEIGHT_MIN = 420;
+int SCREEN_WIDTH_MIN = 360;
 typedef struct {
 	unsigned x;
 	unsigned y;
@@ -377,7 +379,6 @@ unsigned onMouseUp(SDL_MouseButtonEvent e)
 			if (e.y < case_h * (i + 0.75) &&
 			    e.y > case_h * (i + 1.25))
 				return 1;
-			SDL_Log("I'm here! %d\n", i);
 			switch (mm_confs[i].type) {
 			case MM_CONF_BOOL:
 				mm_confs[i].bool.val =
@@ -480,6 +481,12 @@ uint8_t *getGuess(unsigned *play)
 				SDL_WINDOWEVENT_SIZE_CHANGED) {
 				SDL_GetWindowSize(win, &SCREEN_WIDTH,
 						  &SCREEN_HEIGHT);
+				if (SCREEN_WIDTH < SCREEN_WIDTH_MIN)
+					SCREEN_WIDTH = SCREEN_WIDTH_MIN;
+				if (SCREEN_HEIGHT < SCREEN_HEIGHT_MIN)
+					SCREEN_HEIGHT = SCREEN_HEIGHT_MIN;
+				SDL_RenderSetLogicalSize(rend, SCREEN_WIDTH,
+							 SCREEN_HEIGHT);
 				initTables();
 				redraw();
 			}
