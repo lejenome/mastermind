@@ -1,5 +1,13 @@
 INSTALLATION
 ---
+
+First you need to clone the repo and init its submodules
+```shel
+git clone https://github.com/lejenome/mastermind.git
+cd mastermind
+git submodule update --init # ext/ submodule is need for android, windows builds
+```
+
 LINUX
 ---
 Dependencies: `readline, GNU getopt, libncurses5-dev, sdl2, sdl2_ttf, cmake >= 3.0`
@@ -21,17 +29,49 @@ cmake ..
 make
 ```
 
-To run the build, (simple fix until I fix the code)
+To build and run on same dir, you need to set install prefix to build dir until
+the build instructions are fixed.
 ```shell
-mkdir -p share/fonts && cp ../extra/* share/fonts
+mkdir -f build && cd build
+cmake -DCMAKE_INSTALL_PREFIX ..
+make
 ./mastermindcli
 ./mastermindsdl
 ```
 
 OS X
 ---
+Install readline, libncurses, sdl2, sdl2_ttf, cmake from brew
+
+Next, to build:
+```shell
+mkdir -f build && cd build
+cmake ..
+cmake --build .
+```
+
 WINDOWS
 ---
+Build is supported using mingw-w64 on all supported hosts (linux, windows,...),
+ms visual studio compiler support is still not  usable.
+```shell
+mkdir build
+cd build
+cmake -G "MinGW Makefiles" ..
+cmake --build .
+```
+then you need to copy `../ext/mingw/bin<BUILD_ARCH>/*.dll` libs to build dir.
+
+on same linux platforms, cmake builds with mingw integration are provided. Here
+is a demo of a x86_64 mastermind build on ArchLinux using packages provided on
+AUR:
+```shell
+yaourt -S mingw-w64-sdl2 mingw-w64-sdl2_ttf mingw-w64-readline mingw-w64-pdcurses mingw-w64-cmake mingw-w64-libiconv
+mkdir -f build && cdc build
+x86_64-w64-mingw32-cmake ..
+make
+```
+
 ANDROID
 ---
 First install Android NDK and SDK, and install Ant.
@@ -41,7 +81,7 @@ Download SDL2, SDL2_ttf and FreeType lastest sources archives and extract them.
 then run:
 ```shell
 mkdir -p build && cd build
-cmake ..
+cmake -DUSE_LOCALE=OFF ..
 ln -s <PATH_TO_SDL2_SOURCE_DIR> jni/SDL
 ln -s <PATH_TO_SDL2_ttf_SOURCE_DIR> jni/SDL_ttf
 ln -s <PATH_TO_FreeType_SOURCE_DIR> jni/SDL_ttf/freetype
