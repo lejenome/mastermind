@@ -76,7 +76,7 @@ set(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
 
 set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
 set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/res/icons/logo.icns)
-configure_file(${CMAKE_ROOT}/Modules/CPack.Info.plist.in Info.plist)
+configure_file(CMake/CPack.Info.plist.in Info.plist)
 set(CPACK_BUNDLE_PLIST Info.plist)
 set(CPACK_BUNDLE_STARTUP_COMMAND mastermindsdl)
 
