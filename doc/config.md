@@ -1,7 +1,7 @@
 - *colors*: Integer: `6`: number of colors
 - *holes*: Integer: `4`: number of holes
 - *guesses*: Integer: `12`: number of guesses
-- *remise* : Boolean: `0`: color repeated on once on combination
+- *remise* : Boolean: `0`: color repeated only once on combination
 - *account*: String: `default`: account name
 - *save_on_exit*: Boolean: `0`: save session on exit
 - *save_on_play*: Boolean: `0`: save session on every played guess
