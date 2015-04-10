@@ -68,18 +68,21 @@ else()
 	list(APPEND CPACK_GENERATOR DEB RPM)
 endif()
 
+# DEB & RPM
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libncurses5, libsdl2-2.0") # libsdl2-dev libncurses5-dev # FIXME
 set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
 set(CPACK_RPM_PACKAGE_GROUP "Amusements/Games")
 set(CPACK_RPM_PACKAGE_REQUIRES "libncurses5, SDL2") # FIXME
 set(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
 
+# BUNDLE
 set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
 set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/res/icons/logo.icns)
 configure_file(CMake/CPack.Info.plist.in Info.plist)
 set(CPACK_BUNDLE_PLIST Info.plist)
 set(CPACK_BUNDLE_STARTUP_COMMAND mastermindsdl)
 
+# OSXX11
 if(APPLE)
 	install(FILES res/icons/logo.icns DESTINATION icons)
 endif(APPLE)
@@ -91,5 +94,25 @@ set(CPACK_APPLE_GUI_BUNDLE_NAME ${CPACK_PACKAGE_NAME})
 set(CPACK_APPLE_GUI_SHORT_VERSION_STRING ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR})
 set(CPACK_APPLE_GUI_BUNDLE_VERSION ${CPACK_APPLE_GUI_SHORT_VERSION_STRING})
 set(CPACK_APPLE_GUI_COPYRIGHT "Copyright 2015 ${CPACK_PACKAGE_CONTACT}.")
+
+# NSIS
+if(WIN32)
+	install(FILES res/icons/icon.ico DESTINATION icons)
+endif(WIN32)
+set(CPACK_NSIS_MUI_ICON ${CMAKE_CURRENT_SOURCE_DIR}/res/icons/icon.ico)
+set(CPACK_NSIS_CREATE_ICONS_EXTRA "
+	CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Mastermind SDL.lnk\\\" \\\"$INSTDIR\\\\mastermindsdl.exe\\\" \\\"\\\" \\\"$INSTDIR\\\\icons\\\\icon.ico\\\" \n
+	CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Mastermind cli.lnk\\\" \\\"$INSTDIR\\\\mastermindcli.exe\\\" \\\"\\\" \\\"$INSTDIR\\\\icons\\\\icon.ico\\\" \n
+	CreateShortCut \\\"$DESKTOP\\\\Mastermind SDL.lnk\\\" \\\"$INSTDIR\\\\mastermindsdl.exe\\\" \\\"\\\" \\\"$INSTDIR\\\\icons\\\\icon.ico\\\" \n
+	"
+)
+set(CPACK_NSIS_DELETE_ICONS_EXTRA "
+	Delete \\\"$SMPROGRAMS\\\\$MUI_TEMP\\\\Mastermind SDL.lnk\\\" \n
+	Delete \\\"$SMPROGRAMS\\\\$MUI_TEMP\\\\Mastermind cli.lnk\\\" \n
+	Delete \\\"$DESKTOP\\\\Mastermind SDL.lnk\\\" \n
+	"
+)
+set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
+set(CPACK_NSIS_MUI_FINISHPAGE_RUN mastermindsdl)
 
 INCLUDE(CPack)
