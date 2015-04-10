@@ -44,6 +44,7 @@ uint8_t curTab = TAB_GAME; // Current tab being drawed
 
 void init_sdl()
 {
+	SDL_Surface *icon;
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
 					 "SDL could not be initialize",
@@ -72,6 +73,11 @@ void init_sdl()
 					 "Failed to load font", TTF_GetError(),
 					 NULL);
 		exit(EXIT_FAILURE);
+	}
+	icon = SDL_LoadBMP(ICONSDIR "mastermind.bmp");
+	if (icon) {
+		SDL_SetWindowIcon(win, icon);
+		SDL_FreeSurface(icon);
 	}
 }
 void clean()
@@ -519,6 +525,7 @@ int main(int argc, char *argv[])
 #endif // POSIX
 	SDL_Log("FONTSDIR: " FONTSDIR "\n");
 	SDL_Log("LOCALEDIR: " LOCALEDIR "\n");
+	SDL_Log("ICONSDIR: " ICONSDIR "\n");
 	init_sdl();
 #ifdef __ANDROID__
 	// use android app internal path

@@ -17,9 +17,13 @@ if(MINGW)
 	if(CMAKE_SIZEOF_VOID_P EQUAL 8) # x64
 		LIST(APPEND CMAKE_LIBRARY_PATH
 			"${CMAKE_CURRENT_SOURCE_DIR}/ext/mingw/lib64")
+		FILE(GLOB win_dll
+			${CMAKE_CURRENT_SOURCE_DIR}/ext/mingw/bin64/*.dll)
 	else(CMAKE_SIZEOF_VOID_P EQUAL 8) # x86
 		LIST(APPEND CMAKE_LIBRARY_PATH
 			"${CMAKE_CURRENT_SOURCE_DIR}/ext/mingw/lib32")
+		FILE(GLOB win_dll
+			${CMAKE_CURRENT_SOURCE_DIR}/ext/mingw/bin32/*.dll)
 	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 elseif(MSVC)
 	# TODO add gettext-runtime{,-dev} from http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/
@@ -32,9 +36,13 @@ elseif(MSVC)
 	if(CMAKE_SIZEOF_VOID_P EQUAL 8) # x64
 		LIST(APPEND CMAKE_LIBRARY_PATH
 			"${CMAKE_CURRENT_SOURCE_DIR}/ext/msvc/lib64")
+		FILE(GLOB win_dll
+			${CMAKE_CURRENT_SOURCE_DIR}/ext/msvc/lib64/*.dll)
 	else(CMAKE_SIZEOF_VOID_P EQUAL 8) # x86
 		LIST(APPEND CMAKE_LIBRARY_PATH
 			"${CMAKE_CURRENT_SOURCE_DIR}/ext/msvc/lib32")
+		FILE(GLOB win_dll
+			${CMAKE_CURRENT_SOURCE_DIR}/ext/msvc/lib32/*.dll)
 	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif(MINGW)
 SET(SDL2_SEARCH_TTF ON)
@@ -113,12 +121,19 @@ if(CLANG_FORMAT_FOUND)
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif(CLANG_FORMAT_FOUND)
 
-install(FILES res/fonts/fontawesome-webfont.ttf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/)
-install(FILES res/fonts/ProFont_r400-29.pcf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/)
+install(DIRECTORY res/fonts DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/)
 install(FILES res/icons/logo.png DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/ RENAME mastermind.png)
+install(FILES res/icons/icon.bmp DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/ RENAME mastermind.bmp)
+
+foreach(dll ${win_dll})
+	get_filename_component(dll_name "${dll}" NAME)
+	install(FILES "${dll}" DESTINATION ${dll_name})
+	configure_file("${dll}" ${dll_name} COPYONLY)
+endforeach(dll)
 
 configure_file(res/fonts/ProFont_r400-29.pcf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/ProFont_r400-29.pcf COPYONLY)
 configure_file(res/fonts/fontawesome-webfont.ttf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/fontawesome-webfont.ttf COPYONLY)
+configure_file(res/icons/icon.bmp ${CMAKE_INSTALL_DATAROOTDIR}/icons/mastermind.bmp COPYONLY)
 
 INCLUDE(sdl2_android)
 

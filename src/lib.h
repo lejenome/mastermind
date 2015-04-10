@@ -20,7 +20,7 @@
 char *strndup(const char *buf, size_t len);
 #define srandom(var) srand(var)
 #define random() rand()
-#define snprintf(s, n ,fmt, ...) sprintf_s(s, n, fmt, __VA_ARGS__)
+#define snprintf(s, n, fmt, ...) sprintf_s(s, n, fmt, __VA_ARGS__)
 #endif
 
 // Global defines

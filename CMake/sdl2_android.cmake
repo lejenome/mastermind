@@ -20,6 +20,8 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/res/fonts/ProFont_r400-29.pcf"
 	assets/fonts/ProFont_r400-29.pcf COPYONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/res/fonts/fontawesome-webfont.ttf"
 	assets/fonts/fontawesome-webfont.ttf COPYONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/res/icons/icon.bmp"
+	assets/icons/mastermind.bmp COPYONLY)
 configure_file(${android_project_path}/jni/src/Android_static.mk jni/src/ COPYONLY)
 configure_file(${android_project_path}/src/org/libsdl/app/SDLActivity.java
 	src/org/libsdl/app/SDLActivity.java COPYONLY)
