@@ -46,7 +46,7 @@ Install readline, libncurses, sdl2, sdl2_ttf, cmake from brew
 Next, to build:
 ```shell
 mkdir -f build && cd build
-cmake ..
+cmake .. -DUSE_LOCALE=OFF
 cmake --build .
 ```
 
@@ -58,7 +58,7 @@ ms visual studio compiler support is still not  usable.
 mkdir build
 cd build
 cmake -G "MinGW Makefiles" ..
-cmake --build .
+cmake --build . -DUSE_LOCALE=OFF
 ```
 then you need to copy `../ext/mingw/bin<BUILD_ARCH>/*.dll` libs to build dir.
 
