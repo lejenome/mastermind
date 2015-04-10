@@ -11,11 +11,11 @@
 - [x] account support
 - [x] cli options support
 - [x] color scheme support on sdl
+- [x] zsh & bash completion
 - [ ] cli colored output
 - [ ] ncurses backend
 - [ ] build for linux/Mac/Win/Android/iOS/...
 - [ ] package it for ubuntu/archlinux/windows/android
 - [ ] multiplayer support
 - [ ] cli backend table design themes support
-- [ ] zsh & bash completion
 - [ ] compile to NaCL and emscript
