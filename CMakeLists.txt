@@ -97,6 +97,9 @@ elseif(APPLE)
 else()
 	INCLUDE(GNUInstallDirs)
 endif(WIN32)
+if(NOT CMAKE_INSTALL_BINDIR)
+	SET(CMAKE_INSTALL_BINDIR ".")
+endif(NOT CMAKE_INSTALL_BINDIR)
 if(NOT CMAKE_INSTALL_DATAROOTDIR)
 	SET(CMAKE_INSTALL_DATAROOTDIR ".")
 endif(NOT CMAKE_INSTALL_DATAROOTDIR)
@@ -127,7 +130,7 @@ install(FILES res/icons/icon.bmp DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/
 
 foreach(dll ${win_dll})
 	get_filename_component(dll_name "${dll}" NAME)
-	install(FILES "${dll}" DESTINATION ${dll_name})
+	install(FILES "${dll}" DESTINATION .)
 	configure_file("${dll}" ${dll_name} COPYONLY)
 endforeach(dll)
 
@@ -137,6 +140,6 @@ configure_file(res/icons/icon.bmp ${CMAKE_INSTALL_DATAROOTDIR}/icons/mastermind.
 
 INCLUDE(sdl2_android)
 
-install(TARGETS mastermindcli DESTINATION bin)
-install(TARGETS mastermindsdl DESTINATION bin)
+install(TARGETS mastermindcli DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS mastermindsdl DESTINATION ${CMAKE_INSTALL_BINDIR})
 INCLUDE(mm_cpack)
