@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@
+Type=Application
+Name=Mastermind SDL
+GenericName=MasterMind SDL
+Comment=Mastermind SDL is simple mastermind implementation
+TryExec=mastermindsdl
+Exec=mastermindsdl
+Icon=mastermindsdl
+Categories=Game;LogicGame;Game

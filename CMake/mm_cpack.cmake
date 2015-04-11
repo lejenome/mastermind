@@ -75,6 +75,15 @@ set(CPACK_RPM_PACKAGE_GROUP "Amusements/Games")
 set(CPACK_RPM_PACKAGE_REQUIRES "libncurses5, SDL2") # FIXME
 set(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
 
+if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+	configure_file(res/mastermindsdl.desktop.in mastermindsdl.desktop)
+	install(FILES ${CMAKE_BINARY_DIR}/mastermindsdl.desktop DESTINATION share/applications/)
+	install(FILES res/icons/logo-16x16.png DESTINATION share/icons/hicolor/16x16/apps/)
+	install(FILES res/icons/logo-32x32.png DESTINATION share/icons/hicolor/32x32/apps/)
+	install(FILES res/icons/logo-48x48.png DESTINATION share/icons/hicolor/48x48/apps/)
+	install(FILES res/icons/logo-64x64.png DESTINATION share/icons/hicolor/64x64/apps/)
+endif("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+
 # BUNDLE
 set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
 set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/res/icons/logo.icns)
