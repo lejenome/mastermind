@@ -126,4 +126,12 @@ set(CPACK_NSIS_DELETE_ICONS_EXTRA "
 set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
 set(CPACK_NSIS_MUI_FINISHPAGE_RUN mastermindsdl)
 
+# EMSCRIPTEN
+if(EMSCRIPTEN)
+	set(EMSCRIPTEN_JS_FILE mastermindsdl.js)
+	configure_file(ext/emscripten/template.html.in mastermindsdl.html @ONLY)
+	configure_file(res/icons/logo-16x16.png favicon.png COPYONLY)
+	#install(COPY ext/emscripten/loading.png .)
+endif(EMSCRIPTEN)
+
 INCLUDE(CPack)
