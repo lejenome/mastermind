@@ -140,7 +140,6 @@ if(CLANG_FORMAT_FOUND)
 endif(CLANG_FORMAT_FOUND)
 
 install(DIRECTORY res/fonts DESTINATION ${CMAKE_INSTALL_DATAROOTDIR})
-install(FILES res/icons/logo.png DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/ RENAME mastermind.png)
 install(FILES res/icons/icon.bmp DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/ RENAME mastermind.bmp)
 
 foreach(dll ${win_dll})
