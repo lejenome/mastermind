@@ -8,6 +8,9 @@
 #ifdef POSIX
 #include <unistd.h>
 #endif
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 #define drawSecret()                                                           \
 	drawCombination(session->secret->val, session->config->guesses, 0)
@@ -37,6 +40,7 @@ TTF_Font *font = NULL, *icons = NULL;
 ;
 mm_session *session = NULL;
 uint8_t *curGuess = NULL; // combination of last guess combination
+unsigned curPos = 0;      // position of cursor on curGuess for keyboard input
 SDL_Table panel, state, control, play;
 unsigned case_w, case_h, button_w;
 SDL_Color *colors = NULL;  // colors used on drawing combinations
@@ -136,8 +140,13 @@ unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 {
 	SDL_Texture *tex;
 	SDL_Rect rect;
-	SDL_Surface *surf = TTF_RenderGlyph_Blended(
+	SDL_Surface *surf;
+#ifdef __EMSCRIPTEN__
+	return 0;
+#else
+	surf = TTF_RenderGlyph_Blended(
 	    icons, c, (color == NULL) ? (SDL_Color)fg_color : *color);
+#endif
 	if (surf == NULL) {
 		SDL_Log("Unable to render font! Error: %s\n", TTF_GetError());
 		clean();
@@ -370,7 +379,7 @@ void redraw()
 	}
 	SDL_RenderPresent(rend);
 }
-unsigned onMouseUp(SDL_MouseButtonEvent e)
+int onMouseUp(SDL_MouseButtonEvent e)
 {
 	unsigned i;
 	if (curTab == TAB_SETTINGS) {
@@ -418,7 +427,7 @@ unsigned onMouseUp(SDL_MouseButtonEvent e)
 		redraw();
 	} else if (e.x > play.x && e.x < play.x + play.w && e.y > play.y &&
 		   e.y < play.y + play.h) {
-		return (e.x < play.x + play.w / 2) ? 0 : 2;
+		return (e.x < play.x + play.w / 2) ? -1 : 0;
 	} else if (e.x > control.x && e.x < control.x + control.w &&
 		   e.y > control.y && e.y < control.y + control.h) {
 		if (e.x < control.x + button_w) {
@@ -450,14 +459,12 @@ unsigned onMouseUp(SDL_MouseButtonEvent e)
 	}
 	return 1;
 }
-uint8_t *getGuess(unsigned *play)
+int getGuess()
 {
 	SDL_Event event;
-	uint8_t *str;
-	unsigned i = 0;
-	while (i < session->config->holes && SDL_WaitEvent(&event) > -1 &&
-	       *play) {
-		// SDL_PollEvent returns either 0 or 1
+	unsigned play = 1;
+	while (curPos < session->config->holes && SDL_PollEvent(&event) > 0 &&
+	       play == 1) {
 		switch (event.type) {
 		case SDL_QUIT:
 			clean();
@@ -468,7 +475,8 @@ uint8_t *getGuess(unsigned *play)
 			    event.key.keysym.sym >= SDLK_a &&
 			    event.key.keysym.sym <
 				(session->config->colors + SDLK_a)) {
-				curGuess[i++] = event.key.keysym.sym - SDLK_a;
+				curGuess[curPos++] =
+				    event.key.keysym.sym - SDLK_a;
 				redraw();
 			} else if (curTab == TAB_SETTINGS &&
 				   event.key.keysym.sym == SDLK_ESCAPE) {
@@ -502,22 +510,54 @@ uint8_t *getGuess(unsigned *play)
 			SDL_Log("MouseButtonEvent: button: %d, x= %d, y= %d\n",
 				event.button.button, event.button.x,
 				event.button.y);
-			*play = onMouseUp(event.button);
-			if (*play == 2)
-				goto done;
+			play = onMouseUp(event.button);
 			break;
 		}
 	}
-done:
-	str = (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
-	for (i = 0; i < session->config->holes; i++)
-		str[i] = curGuess[i];
-	return str;
+	if (curPos == session->config->holes)
+		play = 0;
+	return play;
+}
+void iter()
+{
+	unsigned play;
+	play = 1;
+	uint8_t *guess;
+	if (curGuess == NULL) {
+		curGuess =
+		    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
+		for (curPos = 0; curPos < session->config->holes; curPos++)
+			curGuess[curPos] = 0;
+		curPos = 0;
+		redraw();
+	}
+	play = getGuess();
+	if (play == 0 &&
+	    (session->state == MM_PLAYING || session->state == MM_NEW)) {
+		guess =
+		    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
+		for (curPos = 0; curPos < session->config->holes; curPos++)
+			guess[curPos] = curGuess[curPos];
+		curPos = 0;
+		if (mm_play(session,
+			    guess)) { // entred a complete and valid guess
+			free(guess);
+		} else {
+			redraw();
+		}
+	}
+	if (play == -1) { // restart session
+		SDL_RenderClear(rend);
+		mm_session_free(session);
+		free(curGuess);
+		curGuess = NULL;
+		session = mm_session_new();
+		initTables();
+		initColors();
+	}
 }
 int main(int argc, char *argv[])
 {
-	uint8_t *g;
-	unsigned i, play;
 #ifdef POSIX
 	char pwd[2000];
 	getcwd(pwd, 2000);
@@ -541,32 +581,14 @@ int main(int argc, char *argv[])
 	SDL_Log("mm_score_path: %s\n", mm_score_path);
 	initTables();
 	initColors();
+#ifdef __EMSCRIPTEN__
+	emscripten_set_main_loop(iter, 60, 1);
+#else
 	for (;;) {
-		curGuess =
-		    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
-		for (i = 0; i < session->config->holes; i++)
-			curGuess[i] = 0;
-		redraw();
-		play = 1;
-		while ((session->state == MM_PLAYING ||
-			session->state == MM_NEW) &&
-		       play) {
-			do {
-				play = 1;
-				g = getGuess(&play);
-			} while (mm_play(session, g) && play);
-			redraw();
-		}
-		while (play && getGuess(&play))
-			;
-		SDL_RenderClear(rend);
-		mm_session_free(session);
-		free(curGuess);
-		curGuess = NULL;
-		session = mm_session_new();
-		initTables();
-		initColors();
+		iter();
+		SDL_Delay(5);
 	}
+#endif
 	clean();
 	exit(EXIT_SUCCESS);
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mastermind\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-10 12:10+0100\n"
+"POT-Creation-Date: 2015-04-12 11:12+0100\n"
 "PO-Revision-Date: 2015-03-04 22:58+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -29,7 +29,7 @@ msgstr "Erreur:  caractere invalide dans la commande'%c'\n"
 msgid "  | Y%2d | A%2d | N%2d |\n"
 msgstr ""
 
-#: ../src/sdl.c:427
+#: ../src/sdl.c:436
 msgid ": Simple mastermind implemetation"
 msgstr ""
 
@@ -94,7 +94,7 @@ msgstr "Configuration globale non supportee!!\n"
 msgid "Global configs:\n"
 msgstr "Configuration global: %s = %d\n"
 
-#: ../src/sdl.c:426
+#: ../src/sdl.c:435
 msgid "Help"
 msgstr ""
 
@@ -103,7 +103,7 @@ msgstr ""
 msgid "Illigal char on you guesse!!\n"
 msgstr "Charactere invalide dans votre essai!!\n"
 
-#: ../src/cli-cmd.c:174 ../src/sdl.c:437
+#: ../src/cli-cmd.c:174 ../src/sdl.c:446
 #, c-format
 msgid "No score yet!\n"
 msgstr ""
@@ -120,7 +120,7 @@ msgstr ""
 msgid "Saving session\n"
 msgstr "Enregistrement de session\n"
 
-#: ../src/sdl.c:446
+#: ../src/sdl.c:455
 msgid "Scores"
 msgstr ""
 
