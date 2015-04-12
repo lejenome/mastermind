@@ -107,7 +107,7 @@ IF(XGETTEXT_FOUND)
 	ENDIF(_xgettext_options_list)
 
 	#MESSAGE("${XGETTEXT_EXECUTABLE} ${_xgettext_options_list} -o ${_potFile} ${_src_list}")
-	ADD_CUSTOM_COMMAND(OUTPUT pot_file
+	ADD_CUSTOM_COMMAND(OUTPUT pot_file ${_potFile}
 	    COMMAND ${XGETTEXT_EXECUTABLE} ${_xgettext_options} -o ${_potFile} ${_src_list}
 	    DEPENDS ${_src_list_abs}
 	    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
