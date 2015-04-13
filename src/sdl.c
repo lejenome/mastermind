@@ -640,7 +640,7 @@ int main(int argc, char *argv[])
 #ifdef __EMSCRIPTEN__
 	emscripten_set_main_loop(iter, 60, 1);
 #elif defined(__IPHONEOS__)
-	InitGameCenter();
+	//InitGameCenter();
 	SDL_iPhoneSetAnimationCallback(win, 60, iter, NULL);
 #else
 	for (;;) {
