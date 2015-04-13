@@ -101,15 +101,15 @@ void clean()
 	SDL_Quit();
 }
 /* printf text with deined position and color
- * param: s: text to print
- * param: x: x coord
- * param: y: y coord
- * param: color: pointer to fourground color to use or NULL for default
- * param: align: text align to provided position:
+ * @param s	text to print
+ * @param x	x coord
+ * @param y	y coord
+ * @param color	pointer to fourground color to use or NULL for default
+ * @param align	text align to provided position:
  * 		-1: left align
  * 		0:  center align
  * 		1:  right align
- * return: printed text width
+ * @return	printed text width
  */
 unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 {
@@ -150,11 +150,11 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	return rect.w;
 }
 /* print icon
- * param: c: unicode o icon to print on icons font
- * param: x: x coord
- * param: y: y coord
- * param:color: poiter to fourground color or NULL to use default color
- * return: printed icon width
+ * @param c	unicode o icon to print on icons font
+ * @param x	x coord
+ * @param y	y coord
+ * @param color	poiter to fourground color or NULL to use default color
+ * @return	printed icon width
  */
 unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 {
@@ -271,9 +271,9 @@ void drawTableTop(SDL_Table *T)
 				   T->x + (case_w * i), T->y + T->h);
 }
 /* draw given combination on panel table and its score on state table
- * param: G: combination array
- * param: p: position on panel
- * param: drawState: draw combination score from current session
+ * @param G	combination array
+ * @param p	position on panel
+ * @param	drawState: draw combination score from current session
  */
 void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 {
@@ -415,9 +415,9 @@ void redraw()
 	SDL_RenderPresent(rend);
 }
 /* mouse button up event handler
- * return: -1 to reset session
- * 	   0 to play current guess
- * 	   1 to keep listing to events
+ * @return	-1 to reset session
+ *		0 to play current guess
+ *		1 to keep listing to events
  */
 int onMouseUp(SDL_MouseButtonEvent e)
 {
@@ -500,7 +500,7 @@ int onMouseUp(SDL_MouseButtonEvent e)
 	return 1;
 }
 /* handle all available events on events pipe
- * return: 	-1 to restart the session
+ * @return	-1 to restart the session
  * 		0 to play current guess
  *	 	1 if nothing to do
  */

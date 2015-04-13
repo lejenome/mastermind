@@ -3,6 +3,7 @@
 #include "lib.h"
 
 #ifndef POSIX
+/* POSIX strndup spec implementation on non POSIX systems */
 char *strndup(const char *buf, size_t len)
 {
 	size_t i = strlen(buf);

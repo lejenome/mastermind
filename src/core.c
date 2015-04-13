@@ -57,7 +57,7 @@ mm_conf_t mm_confs[7] = {
 				       .val = 0}},
 };
 /* create new mastermind session and initialize viables && config
- * return: mm_session* : new session object
+ * @return	new session object
  */
 mm_session *mm_session_new()
 {
@@ -73,7 +73,7 @@ mm_session *mm_session_new()
 }
 /* load global config from config file and create new session config based
  * on global config
- * return: mm_config* : new session config object
+ * @return	new session config object
  */
 void mm_config_load()
 {
@@ -130,6 +130,9 @@ void mm_config_load()
 		    mm_confs[MM_POS_HOLES].nbre.val;
 	}
 }
+/* create new session config
+ * @return	new session config
+ */
 mm_config *mm_config_new()
 {
 	mm_config *config;
@@ -167,10 +170,10 @@ void mm_config_save()
 	}
 }
 /* change global config with name to value then save to config file
- * param name: const char* : name of global config to change
- * param value: const int : the new value of global config name
- * return: unsigned : 0 on success , 1 if conf option not found, 2 if conf
- *         value is not valid
+ * @param name	name of global config to change
+ * @param value	the new value of global config name
+ * @return	0 on success , 1 if conf option not found, 2 if conf
+ *		value is not valid
  */
 unsigned mm_config_set(const char *name, const char *value)
 {
@@ -208,8 +211,8 @@ unsigned mm_config_set(const char *name, const char *value)
 /* create the secret part of mastermind using session config
  * this fuction use random and save it on mm_secret->val && save freq of every
  * color on mm_secret->freq
- * param conf : mm_config* : config of current session
- * return : mm_secret* : secret objet for this session
+ * @param conf	config of current session
+ * @return	secret objet for this session
  */
 mm_secret *mm_secret_new(mm_config *conf)
 {
@@ -227,6 +230,7 @@ mm_secret *mm_secret_new(mm_config *conf)
 	}
 	return sec;
 }
+/* load scores from file */
 void mm_scores_load()
 {
 	FILE *f;
@@ -243,12 +247,18 @@ void mm_scores_load()
 		mm_scores.len++;
 	fclose(f);
 }
+/* return pointer to scores object
+ * @return	pointer to score object
+ */
 const mm_scores_t *mm_scores_get()
 {
 	if (mm_scores.T == NULL)
 		mm_scores_load();
 	return &mm_scores;
 }
+/* generate score of session and save it to score object/file if it's on top 20
+ * @param session	session which to save score
+ */
 void mm_scores_save(mm_session *session)
 {
 	long unsigned score;
@@ -291,13 +301,11 @@ void mm_scores_save(mm_session *session)
  * this function accept new guess combination , add it to
  * the session if it's not ended and calculed the score of
  * the current guess  then update session status
- * param session : mm_session* : current session
- * param t : uint8_t : the new guess combination
- * return : unsigned :
- * 		0 on success
- *  	1 on failure
- * 			- session already ended
- * 			- combination is not valid
+ * @param session	current session
+ * @param t		the new guess combination
+ * @return		0 on success
+ * 			1 on failure (session already ended, combination is not
+ * 			valid)
  */
 unsigned mm_play(mm_session *session, uint8_t *T)
 {
@@ -339,9 +347,15 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 		mm_scores_save(session);
 	return 0;
 }
+/* geenrate session score
+ * @param session	session which to generate score
+ * @return		session score
+ */
 long unsigned mm_score(mm_session *session)
 {
 	unsigned i;
+	if (session->state == MM_FAIL)
+		return 0;
 	// Max score it can get on current session config
 	long unsigned score = session->config->holes * session->config->colors *
 			      MM_GUESSES_MAX * 2;
@@ -357,8 +371,8 @@ long unsigned mm_score(mm_session *session)
 	return score;
 }
 /* get last gusess objet
- * param session : mm_session* : current objet
- * return : session : mm_session
+ * @param session	current session
+ * @return		last guess object
  */
 mm_guess mm_play_last(mm_session *session)
 {
@@ -366,8 +380,11 @@ mm_guess mm_play_last(mm_session *session)
 	return session->panel[session->guessed - 1];
 }
 /* This function initialize data && config && store files path using system
- * and core default standard
- * NOTE : this is an internal function
+ * and core default standard or passed dir path
+ * \note you do not need to call this function only if you want to use custom
+ * dir
+ * @param data_dir	path to dir that will contain the files or NULL to use
+ * 			system default/standard paths
  */
 void mm_init(const char *data_dir)
 {
@@ -444,7 +461,7 @@ done:
 	strcat(mm_score_path, "/score.txt");
 }
 /* free session object
- * param session : mm_session* : session object
+ * @param session	session to free
  */
 void mm_session_free(mm_session *session)
 {
@@ -458,7 +475,9 @@ void mm_session_free(mm_session *session)
 	free(session);
 }
 /* save session if not ended && save_on_exit = 1 then free object
- * param session : mm_session* : session object
+ * @param session	session to check and free before exit
+ * \note if your are not exiting the program use mm_session_free instead as
+ * mm_session_exit may store the session
  */
 void mm_session_exit(mm_session *session)
 {
@@ -468,8 +487,8 @@ void mm_session_exit(mm_session *session)
 	mm_session_free(session);
 }
 /* save session object on mm_store_path file
- * param session : mm_session* : current session object
- * return : unsigned : 0 on success , 1 on failure
+ * @param session	current session object
+ * @return		0 on success , 1 on failure
  */
 unsigned int mm_session_save(mm_session *session)
 {
@@ -510,8 +529,7 @@ unsigned int mm_session_save(mm_session *session)
 	return 0;
 }
 /* this function restore session object from mm_store_path file
- * return mm_session* : NULL on failure , session object pointeur on
- * success
+ * @return	NULL on failure , session object pointeur on success
  */
 mm_session *mm_session_restore()
 {

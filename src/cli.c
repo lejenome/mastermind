@@ -56,9 +56,9 @@ void printPanel()
 	putchar('\n');
 }
 /* parse buffer and get arguments from it
- * param: buf:	buffer to parse
- * param: argc:	poiter to where to store arguments count
- * return: 	arguments array or NULL if buf is invalid
+ * @param buf	buffer to parse
+ * @param argc	poiter to where to store arguments count
+ * @return 	arguments array or NULL if buf is invalid
  */
 char **parseBuf(char *buf, unsigned *argc)
 {
@@ -115,10 +115,10 @@ char **parseBuf(char *buf, unsigned *argc)
 }
 #ifndef DISABLE_READLINE
 /* Tab button click handler
- * param: txt:	current buffer
- * param: start	buffer start position
- * param: end	bufffer end postion
- * return	array of guessed completions
+ * @param txt	current buffer
+ * @param start	buffer start position
+ * @param end	bufffer end postion
+ * @return	array of guessed completions
  */
 static char **completeCombination(const char *txt, int start, int end)
 {
@@ -221,12 +221,12 @@ no_more:
 #endif // DISABLE_READLINE
 
 /* get guessed combination and handle input buffer commands
- * return:
- * -1 : input error, redo (do not redraw table)
- *  0 : seccess input, redo if mm_play(T) does not success (do not redraw
+ * @return
+ *	-1 : input error, redo (do not redraw table)
+ *	0 : seccess input, redo if mm_play(T) does not success (do not redraw
  *      table) or next (redraw table)
- * 1  : cmd input, redo (do not redo table)
- * 2  : cmd input, next (redraw table)
+ * 	1  : cmd input, redo (do not redo table)
+ * 	2  : cmd input, next (redraw table)
  */
 int getCombination(uint8_t *T)
 {
