@@ -12,6 +12,10 @@
 #include "cli-cmd.h"
 #include "core.h"
 
+/* \file cli.c
+ * \brief command line interface implemetation of mastermind
+ */
+
 mm_session *session;
 cmd_t cmds[] = {
     {.n = "quit", .e = cmd_quit, .s = 0},

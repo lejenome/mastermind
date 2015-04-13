@@ -1,6 +1,10 @@
 #include <stdint.h>
 #include "../config.h"
 
+/* \file core.h
+ * \brief mastermind core funtions and types definition
+ */
+
 #ifndef __MM_CORE_H
 #define __MM_CORE_H
 

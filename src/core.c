@@ -15,6 +15,10 @@
 #include <windows.h>
 #endif
 
+/* \file core.c
+ * \brief mastermind core funtions and types definition
+ */
+
 mm_scores_t mm_scores = {.T = NULL, .max = 20, .len = 0};
 char *mm_config_path = NULL;
 char *mm_score_path = NULL;

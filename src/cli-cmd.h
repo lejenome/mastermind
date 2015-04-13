@@ -1,5 +1,9 @@
 #include "core.h"
 
+/* \file cli-cmd.h
+ * \brief commands functions handlers
+ */
+
 #ifndef __MM_CLI_CMD_H
 #define __MM_CLI_CMD_H
 // cmds return values

@@ -12,6 +12,10 @@
 #include <emscripten.h>
 #endif
 
+/* \file sdl.c
+ * \brief SDL interface implementation of mastermind
+ */
+
 #define drawSecret()                                                           \
 	drawCombination(session->secret->val, session->config->guesses, 0)
 #define drawGuess(p) drawCombination(session->panel[p].combination, p, 1)

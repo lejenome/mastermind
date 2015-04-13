@@ -2,6 +2,10 @@
 #include <string.h>
 #include "lib.h"
 
+/* \file lib.c
+ * \brief missing or core/iterface independent functions definition
+ */
+
 #ifndef POSIX
 /* POSIX strndup spec implementation on non POSIX systems */
 char *strndup(const char *buf, size_t len)
