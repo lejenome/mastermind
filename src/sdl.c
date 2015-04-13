@@ -46,6 +46,7 @@ unsigned case_w, case_h, button_w;
 SDL_Color *colors = NULL;  // colors used on drawing combinations
 uint8_t curTab = TAB_GAME; // Current tab being drawed
 
+/* Init SDL subsystem, create window and load fonts */
 void init_sdl()
 {
 	SDL_Surface *icon;
@@ -84,6 +85,7 @@ void init_sdl()
 		SDL_FreeSurface(icon);
 	}
 }
+/* close sdl subsystems and free memory */
 void clean()
 {
 	if (session) {
@@ -98,6 +100,17 @@ void clean()
 	TTF_Quit();
 	SDL_Quit();
 }
+/* printf text with deined position and color
+ * param: s: text to print
+ * param: x: x coord
+ * param: y: y coord
+ * param: color: pointer to fourground color to use or NULL for default
+ * param: align: text align to provided position:
+ * 		-1: left align
+ * 		0:  center align
+ * 		1:  right align
+ * return: printed text width
+ */
 unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 {
 	SDL_Texture *tex;
@@ -136,6 +149,13 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	SDL_DestroyTexture(tex);
 	return rect.w;
 }
+/* print icon
+ * param: c: unicode o icon to print on icons font
+ * param: x: x coord
+ * param: y: y coord
+ * param:color: poiter to fourground color or NULL to use default color
+ * return: printed icon width
+ */
 unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 {
 	SDL_Texture *tex;
@@ -165,14 +185,15 @@ unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 	SDL_DestroyTexture(tex);
 	return rect.w;
 }
-int setBg()
+/* draw background color */
+void setBg()
 {
 	SDL_SetRenderDrawColor(rend, (SDL_Color)bg_color.r,
 			       (SDL_Color)bg_color.g, (SDL_Color)bg_color.b,
 			       (SDL_Color)bg_color.a);
 	SDL_RenderFillRect(rend, NULL);
-	return 0;
 }
+/* recalcualte tables elements values using current session settings */
 void initTables()
 {
 	case_w = SCREEN_WIDTH / (session->config->holes + 4);
@@ -203,6 +224,7 @@ void initTables()
 			   .rows = 1,
 			   .cols = 2};
 }
+/* create colors array with current session colors as length */
 void initColors()
 {
 	unsigned i;
@@ -218,6 +240,7 @@ void initColors()
 		colors[i] = (SDL_Color){255 / (i + 1), (150 * 2) % 200,
 					100 / (i % 3 + 1), 255};
 }
+/* draw borders of bottom tables */
 int drawTableBottom(SDL_Table *T)
 {
 	unsigned i, w;
@@ -230,6 +253,9 @@ int drawTableBottom(SDL_Table *T)
 				   T->y + T->h);
 	return 0;
 }
+/* draw borders of top tables with double case for selector if session still
+ * not ended
+ */
 void drawTableTop(SDL_Table *T)
 {
 	unsigned i;
@@ -244,6 +270,11 @@ void drawTableTop(SDL_Table *T)
 		SDL_RenderDrawLine(rend, T->x + (case_w * i), T->y,
 				   T->x + (case_w * i), T->y + T->h);
 }
+/* draw given combination on panel table and its score on state table
+ * param: G: combination array
+ * param: p: position on panel
+ * param: drawState: draw combination score from current session
+ */
 void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 {
 	unsigned i;
@@ -280,6 +311,7 @@ void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 				 rect.y + rect.h / 3, &yellow);
 	}
 }
+/* draw selector icons on panel on current guess position of current session */
 void drawSelector()
 {
 	unsigned y, x, i;
@@ -295,6 +327,7 @@ void drawSelector()
 		x += case_w;
 	}
 }
+/* draw settings tab */
 void redraw_settings()
 {
 	unsigned x, y;
@@ -339,6 +372,7 @@ void redraw_settings()
 	sdl_print_center("< back", case_w * 0.5 + button_w * 1.5,
 			 SCREEN_HEIGHT - case_h * 1, NULL);
 }
+/* draw game tab */
 void redraw_game()
 {
 	unsigned i;
@@ -365,6 +399,7 @@ void redraw_game()
 	else
 		drawSecret();
 }
+/* clean renderer and redraw current tab */
 void redraw()
 {
 	SDL_RenderClear(rend);
@@ -379,6 +414,11 @@ void redraw()
 	}
 	SDL_RenderPresent(rend);
 }
+/* mouse button up event handler
+ * return: -1 to reset session
+ * 	   0 to play current guess
+ * 	   1 to keep listing to events
+ */
 int onMouseUp(SDL_MouseButtonEvent e)
 {
 	unsigned i;
@@ -459,6 +499,11 @@ int onMouseUp(SDL_MouseButtonEvent e)
 	}
 	return 1;
 }
+/* handle all available events on events pipe
+ * return: 	-1 to restart the session
+ * 		0 to play current guess
+ *	 	1 if nothing to do
+ */
 int getGuess()
 {
 	SDL_Event event;
@@ -518,6 +563,9 @@ int getGuess()
 		play = 0;
 	return play;
 }
+/* one iteration on main loop, handle available events and exec requested
+ * action (play guess, restart session) and redraw if needed
+ */
 void iter()
 {
 	unsigned play;
@@ -570,7 +618,7 @@ int main(int argc, char *argv[])
 #ifdef __ANDROID__
 	// use android app internal path
 	mm_init(SDL_AndroidGetInternalStoragePath());
-#elif __IPHONEOS__
+#elif defined(__IPHONEOS__)
 	mm_init("../Documents"); // FIXME: "../Library/Prefferences"
 #endif // __IPHONEOS__
 	session = mm_session_restore();
@@ -583,6 +631,9 @@ int main(int argc, char *argv[])
 	initColors();
 #ifdef __EMSCRIPTEN__
 	emscripten_set_main_loop(iter, 60, 1);
+#elif defined(__IPHONEOS__)
+	InitGameCenter();
+	SDL_iPhoneSetAnimationCallback(win, 60, iter, NULL);
 #else
 	for (;;) {
 		iter();
