@@ -16,19 +16,21 @@
  * \brief SDL interface implementation of mastermind
  */
 
+// funtions aliases and helpers
 #define drawSecret()                                                           \
 	drawCombination(session->secret->val, session->config->guesses, 0)
 #define drawGuess(p) drawCombination(session->panel[p].combination, p, 1)
 #define sdl_print_center(s, x, y, color) sdl_print(s, x, y, color, 0)
 #define sdl_print_left(s, x, y, color) sdl_print(s, x, y, color, -1)
-
+// window available tabs
 #define TAB_GAME (uint8_t)0
 #define TAB_SETTINGS (uint8_t)1
-
+// default window size and minimal size
 int SCREEN_HEIGHT = 640;
 int SCREEN_WIDTH = 480;
 int SCREEN_HEIGHT_MIN = 420;
 int SCREEN_WIDTH_MIN = 360;
+// table struct that contains table dimensions
 typedef struct {
 	unsigned x;
 	unsigned y;
@@ -38,17 +40,17 @@ typedef struct {
 	unsigned cols;
 } SDL_Table;
 
+// global variables
 SDL_Window *win = NULL;
-SDL_Renderer *rend = NULL;
-TTF_Font *font = NULL, *icons = NULL;
-;
-mm_session *session = NULL;
-uint8_t *curGuess = NULL; // combination of last guess combination
-unsigned curPos = 0;      // position of cursor on curGuess for keyboard input
-SDL_Table panel, state, control, play;
-unsigned case_w, case_h, button_w;
-SDL_Color *colors = NULL;  // colors used on drawing combinations
-uint8_t curTab = TAB_GAME; // Current tab being drawed
+SDL_Renderer *rend = NULL;	    // window renderer object
+TTF_Font *font = NULL, *icons = NULL; // fonts to use
+mm_session *session = NULL;	   // current mastermind session object
+uint8_t *curGuess = NULL;	     // combination of last guess combination
+unsigned curPos = 0; // position of cursor on curGuess for keyboard input
+SDL_Table panel, state, control, play; // tables object
+unsigned case_w, case_h, button_w;     // size of tables cases
+SDL_Color *colors = NULL;	      // colors used on drawing combinations
+uint8_t curTab = TAB_GAME;	     // Current tab being drawed
 
 /* Init SDL subsystem, create window and load fonts */
 void init_sdl()
@@ -197,7 +199,8 @@ void setBg()
 			       (SDL_Color)bg_color.a);
 	SDL_RenderFillRect(rend, NULL);
 }
-/* recalcualte tables elements values using current session settings */
+/* recalcualte tables elements dimensions/values using current session settings
+ */
 void initTables()
 {
 	case_w = SCREEN_WIDTH / (session->config->holes + 4);
@@ -373,7 +376,7 @@ void redraw_settings()
 			       (SDL_Color)br_color.g, (SDL_Color)br_color.b,
 			       (SDL_Color)br_color.a);
 	drawTableBottom(&button);
-	sdl_print_center("< back", case_w * 0.5 + button_w * 1.5,
+	sdl_print_center(_("< back"), case_w * 0.5 + button_w * 1.5,
 			 SCREEN_HEIGHT - case_h * 1, NULL);
 }
 /* draw game tab */
@@ -393,8 +396,9 @@ void redraw_game()
 		       control.y + case_h / 2, NULL); // 0xF013
 	sdl_print_icon(0xF097, control.x + button_w * 2.5,
 		       control.y + case_h / 2, NULL);
-	sdl_print_center("rest", play.x + button_w, play.y + case_h / 2, NULL);
-	sdl_print_center("play", play.x + button_w * 3, play.y + case_h / 2,
+	sdl_print_center(_("rest"), play.x + button_w, play.y + case_h / 2,
+			 NULL);
+	sdl_print_center(_("play"), play.x + button_w * 3, play.y + case_h / 2,
 			 NULL);
 	for (i = 0; i < session->guessed; i++)
 		drawGuess(i);
@@ -520,6 +524,9 @@ int getGuess()
 			exit(EXIT_SUCCESS);
 			break;
 		case SDL_KEYDOWN:
+			SDL_Log("Key down event: %d (%c) name: %s\n",
+				event.key.keysym.sym, event.key.keysym.sym,
+				SDL_GetKeyName(event.key.keysym.sym));
 			if (curTab == TAB_GAME &&
 			    event.key.keysym.sym >= SDLK_a &&
 			    event.key.keysym.sym <
@@ -532,9 +539,6 @@ int getGuess()
 				curTab = TAB_GAME;
 				redraw();
 			}
-			SDL_Log("Key down event: %d (%c) name: %s\n",
-				event.key.keysym.sym, event.key.keysym.sym,
-				SDL_GetKeyName(event.key.keysym.sym));
 			break;
 		case SDL_WINDOWEVENT:
 			SDL_Log("Window Event: id: %d, event: %d\n",
