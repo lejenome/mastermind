@@ -27,6 +27,9 @@
 #ifdef __ANDROID__
 #define FONTSDIR "fonts/"
 #define ICONSDIR "icons/"
+#elif defined(__IPHONEOS__)
+#define FONTSDIR ""
+#define ICONSDIR ""
 #else
 #define FONTSDIR "@CMAKE_INSTALL_FULL_DATAROOTDIR@/fonts/"
 #define ICONSDIR "@CMAKE_INSTALL_FULL_DATAROOTDIR@/icons/"
