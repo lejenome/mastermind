@@ -165,8 +165,39 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 {
 #ifdef __EMSCRIPTEN__
-	return 0;
-#endif
+	// FIXME: fix unicode functs on SDL2_ttf and delete emscripten
+	// modifcation
+	char s[2] = " ";
+	switch (c) {
+	case 0xF0D7:
+	case 0xF0DD:
+		s[0] = '-';
+		break;
+	case 0xF0D8:
+	case 0xF0DE:
+		s[0] = '+';
+		break;
+	case 0xF05A:
+		s[0] = '!';
+		break;
+	case 0xF085:
+		s[0] = 'C';
+		break;
+	case 0xF097:
+		s[0] = 'S';
+		break;
+	case 0xF111:
+		s[0] = '*';
+		break;
+	case 0xF205:
+		s[0] = 'Y';
+		break;
+	case 0xF204:
+		s[0] = 'N';
+		break;
+	}
+	return sdl_print_center(s, x, y, color);
+#else
 	SDL_Texture *tex;
 	SDL_Rect rect;
 	SDL_Surface *surf;
@@ -190,6 +221,7 @@ unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 	SDL_FreeSurface(surf);
 	SDL_DestroyTexture(tex);
 	return rect.w;
+#endif
 }
 /* draw background color */
 void setBg()
@@ -199,7 +231,8 @@ void setBg()
 			       (SDL_Color)bg_color.a);
 	SDL_RenderFillRect(rend, NULL);
 }
-/* recalcualte tables elements dimensions/values using current session settings
+/* recalcualte tables elements dimensions/values using current session
+ * settings
  */
 void initTables()
 {
@@ -260,7 +293,8 @@ int drawTableBottom(SDL_Table *T)
 				   T->y + T->h);
 	return 0;
 }
-/* draw borders of top tables with double case for selector if session still
+/* draw borders of top tables with double case for selector if session
+ * still
  * not ended
  */
 void drawTableTop(SDL_Table *T)
@@ -296,14 +330,16 @@ void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 	// char c[2] = "a";
 	for (i = 0; i < panel.cols; i++) {
 		/*
-		SDL_SetRenderDrawColor(rend, colors[G[i]].r, colors[G[i]].g,
+		SDL_SetRenderDrawColor(rend, colors[G[i]].r,
+		colors[G[i]].g,
 				       colors[G[i]].b, colors[G[i]].a);
 		SDL_RenderFillRect(rend, &rect);
 		*/
 		// c[0] = 'a' + G[i];
 		sdl_print_icon(0xF111, rect.x + rect.w / 2, rect.y + rect.h / 3,
 			       colors + G[i]);
-		// sdl_print_center(c, rect.x + rect.w / 2, rect.y + rect.h / 3,
+		// sdl_print_center(c, rect.x + rect.w / 2, rect.y +
+		// rect.h / 3,
 		//		 NULL);
 		rect.x += case_w;
 	}
@@ -318,7 +354,8 @@ void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 				 rect.y + rect.h / 3, &yellow);
 	}
 }
-/* draw selector icons on panel on current guess position of current session */
+/* draw selector icons on panel on current guess position of current
+ * session */
 void drawSelector()
 {
 	unsigned y, x, i;
@@ -560,7 +597,8 @@ int getGuess()
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
-			SDL_Log("MouseButtonEvent: button: %d, x= %d, y= %d\n",
+			SDL_Log("MouseButtonEvent: button: %d, x= %d, "
+				"y= %d\n",
 				event.button.button, event.button.x,
 				event.button.y);
 			play = onMouseUp(event.button);
@@ -571,7 +609,8 @@ int getGuess()
 		play = 0;
 	return play;
 }
-/* one iteration on main loop, handle available events and exec requested
+/* one iteration on main loop, handle available events and exec
+ * requested
  * action (play guess, restart session) and redraw if needed
  */
 void iter()
