@@ -56,33 +56,6 @@ if(IPHONEOS)
 	foreach(FW ${IOS_FRAMEWORKS})
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework ${FW}")
 	endforeach()
-	set_target_properties(
-	    mastermindsdl
-	    PROPERTIES
-	    MACOSX_BUNDLE YES
-	    #MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_LIST_DIR}/plist.in"
-	    XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
-	    XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES
-	    XCODE_ATTRIBUTE_INSTALL_PATH "${CMAKE_BINARY_DIR}/ProductRelease"
-	    XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES "NO"
-	    #RESOURCE "${IMAGES};${STORYBOARDS};${ICONS}"
-	)
-	set_target_properties(
-	    mastermindsdl
-	    PROPERTIES
-	    XCODE_ATTRIBUTE_PRODUCT_NAME
-	    "MasterMind"
-	    XCODE_ATTRIBUTE_BUNDLE_IDENTIFIER
-	    "com.dev2space.mastermind"
-	)
-	set_target_properties(
-	    mastermindsdl
-	    PROPERTIES
-	    XCODE_ATTRIBUTE_PRODUCT_NAME[variant=Debug]
-	    "MasterMind-dbg"
-	    XCODE_ATTRIBUTE_BUNDLE_IDENTIFIER[variant=Debug]
-	    "com.dev2space.mastermind.debug"
-	)
 endif(IPHONEOS)
 
 if(NOT EMSCRIPTEN AND NOT IPHONEOS)
@@ -201,8 +174,6 @@ endif(EMSCRIPTEN)
 
 INCLUDE(sdl2_android)
 
-if(NOT IPHONEOS)
-	install(TARGETS mastermindcli DESTINATION ${CMAKE_INSTALL_BINDIR})
-	install(TARGETS mastermindsdl RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-endif(NOT IPHONEOS)
+install(TARGETS mastermindcli DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS mastermindsdl DESTINATION ${CMAKE_INSTALL_BINDIR})
 INCLUDE(mm_cpack)

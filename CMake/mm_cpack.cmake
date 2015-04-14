@@ -136,4 +136,33 @@ if(EMSCRIPTEN)
 	#install(COPY ext/emscripten/loading.png .)
 endif(EMSCRIPTEN)
 
+if(IPHONEOS)
+	set_target_properties(
+	    mastermindsdl
+	    PROPERTIES
+	    MACOSX_BUNDLE YES
+	    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_BINARY_DIR}/Info.plist"
+	    XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
+	    XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES
+	    XCODE_ATTRIBUTE_INSTALL_PATH "${CMAKE_BINARY_DIR}/ProductRelease"
+	    XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES "NO"
+	    #RESOURCE "${IMAGES};${STORYBOARDS};${ICONS}"
+	)
+	set_target_properties(
+	    mastermindsdl
+	    PROPERTIES
+	    XCODE_ATTRIBUTE_PRODUCT_NAME
+	    "MasterMind"
+	    XCODE_ATTRIBUTE_BUNDLE_IDENTIFIER
+	    "com.dev2space.mastermind"
+	)
+	set_target_properties(
+	    mastermindsdl
+	    PROPERTIES
+	    XCODE_ATTRIBUTE_PRODUCT_NAME[variant=Debug]
+	    "MasterMind-dbg"
+	    XCODE_ATTRIBUTE_BUNDLE_IDENTIFIER[variant=Debug]
+	    "com.dev2space.mastermind.debug"
+	)
+endif(IPHONEOS)
 INCLUDE(CPack)

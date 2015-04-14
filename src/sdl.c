@@ -639,9 +639,11 @@ int main(int argc, char *argv[])
 	initColors();
 #ifdef __EMSCRIPTEN__
 	emscripten_set_main_loop(iter, 60, 1);
+/* FIXME: implement iPhone Game Center support
 #elif defined(__IPHONEOS__)
-	//InitGameCenter();
+	//InitGameCenter(); // only implemeted on object-c
 	SDL_iPhoneSetAnimationCallback(win, 60, iter, NULL);
+*/
 #else
 	for (;;) {
 		iter();

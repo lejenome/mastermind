@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B597A648-D18D-49BB-B6D6-50746D7A2243</string>
+	<key>IDESourceControlProjectName</key>
+	<string>___PROJECTNAME___</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>32001BBD-5B41-439C-98EB-470F61B5ED2A</key>
+		<string>https://github.com/lejenome/mastermind.git</string>
+		<key>71780C96-B9A1-4339-AC12-AB2EF69235E5</key>
+		<string>https://github.com/lejenome/mastermind-ext.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ide/xcode-ios/___PROJECTNAME___.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>32001BBD-5B41-439C-98EB-470F61B5ED2A</key>
+		<string>../../../..</string>
+		<key>71780C96-B9A1-4339-AC12-AB2EF69235E5</key>
+		<string>../../../../ext</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/lejenome/mastermind.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>32001BBD-5B41-439C-98EB-470F61B5ED2A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>71780C96-B9A1-4339-AC12-AB2EF69235E5</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ext</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>32001BBD-5B41-439C-98EB-470F61B5ED2A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>mastermind</string>
+		</dict>
+	</array>
+</dict>
+</plist>
