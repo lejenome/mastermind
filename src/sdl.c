@@ -164,15 +164,15 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
  */
 unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 {
+#ifdef __EMSCRIPTEN__
+	return 0;
+#endif
 	SDL_Texture *tex;
 	SDL_Rect rect;
 	SDL_Surface *surf;
-#ifdef __EMSCRIPTEN__
-	return 0;
-#else
-	surf = TTF_RenderGlyph_Blended(
-	    icons, c, (color == NULL) ? (SDL_Color)fg_color : *color);
-#endif
+	SDL_Color default_color = (SDL_Color)fg_color;
+	surf = TTF_RenderGlyph_Blended(icons, c, (color == NULL) ? default_color
+								 : *color);
 	if (surf == NULL) {
 		SDL_Log("Unable to render font! Error: %s\n", TTF_GetError());
 		clean();

@@ -73,7 +73,10 @@ elseif(IPHONEOS)
 elseif(EMSCRIPTEN)
 	#SET(CMAKE_C_FLAGS "-s USE_SDL=2 ${CMAKE_C_FLAGS}")
 	INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/ext/emscripten/include)
-	TARGET_LINK_LIBRARIES(mastermindsdl ${CMAKE_CURRENT_SOURCE_DIR}/ext/emscripten/libSDL2.a
+	TARGET_LINK_LIBRARIES(mastermindsdl
+		${CMAKE_CURRENT_SOURCE_DIR}/ext/emscripten/libSDL2.a
+		${CMAKE_CURRENT_SOURCE_DIR}/ext/emscripten/libSDL2_ttf.a
+		${CMAKE_CURRENT_SOURCE_DIR}/ext/emscripten/libfreetype.a
 		${CMAKE_CURRENT_SOURCE_DIR}/ext/emscripten/libSDL2main.a)
 endif(NOT EMSCRIPTEN AND NOT IPHONEOS)
 
