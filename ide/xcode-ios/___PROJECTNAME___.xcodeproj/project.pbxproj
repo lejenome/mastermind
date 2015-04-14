@@ -14,12 +14,12 @@
 		426FD3B11ADCB576005B4AAD /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = 426FD3AE1ADCB576005B4AAD /* core.c */; };
 		426FD3B21ADCB576005B4AAD /* lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 426FD3AF1ADCB576005B4AAD /* lib.c */; };
 		426FD3B31ADCB576005B4AAD /* sdl.c in Sources */ = {isa = PBXBuildFile; fileRef = 426FD3B01ADCB576005B4AAD /* sdl.c */; };
+		42967CD31ADD1A8B00B4185F /* logo-256x256.png in Resources */ = {isa = PBXBuildFile; fileRef = 42967CD21ADD1A8B00B4185F /* logo-256x256.png */; };
 		42EE09BA1ADCB81E002FEC0E /* libSDL2_ttf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42EE09B81ADCB81E002FEC0E /* libSDL2_ttf.a */; };
 		42EE09BB1ADCB81E002FEC0E /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42EE09B91ADCB81E002FEC0E /* libSDL2.a */; };
 		42EE09C21ADCBCE3002FEC0E /* fontawesome-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42EE09C01ADCBCE3002FEC0E /* fontawesome-webfont.ttf */; };
 		42EE09C31ADCBCE3002FEC0E /* ProFont_r400-29.pcf in Resources */ = {isa = PBXBuildFile; fileRef = 42EE09C11ADCBCE3002FEC0E /* ProFont_r400-29.pcf */; };
 		FD779EDE0E26BA1200F39101 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD779EDD0E26BA1200F39101 /* CoreAudio.framework */; };
-		FD77A07D0E26BD8C00F39101 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FD77A07C0E26BD8C00F39101 /* Icon.png */; };
 		FD77A07F0E26BDA900F39101 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FD77A07E0E26BDA900F39101 /* Default.png */; };
 		FD77A0850E26BDB800F39101 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD77A0840E26BDB800F39101 /* AudioToolbox.framework */; };
 		FDB8BFC60E5A0F6A00980157 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB8BFC50E5A0F6A00980157 /* CoreGraphics.framework */; };
@@ -34,13 +34,13 @@
 		426FD3AE1ADCB576005B4AAD /* core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = core.c; path = ../../src/core.c; sourceTree = "<group>"; };
 		426FD3AF1ADCB576005B4AAD /* lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lib.c; path = ../../src/lib.c; sourceTree = "<group>"; };
 		426FD3B01ADCB576005B4AAD /* sdl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sdl.c; path = ../../src/sdl.c; sourceTree = "<group>"; };
+		42967CD21ADD1A8B00B4185F /* logo-256x256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "logo-256x256.png"; path = "../../res/icons/logo-256x256.png"; sourceTree = "<group>"; };
 		42EE09B81ADCB81E002FEC0E /* libSDL2_ttf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2_ttf.a; path = "../../ext/ios/libs/Debug-iphonesimulator/libSDL2_ttf.a"; sourceTree = "<group>"; };
 		42EE09B91ADCB81E002FEC0E /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = "../../ext/ios/libs/Debug-iphonesimulator/libSDL2.a"; sourceTree = "<group>"; };
 		42EE09C01ADCBCE3002FEC0E /* fontawesome-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fontawesome-webfont.ttf"; sourceTree = "<group>"; };
 		42EE09C11ADCBCE3002FEC0E /* ProFont_r400-29.pcf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProFont_r400-29.pcf"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FD779EDD0E26BA1200F39101 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		FD77A07C0E26BD8C00F39101 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		FD77A07E0E26BDA900F39101 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		FD77A0840E26BDB800F39101 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		FDB8BFC50E5A0F6A00980157 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -98,9 +98,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				42967CD21ADD1A8B00B4185F /* logo-256x256.png */,
 				42EE09BF1ADCBCE3002FEC0E /* fonts */,
 				FD77A07E0E26BDA900F39101 /* Default.png */,
-				FD77A07C0E26BD8C00F39101 /* Icon.png */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 			);
 			name = Resources;
@@ -184,9 +184,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				42EE09C21ADCBCE3002FEC0E /* fontawesome-webfont.ttf in Resources */,
-				FD77A07D0E26BD8C00F39101 /* Icon.png in Resources */,
 				FD77A07F0E26BDA900F39101 /* Default.png in Resources */,
 				42EE09C31ADCBCE3002FEC0E /* ProFont_r400-29.pcf in Resources */,
+				42967CD31ADD1A8B00B4185F /* logo-256x256.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
