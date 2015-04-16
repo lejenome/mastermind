@@ -636,6 +636,9 @@ void iter()
 		curPos = 0;
 		if (mm_play(session,
 			    guess)) { // entred a complete and valid guess
+			SDL_ShowSimpleMessageBox(
+			    SDL_MESSAGEBOX_WARNING, _("Invalid Guess"),
+			    _("You Guess is invalid"), win);
 			free(guess);
 		} else {
 			redraw();
