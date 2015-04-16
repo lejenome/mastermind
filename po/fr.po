@@ -27,7 +27,7 @@ msgstr "Erreur:  caractere invalide dans la commande'%c'\n"
 #: ../src/cli.c:41
 #, c-format
 msgid "  | Y%2d | A%2d | N%2d |\n"
-msgstr ""
+msgstr "  | Y%2d | A%2d | N%2d |\n"
 
 #: ../src/sdl.c:436
 msgid ": Simple mastermind implemetation"
@@ -36,12 +36,12 @@ msgstr ""
 #: ../src/cli-cmd.c:159
 #, c-format
 msgid "About "
-msgstr ""
+msgstr "A propos "
 
 #: ../src/cli-cmd.c:69
 #, c-format
 msgid "Bye!\n"
-msgstr ""
+msgstr "Bye!\n"
 
 #: ../src/cli-cmd.c:145
 #, c-format
@@ -122,21 +122,21 @@ msgstr "Enregistrement de session\n"
 
 #: ../src/sdl.c:455
 msgid "Scores"
-msgstr ""
+msgstr "Scores"
 
 #: ../src/cli.c:343
 #, c-format
 msgid "Secret Key is: "
-msgstr ""
+msgstr "Le mots secret est : "
 
 #: ../src/cli-cmd.c:109
 #, c-format
 msgid "Session configs:\n"
-msgstr ""
+msgstr "Configurations du session:\n"
 
 #: ../src/cli.c:340
 msgid "You Failed :("
-msgstr "Rate :("
+msgstr "Tu as perdu :("
 
 #: ../src/cli.c:329
 #, c-format
@@ -150,17 +150,17 @@ msgstr "Tu a gagne :)"
 #: ../src/cli.c:342
 #, c-format
 msgid "Your score is: %ld\n"
-msgstr ""
+msgstr "Ton score est: %ld\n"
 
 #: ../src/cli-cmd.c:183
 #, c-format
 msgid "current account: %s\n"
-msgstr ""
+msgstr "compte courent: %s\n"
 
 #: ../src/cli.c:349
 #, c-format
 msgid "restart? (Y/N): "
-msgstr "resultat? (O/N): "
+msgstr "rejouer? (Y/N): "
 
 #~ msgid ""
 #~ "Current State:\n"
