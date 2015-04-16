@@ -18,13 +18,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ../src/cli.c:85
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Error: illegal charater on the command '%c'\n"
 msgstr ""
 "\n"
-"Erreur: caractere invalide dans la commande'%c'\n"
+"Erreur: caractere invalide dans la commande '%c'\n"
 
 #: ../src/cli.c:46
 #, c-format
@@ -59,12 +59,12 @@ msgstr ""
 "set [config_name [config_value]]\n"
 
 #: ../src/cli.c:270
-#, fuzzy, c-format
+#, c-format
 msgid "Command unsupported '%s'\n"
 msgstr "Commande non supportee '%s'\n"
 
 #: ../src/cli.c:334
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Current Config:\n"
 "\tguesses: %d\n"
@@ -84,9 +84,9 @@ msgid "Enter you guesse: (%d of [0..%d] nbre) > "
 msgstr "Donner votre essai: (%d nbre de [0..%d]) > "
 
 #: ../src/core.c:100
-#, fuzzy, c-format
+#, c-format
 msgid "Error: config option not supported: %s\n"
-msgstr "Configuration globale non supportee!!\n"
+msgstr "Configuration globale non supportee: %s\n"
 
 #: ../src/cli.c:353
 #, c-format
@@ -99,9 +99,9 @@ msgid "Global config not supported!!\n"
 msgstr "Configuration globale non supportee!!\n"
 
 #: ../src/cli-cmd.c:90
-#, fuzzy, c-format
+#, c-format
 msgid "Global configs:\n"
-msgstr "Configuration global: %s = %d\n"
+msgstr "Configuration global:\n"
 
 #: ../src/sdl.c:520
 msgid "Help"
@@ -122,7 +122,7 @@ msgid "No score yet!\n"
 msgstr "Pas encore de score!\n"
 
 #: ../src/cli.c:322
-#, fuzzy, c-format
+#, c-format
 msgid "Restoring old session\n"
 msgstr "Ouvrir ancienne session\n"
 
@@ -150,9 +150,8 @@ msgid "You Failed :("
 msgstr "Tu as perdu :("
 
 #: ../src/sdl.c:641
-#, fuzzy
 msgid "You Guess is invalid"
-msgstr "Votre essai est invalide!!!!\n"
+msgstr "Votre essai est invalide"
 
 #: ../src/cli.c:346
 #, c-format
