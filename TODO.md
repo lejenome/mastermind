@@ -12,10 +12,13 @@
 - [x] cli options support
 - [x] color scheme support on sdl
 - [x] zsh & bash completion
+- [x] windows build/packaging
+- [x] Mac OS X build/packaging
+- [x] Android build/packaging
 - [ ] cli colored output
 - [ ] ncurses backend
 - [ ] build for linux/Mac/Win/Android/iOS/...
-- [ ] package it for ubuntu/archlinux/windows/android
+- [ ] package it for ubuntu/archlinux/windows/android/tizen
 - [ ] multiplayer support
 - [ ] cli backend table design themes support
 - [ ] compile to NaCL and emscript
