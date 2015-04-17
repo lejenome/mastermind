@@ -6,6 +6,7 @@ Learning sources used on mastermind homework developement.
 - SDL: [1”](http://lazyfoo.net/tutorials/SDL/index.php)
 - Gettext: [1”](http://www.gnu.org/software/gettext/manual/gettext.html)
 - NSIS: [1”](http://nsis.sourceforge.net/Docs/)
+- Doxygen: [1"](http://www.stack.nl/~dimitri/doxygen/manual/index.html)
 
 **Commands and tools:**
 - man command:
