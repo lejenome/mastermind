@@ -1,0 +1,84 @@
+.TH mastermindsdl 1 "April 2015" Mastermind "User Commands"
+.SH NAME
+mastermindcli \- simple and customizable mastermind implementation.
+.SH SYNOPSIS
+.B mastermindcli [OPTION]...
+.SH DESCRIPTION
+.B mastermindcli
+is a simple and customizable mastermind implementation.
+.SH OPTIONS
+.TP
+\fB\-s\fB, \fB\-\-set\fB [OPTION [VALUE]]
+print mastermind global settings if not option is passed.
+.br
+print mastermind global OPTION value if just OPTION is passed.
+.br
+change mastermind global OPTION value to VALUE if booth OPTION and VALUE are
+passed.
+.TP
+\-c, \-\-score
+printf mastermind top scores.
+.TP
+\-a, \-\-account [ACCOUNT]
+print mastermind current account name if ACCOUNT is not specified.
+.br
+set mastermind account to ACCOUNT and start a new session.
+.TP
+\-h, \-\-help
+printf help message.
+.TP
+\-v, \-\-version
+printf version.
+.SH CONFIGURATION
+Configuration options are readden and written to config file as specified on
+FILES section.
+.br
+Available options:
+.TP
+colors (Integer, default: 6)
+number of colors
+.TP
+holes (Integer, default: 4)
+number of holes
+.TP
+guesses (Integer, default: 12)
+number of guesses
+.TP
+remise (Boolean, default: 0)
+color repeated only once on combination
+.TP
+account (String, default: default)
+account name
+.TP
+save_on_exit (Boolean, default: 0)
+save session on exit
+.TP
+save_on_play (Boolean, default: 0)
+save session on every played guess
+.SH COMMAND LINE
+mastermindcli supports an internal interative commandline based on readline to
+modify configuration, change account, show scores, save/restart sessions,...
+.br
+For an up to date list of internal commandline commands, you can use
+auto-completion feature of readline to list them (Tab button on the default
+emcas mode).
+.SH FILES
+mastermindcli uses 3 files; one config file, one score file which contains top
+scores and one binary store file which contains last saved session object.
+.PP
+config file location depend on platform mastermindcli is running on; on Unix
+systems (other than Mac OS and Android and iOS), config file location is choosen
+on the following order:
+.br
+$XDG_CONFIG_DIR/mastermind/config
+.br
+~/.mastermind/config
+.PP
+More details on each file location on each platform, refer to src/core.c
+mm_init() function code.
+.SH AUTHOR
+Written by Moez Bouhlel.
+.SH COPYRIGHT
+Copyright (c) 2015 Dev2Space team.
+Licence GPLv+.
+Main developers: Moez Bouhlel and Firas Chaaben.
