@@ -1,22 +1,29 @@
 #ifndef __MASTERMIND_CONFIG_H
 #define __MASTERMIND_CONFIG_H
+/*!
+ * \file config.h
+ * \brief mastermind core build time configuration options
+ */
 
 // Package info
-#define PACKAGE "@PROJECT_NAME_LOWER@"
-#define PROGRAM_NAME "@PROJECT_NAME@"
-#define PROGRAM_VERSION "@PROJECT_VERSION@"
-#define PROGRAM_URL "@PROJECT_WEBSITE@"
+
+#define PACKAGE "@PROJECT_NAME_LOWER@" ///< package name
+#define PROGRAM_NAME "@PROJECT_NAME@" ///< user firendly program name
+#define PROGRAM_VERSION "@PROJECT_VERSION@" ///< verion
+#define PROGRAM_URL "@PROJECT_WEBSITE@" ///< website
 
 // Default settings
-#define MM_HOLES 4
-#define MM_COLORS 6
-#define MM_GUESSES 10
 
-#define MM_HOLES_MAX 8
-#define MM_COLORS_MAX 12
-#define MM_GUESSES_MAX 20
+#define MM_HOLES 4 ///< default holes number
+#define MM_COLORS 6 ///< default colors number
+#define MM_GUESSES 10 ///< default guesses number
 
-// sdl version color scheme
+#define MM_HOLES_MAX 8 ///< max number of holes mastermind can accepts
+#define MM_COLORS_MAX 12 ///< max number of colors mastermind can accepts
+#define MM_GUESSES_MAX 20 ///< max number of guesses mastermind can accepts
+
+// sdl version color scheme definition
+
 #include "colorscheme/solarized_light.h"
 //#include "colorscheme/solarized_dark.h"
 //#include "colorscheme/jellybeans.h"
