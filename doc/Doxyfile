@@ -6,7 +6,7 @@ MULTILINE_CPP_IS_BRIEF = YES
 OPTIMIZE_OUTPUT_FOR_C = YES
 EXTRACT_ALL = NO
 
-INPUT = ../src ../colorscheme ../
+INPUT = ../src ../colorscheme ../ ../doc
 FILE_PATTERNS = *.c *.h *.md
 USE_MDFILE_AS_MAINPAGE = ../README.md
 

@@ -10,15 +10,15 @@ Learning sources used on mastermind homework developement.
 
 **Commands and tools:**
 - man command:
-```shell
+~~~~~~~~~{.sh}
 # examples:
 man 0 stdlib.h
 man 3 strdup
 man 3 SDL_Surface
-```
+~~~~~~~~~
 - info command:
-```shell
+~~~~~~~~~{.sh}
 # example:
 info Make
-```
+~~~~~~~~~
 - cling (LLVM based interactive C/C++ interpreter): [site](https://root.cern.ch/drupal/content/cling)
