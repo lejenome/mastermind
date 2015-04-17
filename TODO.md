@@ -15,6 +15,8 @@
 - [x] windows build/packaging
 - [x] Mac OS X build/packaging
 - [x] Android build/packaging
+- [x] Doxygen HTML and PDF docs
+- [x] mastermindcli man page
 - [ ] cli colored output
 - [ ] ncurses backend
 - [ ] build for linux/Mac/Win/Android/iOS/...
