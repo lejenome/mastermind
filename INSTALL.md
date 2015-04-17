@@ -15,6 +15,12 @@ cd build
 ~~~~~~~~~
 And assume that the building direcotry is clean and you didn't run cmake on it
 before or you need to clean it.
+- [Linux](#linux)
+- [OS X](#os-x)
+- [Windows](#windows)
+- [Android](#android)
+- [iOS](#ios)
+- [Emscripten](#emscripten)
 
 LINUX
 ---
