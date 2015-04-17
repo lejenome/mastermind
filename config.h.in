@@ -7,19 +7,19 @@
 
 // Package info
 
-#define PACKAGE "@PROJECT_NAME_LOWER@" ///< package name
-#define PROGRAM_NAME "@PROJECT_NAME@" ///< user firendly program name
+#define PACKAGE "@PROJECT_NAME_LOWER@"      ///< package name
+#define PROGRAM_NAME "@PROJECT_NAME@"       ///< user firendly program name
 #define PROGRAM_VERSION "@PROJECT_VERSION@" ///< verion
-#define PROGRAM_URL "@PROJECT_WEBSITE@" ///< website
+#define PROGRAM_URL "@PROJECT_WEBSITE@"     ///< website
 
 // Default settings
 
-#define MM_HOLES 4 ///< default holes number
-#define MM_COLORS 6 ///< default colors number
+#define MM_HOLES 4    ///< default holes number
+#define MM_COLORS 6   ///< default colors number
 #define MM_GUESSES 10 ///< default guesses number
 
-#define MM_HOLES_MAX 8 ///< max number of holes mastermind can accepts
-#define MM_COLORS_MAX 12 ///< max number of colors mastermind can accepts
+#define MM_HOLES_MAX 8    ///< max number of holes mastermind can accepts
+#define MM_COLORS_MAX 12  ///< max number of colors mastermind can accepts
 #define MM_GUESSES_MAX 20 ///< max number of guesses mastermind can accepts
 
 // sdl version color scheme definition
