@@ -7,7 +7,8 @@
 #ifndef DISABLE_GETOPT
 #include <getopt.h>
 #endif
-/* \file cli-cmd.c
+/*!
+ * \file cli-cmd.c
  * \brief commands unctions handlers
  */
 

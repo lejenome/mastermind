@@ -15,7 +15,8 @@
 #include <windows.h>
 #endif
 
-/*! \file core.c
+/*!
+ * \file core.c
  * \brief mastermind core funtions and types definition
  */
 

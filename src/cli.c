@@ -12,7 +12,8 @@
 #include "cli-cmd.h"
 #include "core.h"
 
-/*! \file cli.c
+/*!
+ * \file cli.c
  * \brief command line interface implemetation of mastermind
  */
 

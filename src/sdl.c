@@ -12,7 +12,8 @@
 #include <emscripten.h>
 #endif
 
-/*! \file sdl.c
+/*!
+ * \file sdl.c
  * \brief SDL interface implementation of mastermind
  */
 

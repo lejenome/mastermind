@@ -1,6 +1,7 @@
 #include "core.h"
 
-/*! \file cli-cmd.h
+/*!
+ * \file cli-cmd.h
  * \brief commands functions handlers
  */
 

@@ -2,7 +2,8 @@
 #define __MASTERMIN_LIB_H
 #include "../config.h"
 
-/*! \file lib.h
+/*!
+ * \file lib.h
  * \brief core/interface independent functions/types definition and fixing
  * systems incompatibility problems
  */

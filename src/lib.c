@@ -2,7 +2,8 @@
 #include <string.h>
 #include "lib.h"
 
-/*! \file lib.c
+/*!
+ * \file lib.c
  * \brief missing or core/iterface independent functions definition
  */
 
