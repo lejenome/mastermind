@@ -1,3 +1,7 @@
+/*!
+ * \file rcg_term.h
+ * \brief rcg_term color scheme for sdl version
+ */
 #define fg_color                                                               \
 	{                                                                      \
 		0xCC, 0xCC, 0xCC, 0xFF                                         \

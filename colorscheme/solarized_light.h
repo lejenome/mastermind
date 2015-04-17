@@ -1,4 +1,7 @@
-// solarized light color scheme for sdl version
+/*!
+ * \file solarized_light.h
+ * \brief solarized light color scheme for sdl version
+ */
 #define fg_black                                                               \
 	{                                                                      \
 		0x07, 0x36, 0x42, 0xff                                         \

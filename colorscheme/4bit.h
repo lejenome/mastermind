@@ -1,5 +1,8 @@
-// 4bit color scheme color for sdl version
-// the default on: http://ciembor.github.io/4bit/
+/*!
+ * \file 4bit.h
+ * \brief 4bit color scheme color for sdl version
+ * \author http://ciembor.github.io/4bit/
+ */
 #define bg_color                                                               \
 	{                                                                      \
 		0x0d, 0x19, 0x26, 0xFF                                         \

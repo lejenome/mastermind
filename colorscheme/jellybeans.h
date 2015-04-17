@@ -1,4 +1,7 @@
-// jellybeans color scheme for sdl
+/*!
+ * \file jellybeans.h
+ * \brief jellybeans color scheme for sdl
+ */
 #define fg_black                                                               \
 	{                                                                      \
 		0x1C, 0x1C, 0x1C, 0xFF                                         \

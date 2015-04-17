@@ -1,5 +1,7 @@
-// simple_rainbow color scheme for sdl version
-
+/*!
+ * \file rainbow_simple.h
+ * \brief simple_rainbow color scheme for sdl version
+ */
 #define fg_black                                                               \
 	{                                                                      \
 		0x66, 0x66, 0x66, 0xFF                                         \
