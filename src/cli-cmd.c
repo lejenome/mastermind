@@ -13,7 +13,13 @@
 
 uint8_t mm_cmd_mode = MM_CMD_MODE_OPT;
 #ifndef DISABLE_GETOPT
-/* parse and exec command line arguments */
+/*! parse and exec command line arguments
+ * @param argc	main function argc param
+ * @param argv	main function argv param
+ * @param cmds	list of commands objects
+ * @param len	length of cmds array
+ * @return	excuted commands return values
+*/
 int execArgs(int argc, char *argv[], cmd_t *cmds, size_t len,
 	     mm_session *session)
 {
