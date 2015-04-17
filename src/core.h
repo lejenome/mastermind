@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "../config.h"
 
-/* \file core.h
+/*! \file core.h
  * \brief mastermind core funtions and types definition
  */
 

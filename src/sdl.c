@@ -12,7 +12,7 @@
 #include <emscripten.h>
 #endif
 
-/* \file sdl.c
+/*! \file sdl.c
  * \brief SDL interface implementation of mastermind
  */
 
@@ -30,7 +30,7 @@ int SCREEN_HEIGHT = 640;
 int SCREEN_WIDTH = 480;
 int SCREEN_HEIGHT_MIN = 420;
 int SCREEN_WIDTH_MIN = 360;
-// table struct that contains table dimensions
+/// table struct that contains table dimensions
 typedef struct {
 	unsigned x;
 	unsigned y;
@@ -52,7 +52,7 @@ unsigned case_w, case_h, button_w;     // size of tables cases
 SDL_Color *colors = NULL;	      // colors used on drawing combinations
 uint8_t curTab = TAB_GAME;	     // Current tab being drawed
 
-/* Init SDL subsystem, create window and load fonts */
+/*! Init SDL subsystem, create window and load fonts */
 void init_sdl()
 {
 	SDL_Surface *icon;
@@ -91,7 +91,7 @@ void init_sdl()
 		SDL_FreeSurface(icon);
 	}
 }
-/* close sdl subsystems and free memory */
+/*! close sdl subsystems and free memory */
 void clean()
 {
 	if (session) {
@@ -106,7 +106,7 @@ void clean()
 	TTF_Quit();
 	SDL_Quit();
 }
-/* printf text with deined position and color
+/*! printf text with deined position and color
  * @param s	text to print
  * @param x	x coord
  * @param y	y coord
@@ -155,7 +155,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	SDL_DestroyTexture(tex);
 	return rect.w;
 }
-/* print icon
+/*! print icon
  * @param c	unicode o icon to print on icons font
  * @param x	x coord
  * @param y	y coord
@@ -223,7 +223,7 @@ unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 	return rect.w;
 #endif
 }
-/* draw background color */
+/*! draw background color */
 void setBg()
 {
 	SDL_SetRenderDrawColor(rend, (SDL_Color)bg_color.r,
@@ -231,7 +231,7 @@ void setBg()
 			       (SDL_Color)bg_color.a);
 	SDL_RenderFillRect(rend, NULL);
 }
-/* recalcualte tables elements dimensions/values using current session
+/*! recalcualte tables elements dimensions/values using current session
  * settings
  */
 void initTables()
@@ -264,7 +264,7 @@ void initTables()
 			   .rows = 1,
 			   .cols = 2};
 }
-/* create colors array with current session colors as length */
+/*! create colors array with current session colors as length */
 void initColors()
 {
 	unsigned i;
@@ -280,7 +280,7 @@ void initColors()
 		colors[i] = (SDL_Color){255 / (i + 1), (150 * 2) % 200,
 					100 / (i % 3 + 1), 255};
 }
-/* draw borders of bottom tables */
+/*! draw borders of bottom tables */
 int drawTableBottom(SDL_Table *T)
 {
 	unsigned i, w;
@@ -293,7 +293,7 @@ int drawTableBottom(SDL_Table *T)
 				   T->y + T->h);
 	return 0;
 }
-/* draw borders of top tables with double case for selector if session
+/*! draw borders of top tables with double case for selector if session
  * still
  * not ended
  */
@@ -311,7 +311,7 @@ void drawTableTop(SDL_Table *T)
 		SDL_RenderDrawLine(rend, T->x + (case_w * i), T->y,
 				   T->x + (case_w * i), T->y + T->h);
 }
-/* draw given combination on panel table and its score on state table
+/*! draw given combination on panel table and its score on state table
  * @param G	combination array
  * @param p	position on panel
  * @param	drawState: draw combination score from current session
@@ -354,7 +354,7 @@ void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 				 rect.y + rect.h / 3, &yellow);
 	}
 }
-/* draw selector icons on panel on current guess position of current
+/*! draw selector icons on panel on current guess position of current
  * session */
 void drawSelector()
 {
@@ -371,7 +371,7 @@ void drawSelector()
 		x += case_w;
 	}
 }
-/* draw settings tab */
+/*! draw settings tab */
 void redraw_settings()
 {
 	unsigned x, y;
@@ -416,7 +416,7 @@ void redraw_settings()
 	sdl_print_center(_("< back"), case_w * 0.5 + button_w * 1.5,
 			 SCREEN_HEIGHT - case_h * 1, NULL);
 }
-/* draw game tab */
+/*! draw game tab */
 void redraw_game()
 {
 	unsigned i;
@@ -444,7 +444,7 @@ void redraw_game()
 	else
 		drawSecret();
 }
-/* clean renderer and redraw current tab */
+/*! clean renderer and redraw current tab */
 void redraw()
 {
 	SDL_RenderClear(rend);
@@ -459,7 +459,7 @@ void redraw()
 	}
 	SDL_RenderPresent(rend);
 }
-/* mouse button up event handler
+/*! mouse button up event handler
  * @return	-1 to reset session
  *		0 to play current guess
  *		1 to keep listing to events
@@ -544,7 +544,7 @@ int onMouseUp(SDL_MouseButtonEvent e)
 	}
 	return 1;
 }
-/* handle all available events on events pipe
+/*! handle all available events on events pipe
  * @return	-1 to restart the session
  * 		0 to play current guess
  *	 	1 if nothing to do
@@ -609,9 +609,8 @@ int getGuess()
 		play = 0;
 	return play;
 }
-/* one iteration on main loop, handle available events and exec
- * requested
- * action (play guess, restart session) and redraw if needed
+/*! one iteration on main loop, handle available events and exec
+ * requested action (play guess, restart session) and redraw if needed
  */
 void iter()
 {

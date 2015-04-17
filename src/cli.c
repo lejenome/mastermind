@@ -12,7 +12,7 @@
 #include "cli-cmd.h"
 #include "core.h"
 
-/* \file cli.c
+/*! \file cli.c
  * \brief command line interface implemetation of mastermind
  */
 
@@ -27,7 +27,7 @@ cmd_t cmds[] = {
     {.n = "account", .e = cmd_account, .s = 'a', .a = 1},
     {.n = "version", .e = cmd_version, .s = 'v', .a = 0},
 }; // "connect", "server", "disconnect"
-/* draw session panel */
+/// draw session panel
 void printPanel()
 {
 	unsigned i, j;
@@ -59,7 +59,7 @@ void printPanel()
 	printf("  +-----+-----+-----+");
 	putchar('\n');
 }
-/* parse buffer and get arguments from it
+/*! parse buffer and get arguments from it
  * @param buf	buffer to parse
  * @param argc	poiter to where to store arguments count
  * @return 	arguments array or NULL if buf is invalid
@@ -118,7 +118,7 @@ char **parseBuf(char *buf, unsigned *argc)
 	return args;
 }
 #ifndef DISABLE_READLINE
-/* Tab button click handler
+/*! Tab button click handler
  * @param txt	current buffer
  * @param start	buffer start position
  * @param end	bufffer end postion
@@ -224,7 +224,7 @@ no_more:
 }
 #endif // DISABLE_READLINE
 
-/* get guessed combination and handle input buffer commands
+/*! get guessed combination and handle input buffer commands
  * @return
  *	-1 : input error, redo (do not redraw table)
  *	0 : seccess input, redo if mm_play(T) does not success (do not redraw

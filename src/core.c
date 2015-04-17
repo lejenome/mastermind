@@ -15,7 +15,7 @@
 #include <windows.h>
 #endif
 
-/* \file core.c
+/*! \file core.c
  * \brief mastermind core funtions and types definition
  */
 
@@ -60,7 +60,7 @@ mm_conf_t mm_confs[7] = {
 				       .name = "save_on_play",
 				       .val = 0}},
 };
-/* create new mastermind session and initialize viables && config
+/*! create new mastermind session and initialize viables && config
  * @return	new session object
  */
 mm_session *mm_session_new()
@@ -75,7 +75,7 @@ mm_session *mm_session_new()
 	    (mm_guess *)malloc(sizeof(mm_guess) * session->config->guesses);
 	return session;
 }
-/* load global config from config file and create new session config based
+/*! load global config from config file and create new session config based
  * on global config
  * @return	new session config object
  */
@@ -134,7 +134,7 @@ void mm_config_load()
 		    mm_confs[MM_POS_HOLES].nbre.val;
 	}
 }
-/* create new session config
+/*! create new session config
  * @return	new session config
  */
 mm_config *mm_config_new()
@@ -148,8 +148,7 @@ mm_config *mm_config_new()
 	config->remise = (uint8_t)mm_confs[MM_POS_REMISE].bool.val;
 	return config;
 }
-/* save global config on the config file
- */
+/*! save global config on the config file */
 void mm_config_save()
 {
 	FILE *f = fopen(mm_config_path, "w");
@@ -173,7 +172,7 @@ void mm_config_save()
 		fclose(f);
 	}
 }
-/* change global config with name to value then save to config file
+/*! change global config with name to value then save to config file
  * @param name	name of global config to change
  * @param value	the new value of global config name
  * @return	0 on success , 1 if conf option not found, 2 if conf
@@ -212,7 +211,7 @@ unsigned mm_config_set(const char *name, const char *value)
 	mm_config_save();
 	return 0;
 }
-/* create the secret part of mastermind using session config
+/*! create the secret part of mastermind using session config
  * this fuction use random and save it on mm_secret->val && save freq of every
  * color on mm_secret->freq
  * @param conf	config of current session
@@ -234,7 +233,7 @@ mm_secret *mm_secret_new(mm_config *conf)
 	}
 	return sec;
 }
-/* load scores from file */
+/*! load scores from file */
 void mm_scores_load()
 {
 	FILE *f;
@@ -251,7 +250,7 @@ void mm_scores_load()
 		mm_scores.len++;
 	fclose(f);
 }
-/* return pointer to scores object
+/*! return pointer to scores object
  * @return	pointer to score object
  */
 const mm_scores_t *mm_scores_get()
@@ -260,7 +259,7 @@ const mm_scores_t *mm_scores_get()
 		mm_scores_load();
 	return &mm_scores;
 }
-/* generate score of session and save it to score object/file if it's on top 20
+/*! generate score of session and save it to score object/file if it's on top 20
  * @param session	session which to save score
  */
 void mm_scores_save(mm_session *session)
@@ -301,7 +300,7 @@ void mm_scores_save(mm_session *session)
 			mm_scores.T[i].account);
 	fclose(f);
 }
-/* This function is the most important function in the code
+/*! This function is the most important function in the code
  * this function accept new guess combination , add it to
  * the session if it's not ended and calculed the score of
  * the current guess  then update session status
@@ -351,7 +350,7 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 		mm_scores_save(session);
 	return 0;
 }
-/* geenrate session score
+/*! geenrate session score
  * @param session	session which to generate score
  * @return		session score
  */
@@ -374,7 +373,7 @@ long unsigned mm_score(mm_session *session)
 		score *= 0.75;
 	return score;
 }
-/* get last gusess objet
+/*! get last gusess objet
  * @param session	current session
  * @return		last guess object
  */
@@ -383,7 +382,7 @@ mm_guess mm_play_last(mm_session *session)
 	assert(session->guessed == 0);
 	return session->panel[session->guessed - 1];
 }
-/* This function initialize data && config && store files path using system
+/*! This function initialize data && config && store files path using system
  * and core default standard or passed dir path
  * \note you do not need to call this function only if you want to use custom
  * dir
@@ -464,7 +463,7 @@ done:
 	strcat(mm_config_path, "/config");
 	strcat(mm_score_path, "/score.txt");
 }
-/* free session object
+/*! free session object
  * @param session	session to free
  */
 void mm_session_free(mm_session *session)
@@ -478,7 +477,7 @@ void mm_session_free(mm_session *session)
 	free(session->config);
 	free(session);
 }
-/* save session if not ended && save_on_exit = 1 then free object
+/*! save session if not ended && save_on_exit = 1 then free object
  * @param session	session to check and free before exit
  * \note if your are not exiting the program use mm_session_free instead as
  * mm_session_exit may store the session
@@ -490,7 +489,7 @@ void mm_session_exit(mm_session *session)
 		mm_session_save(session);
 	mm_session_free(session);
 }
-/* save session object on mm_store_path file
+/*! save session object on mm_store_path file
  * @param session	current session object
  * @return		0 on success , 1 on failure
  */
@@ -532,7 +531,7 @@ unsigned int mm_session_save(mm_session *session)
 	fclose(f);
 	return 0;
 }
-/* this function restore session object from mm_store_path file
+/*! this function restore session object from mm_store_path file
  * @return	NULL on failure , session object pointeur on success
  */
 mm_session *mm_session_restore()
