@@ -16,11 +16,6 @@ set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_RESOURCE_FILE_README "${CPACK_PACKAGE_DESCRIPTION_FILE}")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 
-#set(CPACK_NSIS_MODIFY_PATH ON)
-#set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/resources\\\\MasterMind_Install.bmp")
-#set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/resources\\\\MasterMind_Icon_96px.ico")
-#set(CPACK_NSIS_MUI_UNICON "${CMAKE_SOURCE_DIR}/resource\\\\MasterMind_Icon_96px.ico")
-
 set(CPACK_SOURCE_IGNORE_FILES
 	"/\\\\.git/"
 	"/intl/"
@@ -82,6 +77,10 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 	install(FILES res/icons/logo-32x32.png DESTINATION share/icons/hicolor/32x32/apps/ RENAME mastermindsdl.png)
 	install(FILES res/icons/logo-48x48.png DESTINATION share/icons/hicolor/48x48/apps/ RENAME mastermindsdl.png)
 	install(FILES res/icons/logo-256x256.png DESTINATION share/icons/hicolor/256x256/apps/ RENAME mastermindsdl.png)
+	install(FILES doc/mastermindcli.1 DESTINATION share/man/man1/)
+	install(FILES doc/config.md DESTINATION share/doc/mastermind/)
+	install(FILES res/completion/mastermindcli.zsh DESTINATION share/zsh/site-functions/ RENAME _mastermindcli) #PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE)
+	install(FILES res/completion/mastermindcli.bash DESTINATION share/bash-completion/completions/ RENAME mastermindcli)
 else("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 	install(FILES res/icons/logo.png DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/ RENAME mastermind.png)
 endif("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
@@ -136,6 +135,7 @@ if(EMSCRIPTEN)
 	#install(COPY ext/emscripten/loading.png .)
 endif(EMSCRIPTEN)
 
+# IOS BUNDLE
 if(IPHONEOS)
 	set_target_properties(
 	    mastermindsdl
