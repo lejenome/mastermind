@@ -37,13 +37,13 @@ int SCREEN_HEIGHT_MIN = 420;
 int SCREEN_WIDTH_MIN = 360;
 /// table struct that contains table dimensions
 typedef struct {
-	unsigned x; ///< x position of table 
-	unsigned y; ///< y position of table 
-	unsigned w; ///< width of table
-	unsigned h; ///< height of table
+	unsigned x;    ///< x position of table
+	unsigned y;    ///< y position of table
+	unsigned w;    ///< width of table
+	unsigned h;    ///< height of table
 	unsigned rows; ///< number of rows of table
-	unsigned cols; ///< number of columns of table 
-} SDL_Table; 
+	unsigned cols; ///< number of columns of table
+} SDL_Table;
 
 // global variables
 SDL_Window *win = NULL;
@@ -55,7 +55,7 @@ unsigned curPos = 0; ///< position of cursor on curGuess for keyboard input
 SDL_Table panel, state, control, play; ///< tables object
 unsigned case_w, case_h, button_w;     ///< size of tables cases
 SDL_Color *colors = NULL;	      ///< colors used on drawing combinations
-unsigned curTab = TAB_GAME;	     ///< Current tab being drawed
+unsigned curTab = TAB_GAME;	    ///< Current tab being drawed
 
 /*! Init SDL subsystem, create window and load fonts */
 void init_sdl()
@@ -145,7 +145,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	rect.h = surf->h;
 	rect.y = y - surf->h / 2;
 	switch (align) {
-	case -1: // left align 
+	case -1: // left align
 		rect.x = x;
 		break;
 	case 0: // center align
