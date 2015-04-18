@@ -145,13 +145,13 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	rect.h = surf->h;
 	rect.y = y - surf->h / 2;
 	switch (align) {
-	case -1:
+	case -1: // left align 
 		rect.x = x;
 		break;
-	case 0:
+	case 0: // center align
 		rect.x = x - surf->w / 2;
 		break;
-	case 1:
+	case 1: // rigth align
 		rect.x = x - surf->w;
 		break;
 	}
