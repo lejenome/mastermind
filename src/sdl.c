@@ -24,8 +24,8 @@
 #define sdl_print_center(s, x, y, color) sdl_print(s, x, y, color, 0)
 #define sdl_print_left(s, x, y, color) sdl_print(s, x, y, color, -1)
 // window available tabs
-#define TAB_GAME (uint8_t)0
-#define TAB_SETTINGS (uint8_t)1
+#define TAB_GAME 0
+#define TAB_SETTINGS 1
 // default window size and minimal size
 int SCREEN_HEIGHT = 640;
 int SCREEN_WIDTH = 480;
@@ -51,7 +51,7 @@ unsigned curPos = 0; // position of cursor on curGuess for keyboard input
 SDL_Table panel, state, control, play; // tables object
 unsigned case_w, case_h, button_w;     // size of tables cases
 SDL_Color *colors = NULL;	      // colors used on drawing combinations
-uint8_t curTab = TAB_GAME;	     // Current tab being drawed
+unsigned curTab = TAB_GAME;	     // Current tab being drawed
 
 /*! Init SDL subsystem, create window and load fonts */
 void init_sdl()
