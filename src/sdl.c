@@ -37,13 +37,13 @@ int SCREEN_HEIGHT_MIN = 420;
 int SCREEN_WIDTH_MIN = 360;
 /// table struct that contains table dimensions
 typedef struct {
-	unsigned x;
-	unsigned y;
-	unsigned w;
-	unsigned h;
-	unsigned rows;
-	unsigned cols;
-} SDL_Table;
+	unsigned x; ///< x position of table 
+	unsigned y; ///< y position of table 
+	unsigned w; ///< width of table
+	unsigned h; ///< height of table
+	unsigned rows; ///< number of rows of table
+	unsigned cols; ///< number of columns of table 
+} SDL_Table; 
 
 // global variables
 SDL_Window *win = NULL;
