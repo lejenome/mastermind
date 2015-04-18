@@ -1,3 +1,6 @@
+Configuration options
+---
+
 - **colors**: number of colors
 	- type: integer
 	- default value: `6`

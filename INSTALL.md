@@ -1,4 +1,4 @@
-INSTALLATION
+Install
 ---
 
 First you need to clone the repo and init its submodules
