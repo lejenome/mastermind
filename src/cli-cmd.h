@@ -1,3 +1,5 @@
+#ifndef __MM_CLI_CMD_H
+#define __MM_CLI_CMD_H
 #include "core.h"
 
 /*!
@@ -5,8 +7,6 @@
  * \brief commands functions handlers
  */
 
-#ifndef __MM_CLI_CMD_H
-#define __MM_CLI_CMD_H
 /// cmds return values
 #define MM_CMD_SUCCESS 0x00     ///< cmd succeded
 #define MM_CMD_ERROR 0x01       ///< their was an error
