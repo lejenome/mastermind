@@ -4,7 +4,7 @@ Open Source MasterMind implementation for School homework.
 
 # Install
 
-Look on INSTALL.md file.
+Look on [INSTALL.md](INSTALL.md) file.
 
 # Configuration
 
