@@ -18,14 +18,18 @@
  */
 
 // funtions aliases and helpers
+/// draw secret combination on bottom of panel without its score
 #define drawSecret()                                                           \
 	drawCombination(session->secret->val, session->config->guesses, 0)
+/// draw user guess in position p with its score
 #define drawGuess(p) drawCombination(session->panel[p].combination, p, 1)
+/// print string in the center of coord x,y
 #define sdl_print_center(s, x, y, color) sdl_print(s, x, y, color, 0)
+/// print string with left align of coord x,y
 #define sdl_print_left(s, x, y, color) sdl_print(s, x, y, color, -1)
 // window available tabs
-#define TAB_GAME (uint8_t)0
-#define TAB_SETTINGS (uint8_t)1
+#define TAB_GAME 0
+#define TAB_SETTINGS 1
 // default window size and minimal size
 int SCREEN_HEIGHT = 640;
 int SCREEN_WIDTH = 480;
@@ -33,25 +37,25 @@ int SCREEN_HEIGHT_MIN = 420;
 int SCREEN_WIDTH_MIN = 360;
 /// table struct that contains table dimensions
 typedef struct {
-	unsigned x;
-	unsigned y;
-	unsigned w;
-	unsigned h;
-	unsigned rows;
-	unsigned cols;
-} SDL_Table;
+	unsigned x; ///< x position of table 
+	unsigned y; ///< y position of table 
+	unsigned w; ///< width of table
+	unsigned h; ///< height of table
+	unsigned rows; ///< number of rows of table
+	unsigned cols; ///< number of columns of table 
+} SDL_Table; 
 
 // global variables
 SDL_Window *win = NULL;
-SDL_Renderer *rend = NULL;	    // window renderer object
-TTF_Font *font = NULL, *icons = NULL; // fonts to use
-mm_session *session = NULL;	   // current mastermind session object
-uint8_t *curGuess = NULL;	     // combination of last guess combination
-unsigned curPos = 0; // position of cursor on curGuess for keyboard input
-SDL_Table panel, state, control, play; // tables object
-unsigned case_w, case_h, button_w;     // size of tables cases
-SDL_Color *colors = NULL;	      // colors used on drawing combinations
-uint8_t curTab = TAB_GAME;	     // Current tab being drawed
+SDL_Renderer *rend = NULL;	    ///< window renderer object
+TTF_Font *font = NULL, *icons = NULL; ///< fonts to use
+mm_session *session = NULL;	   ///< current mastermind session object
+uint8_t *curGuess = NULL;	     ///< combination of last guess combination
+unsigned curPos = 0; ///< position of cursor on curGuess for keyboard input
+SDL_Table panel, state, control, play; ///< tables object
+unsigned case_w, case_h, button_w;     ///< size of tables cases
+SDL_Color *colors = NULL;	      ///< colors used on drawing combinations
+unsigned curTab = TAB_GAME;	     ///< Current tab being drawed
 
 /*! Init SDL subsystem, create window and load fonts */
 void init_sdl()
@@ -141,13 +145,13 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	rect.h = surf->h;
 	rect.y = y - surf->h / 2;
 	switch (align) {
-	case -1:
+	case -1: // left align 
 		rect.x = x;
 		break;
-	case 0:
+	case 0: // center align
 		rect.x = x - surf->w / 2;
 		break;
-	case 1:
+	case 1: // rigth align
 		rect.x = x - surf->w;
 		break;
 	}
