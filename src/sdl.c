@@ -47,15 +47,15 @@ typedef struct {
 
 // global variables
 SDL_Window *win = NULL;
-SDL_Renderer *rend = NULL;	    // window renderer object
-TTF_Font *font = NULL, *icons = NULL; // fonts to use
-mm_session *session = NULL;	   // current mastermind session object
-uint8_t *curGuess = NULL;	     // combination of last guess combination
-unsigned curPos = 0; // position of cursor on curGuess for keyboard input
-SDL_Table panel, state, control, play; // tables object
-unsigned case_w, case_h, button_w;     // size of tables cases
-SDL_Color *colors = NULL;	      // colors used on drawing combinations
-unsigned curTab = TAB_GAME;	     // Current tab being drawed
+SDL_Renderer *rend = NULL;	    ///< window renderer object
+TTF_Font *font = NULL, *icons = NULL; ///< fonts to use
+mm_session *session = NULL;	   ///< current mastermind session object
+uint8_t *curGuess = NULL;	     ///< combination of last guess combination
+unsigned curPos = 0; ///< position of cursor on curGuess for keyboard input
+SDL_Table panel, state, control, play; ///< tables object
+unsigned case_w, case_h, button_w;     ///< size of tables cases
+SDL_Color *colors = NULL;	      ///< colors used on drawing combinations
+unsigned curTab = TAB_GAME;	     ///< Current tab being drawed
 
 /*! Init SDL subsystem, create window and load fonts */
 void init_sdl()
