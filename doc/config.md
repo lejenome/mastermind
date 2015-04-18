@@ -1,7 +1,21 @@
-- **colors** (Integer; default value: `6`): number of colors
-- **holes** (Integer; default value: `4`): number of holes
-- **guesses** (Integer; default value: `12`): number of guesses
-- **remise** (Boolean; default value: `0`): color repeated only once on combination
-- **account** (String; default value: `default`): account name
-- **save_on_exit** (Boolean; default value: `0`): save session on exit
-- **save_on_play** (Boolean; default value: `0`): save session on every played guess
+- **colors**: number of colors
+	- type: integer
+	- default value: `6`
+- **holes**: number of holes
+	- type: integer
+	- default value: `4`
+- **guesses**: number of guesses
+	- type: integer
+	- default value: `12`
+- **remise**: color repeated only once on combination
+	- type: boolean
+	- default value: `0`
+- **account**: account name
+	- type: string
+	- default value: `default`
+- **save_on_exit**: save session on exit
+	- type: boolean
+	- default value: `0`
+- **save_on_play**: save session on every played guess
+	- type: boolean
+	- default value: `0`
