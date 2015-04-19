@@ -180,6 +180,7 @@ if(EMSCRIPTEN)
 endif(EMSCRIPTEN)
 
 INCLUDE(sdl2_android)
+include(doxygen)
 
 install(TARGETS mastermindcli DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(TARGETS mastermindsdl DESTINATION ${CMAKE_INSTALL_BINDIR})
