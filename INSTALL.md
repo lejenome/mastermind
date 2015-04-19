@@ -57,7 +57,7 @@ Install readline, libncurses, sdl2, sdl2_ttf, cmake from brew
 
 Next, to build:
 ~~~~~~~~~{.sh}
-cmake .. -DUSE_LOCALE=OFF
+cmake ..
 cmake --build .
 ~~~~~~~~~
 For packaging the build on bundle:
@@ -71,12 +71,12 @@ Build is supported using mingw-w64 on all supported hosts (linux, windows,...)
 and using MS Visual Studio on windows.
 For build using mingw on windowns:
 ~~~~~~~~~{.sh}
-cmake -G "MinGW Makefiles" .. -DUSE_LOCALE=OFF
+cmake -G "MinGW Makefiles" ..
 cmake --build .
 ~~~~~~~~~
 For build using MS Visual Studio on windows:
 ~~~~~~~~~{.sh}
-cmake -DUSE_LOCALE=OFF -DUSE_GETOPT=OFF -DUSE_READLINE=OFF ..
+cmake ..
 cmake --build .
 ~~~~~~~~~
 For packaging the mingw/MS visual studio build on NSIS installer:
@@ -101,7 +101,7 @@ Download SDL2, SDL2_ttf and FreeType lastest sources archives and extract them.
 
 then run:
 ~~~~~~~~~{.sh}
-cmake -DUSE_LOCALE=OFF ..
+cmake ..
 ln -s <PATH_TO_SDL2_SOURCE_DIR> jni/SDL
 ln -s <PATH_TO_SDL2_ttf_SOURCE_DIR> jni/SDL_ttf
 ln -s <PATH_TO_FreeType_SOURCE_DIR> jni/SDL_ttf/freetype
