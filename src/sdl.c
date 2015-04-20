@@ -129,7 +129,7 @@ void clean()
  */
 unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 {
-	SDL_Texture *tex;
+	SDL_Texture *tex; 
 	SDL_Rect rect;
 	SDL_Color default_color = (SDL_Color)fg_color;
 	// create surface from text and font
@@ -166,7 +166,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	}
 	// copy texture to the renderer in the rigth position
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
-	SDL_FreeSurface(surf);
+	SDL_FreeSurface(surf); 
 	SDL_DestroyTexture(tex);
 	return rect.w;
 }
