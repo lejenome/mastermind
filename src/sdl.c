@@ -61,12 +61,14 @@ unsigned curTab = TAB_GAME;	    ///< Current tab being drawed
 void init_sdl()
 {
 	SDL_Surface *icon;
+	// init SDL subsystems
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
 					 "SDL could not be initialize",
 					 SDL_GetError(), NULL);
 		exit(EXIT_FAILURE);
 	}
+	// create SDL window and renderer object
 	if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT,
 					SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE,
 					&win, &rend)) {
@@ -76,6 +78,7 @@ void init_sdl()
 		    SDL_GetError(), NULL);
 		exit(EXIT_FAILURE);
 	}
+	// init font subsystem and load fonts
 	if (TTF_Init() == -1) {
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
 					 "SDL_ttf cannont intialize",
@@ -90,6 +93,7 @@ void init_sdl()
 					 NULL);
 		exit(EXIT_FAILURE);
 	}
+	// load and set window icon
 	icon = SDL_LoadBMP(ICONSDIR "mastermind.bmp");
 	if (icon) {
 		SDL_SetWindowIcon(win, icon);
@@ -127,6 +131,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	SDL_Texture *tex;
 	SDL_Rect rect;
 	SDL_Color default_color = (SDL_Color)fg_color;
+	// create surface from text and font
 	SDL_Surface *surf = TTF_RenderUTF8_Solid(
 	    font, s, (color == NULL) ? default_color : *color);
 	if (surf == NULL) {
@@ -134,6 +139,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 		clean();
 		exit(EXIT_FAILURE);
 	}
+	// convert it to texture object
 	tex = SDL_CreateTextureFromSurface(rend, surf);
 	if (tex == NULL) {
 		SDL_Log("Unable to create texture! Error: %s\n",
@@ -155,6 +161,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 		rect.x = x - surf->w;
 		break;
 	}
+	// copy texture to renderer on right position
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
 	SDL_FreeSurface(surf);
 	SDL_DestroyTexture(tex);
@@ -170,6 +177,8 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 {
 #ifdef __EMSCRIPTEN__
+	// fallback to sdl_print_center and use ascii chars instead of unicode
+	// chars as the crash the app on emscripten env.
 	// FIXME: fix unicode functs on SDL2_ttf and delete emscripten
 	// modifcation
 	char s[2] = " ";
@@ -228,7 +237,7 @@ unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 	return rect.w;
 #endif
 }
-/*! draw background color */
+/*! draw background color on full renderer */
 void setBg()
 {
 	SDL_SetRenderDrawColor(rend, (SDL_Color)bg_color.r,
@@ -660,6 +669,12 @@ void iter()
 }
 int main(int argc, char *argv[])
 {
+#ifndef DISABLE_LOCALE
+	setlocale(LC_ALL, "");
+	bindtextdomain(PACKAGE, LOCALEDIR);
+	textdomain(PACKAGE);
+#endif // DISABLE_LOCALE
+#ifdef DEBUG
 #ifdef POSIX
 	char pwd[2000];
 	getcwd(pwd, 2000);
@@ -668,6 +683,7 @@ int main(int argc, char *argv[])
 	SDL_Log("FONTSDIR: " FONTSDIR "\n");
 	SDL_Log("LOCALEDIR: " LOCALEDIR "\n");
 	SDL_Log("ICONSDIR: " ICONSDIR "\n");
+#endif // DEBUG
 	init_sdl();
 #ifdef __ANDROID__
 	// use android app internal path
