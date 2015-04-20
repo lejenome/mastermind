@@ -27,9 +27,10 @@
 #define sdl_print_center(s, x, y, color) sdl_print(s, x, y, color, 0)
 /// print string with left align of coord x,y
 #define sdl_print_left(s, x, y, color) sdl_print(s, x, y, color, -1)
-// window available tabs
-#define TAB_GAME 0
-#define TAB_SETTINGS 1
+/// window available tabs to draw
+enum { TAB_GAME,    ///< we will draw the game tab
+       TAB_SETTINGS ///< we will draw the settings tab
+};
 // default window size and minimal size
 int SCREEN_HEIGHT = 640;
 int SCREEN_WIDTH = 480;
@@ -37,13 +38,13 @@ int SCREEN_HEIGHT_MIN = 420;
 int SCREEN_WIDTH_MIN = 360;
 /// table struct that contains table dimensions
 typedef struct {
-	unsigned x; ///< x position of table 
-	unsigned y; ///< y position of table 
-	unsigned w; ///< width of table
-	unsigned h; ///< height of table
+	unsigned x;    ///< x position of table
+	unsigned y;    ///< y position of table
+	unsigned w;    ///< width of table
+	unsigned h;    ///< height of table
 	unsigned rows; ///< number of rows of table
-	unsigned cols; ///< number of columns of table 
-} SDL_Table; 
+	unsigned cols; ///< number of columns of table
+} SDL_Table;
 
 // global variables
 SDL_Window *win = NULL;
@@ -55,18 +56,20 @@ unsigned curPos = 0; ///< position of cursor on curGuess for keyboard input
 SDL_Table panel, state, control, play; ///< tables object
 unsigned case_w, case_h, button_w;     ///< size of tables cases
 SDL_Color *colors = NULL;	      ///< colors used on drawing combinations
-unsigned curTab = TAB_GAME;	     ///< Current tab being drawed
+unsigned curTab = TAB_GAME;	    ///< Current tab being drawed
 
 /*! Init SDL subsystem, create window and load fonts */
 void init_sdl()
 {
 	SDL_Surface *icon;
+	// init SDL subsystems
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
 					 "SDL could not be initialize",
 					 SDL_GetError(), NULL);
 		exit(EXIT_FAILURE);
 	}
+	// create SDL window and renderer object
 	if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT,
 					SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE,
 					&win, &rend)) {
@@ -76,6 +79,7 @@ void init_sdl()
 		    SDL_GetError(), NULL);
 		exit(EXIT_FAILURE);
 	}
+	// init font subsystem and load fonts
 	if (TTF_Init() == -1) {
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
 					 "SDL_ttf cannont intialize",
@@ -90,6 +94,7 @@ void init_sdl()
 					 NULL);
 		exit(EXIT_FAILURE);
 	}
+	// load and set window icon
 	icon = SDL_LoadBMP(ICONSDIR "mastermind.bmp");
 	if (icon) {
 		SDL_SetWindowIcon(win, icon);
@@ -127,6 +132,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	SDL_Texture *tex; 
 	SDL_Rect rect;
 	SDL_Color default_color = (SDL_Color)fg_color;
+	// create surface from text and font
 	SDL_Surface *surf = TTF_RenderUTF8_Solid(
 	    font, s, (color == NULL) ? default_color : *color); // create surface from font
 	if (surf == NULL) {
@@ -134,6 +140,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 		clean();
 		exit(EXIT_FAILURE);
 	}
+	// convert it to texture object
 	tex = SDL_CreateTextureFromSurface(rend, surf);
 	if (tex == NULL) {
 		SDL_Log("Unable to create texture! Error: %s\n",
@@ -145,7 +152,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	rect.h = surf->h;
 	rect.y = y - surf->h / 2;
 	switch (align) {
-	case -1: // left align 
+	case -1: // left align
 		rect.x = x;
 		break;
 	case 0: // center align
@@ -171,6 +178,8 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 {
 #ifdef __EMSCRIPTEN__
+	// fallback to sdl_print_center and use ascii chars instead of unicode
+	// chars as the crash the app on emscripten env.
 	// FIXME: fix unicode functs on SDL2_ttf and delete emscripten
 	// modifcation
 	char s[2] = " ";
@@ -229,7 +238,7 @@ unsigned sdl_print_icon(uint16_t c, int x, int y, SDL_Color *color)
 	return rect.w;
 #endif
 }
-/*! draw background color */
+/*! draw background color on full renderer */
 void setBg()
 {
 	SDL_SetRenderDrawColor(rend, (SDL_Color)bg_color.r,
@@ -386,7 +395,7 @@ void redraw_settings()
 	char str[3];
 	mm_conf_t *conf;
 	SDL_Table button;
-	for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++) {
+	for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++) {
 		sdl_print_left(conf->str.name, x, y, NULL);
 		switch (conf->type) {
 		case MM_CONF_BOOL:
@@ -481,7 +490,7 @@ int onMouseUp(SDL_MouseButtonEvent e)
 			redraw();
 		} else if (e.x > SCREEN_WIDTH - case_w * 3 &&
 			   e.x < SCREEN_WIDTH - case_w && e.y > case_h * 0.5 &&
-			   e.y < case_h * LEN(mm_confs) + case_h * 0.5) {
+			   e.y < case_h * MM_POS_LEN + case_h * 0.5) {
 			i = (unsigned)(e.y - case_h * 0.5) / case_h;
 			if (e.y < case_h * (i + 0.75) &&
 			    e.y > case_h * (i + 1.25))
@@ -661,6 +670,12 @@ void iter()
 }
 int main(int argc, char *argv[])
 {
+#ifndef DISABLE_LOCALE
+	setlocale(LC_ALL, "");
+	bindtextdomain(PACKAGE, LOCALEDIR);
+	textdomain(PACKAGE);
+#endif // DISABLE_LOCALE
+#ifdef DEBUG
 #ifdef POSIX
 	char pwd[2000];
 	getcwd(pwd, 2000);
@@ -669,6 +684,7 @@ int main(int argc, char *argv[])
 	SDL_Log("FONTSDIR: " FONTSDIR "\n");
 	SDL_Log("LOCALEDIR: " LOCALEDIR "\n");
 	SDL_Log("ICONSDIR: " ICONSDIR "\n");
+#endif // DEBUG
 	init_sdl();
 #ifdef __ANDROID__
 	// use android app internal path

@@ -25,14 +25,7 @@ char *mm_config_path = NULL;
 char *mm_score_path = NULL;
 char *mm_store_path = NULL;
 
-#define MM_POS_GUESSES 0
-#define MM_POS_COLORS 1
-#define MM_POS_HOLES 2
-#define MM_POS_REMISE 3
-#define MM_POS_ACCOUNT 4
-#define MM_POS_SAVE_EXIT 5
-#define MM_POS_SAVE_PLAY 6
-mm_conf_t mm_confs[7] = {
+mm_conf_t mm_confs[] = {
 	[MM_POS_GUESSES] = {.nbre = {.name = "guesses",
 				     .type = MM_CONF_INT,
 				     .val = MM_GUESSES,

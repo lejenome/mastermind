@@ -36,7 +36,7 @@ char *strndup(const char *buf, size_t len);
 #define _(str) gettext(str)
 
 #else
-#define _(str) (str)
+#define _(str) (char *) str
 #endif // DISABLE_LOCALE
 
 #endif //__MASTERMIN_LIB_H

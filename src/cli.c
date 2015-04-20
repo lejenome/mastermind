@@ -172,13 +172,12 @@ static char **completeCombination(const char *txt, int start, int end)
 			output = T[j];
 	}
 	if (cmpltCmd && strcmp(cmpltCmd->n, "set") == 0) {
-		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs);
-		     conf++, l++)
+		for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++, l++)
 			T[l] = strdup(conf->str.name);
 	}
 	if (argc == 2 && strcmp(args[0], "set") == 0) {
 		j = l;
-		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++) {
+		for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++) {
 			if (strstr(conf->str.name, args[1]) == conf->str.name) {
 				if (strcmp(conf->str.name, args[1]) == 0)
 					cmpltCnf = conf;

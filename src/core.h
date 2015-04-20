@@ -9,14 +9,18 @@
 #ifndef __MM_CORE_H
 #define __MM_CORE_H
 
-#define MM_NEW 0
-#define MM_PLAYING 1
-#define MM_SUCCESS 2
-#define MM_FAIL 4
+/// different session states
+enum { MM_NEW,     ///< just created session and didn't play any guess yet
+       MM_PLAYING, ///< played at least one valid guess but session not ended
+       MM_SUCCESS, ///< session ended with success (user find the secret)
+       MM_FAIL     ///< session ended with failure (user didn't find the secret)
+};
 
-#define MM_CONF_INT 0
-#define MM_CONF_STR 1
-#define MM_CONF_BOOL 2
+/// supported types of conffigration options
+enum { MM_CONF_INT, ///< configuration value is an integer
+       MM_CONF_STR, ///< configuration value is a string
+       MM_CONF_BOOL ///< configuration value is boolean (0 or 1)
+};
 
 /// contains current session configuration
 typedef struct {
@@ -96,7 +100,19 @@ typedef union {
 	mm_conf_int_t nbre;  ///< integer configuration data
 } mm_conf_t;
 
-extern mm_conf_t mm_confs[7];
+/// config options indexes on mm_confs
+enum { MM_POS_GUESSES,
+       MM_POS_COLORS,
+       MM_POS_HOLES,
+       MM_POS_REMISE,
+       MM_POS_ACCOUNT,
+       MM_POS_SAVE_EXIT,
+       MM_POS_SAVE_PLAY,
+       MM_POS_LEN ///< length of mm_confs arrays
+};
+
+/// config options arrays
+extern mm_conf_t mm_confs[];
 
 mm_session *mm_session_new();
 mm_session *mm_session_restore();
