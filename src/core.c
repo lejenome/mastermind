@@ -23,8 +23,9 @@
 /// top 20 scores struct where to load score.txt file content
 mm_scores_t mm_scores = {.T = NULL, .max = 20, .len = 0};
 char *mm_config_path = NULL; ///< config file path
-char *mm_score_path = NULL; ///< score.txt file path
-char *mm_store_path = NULL; ///< store.data file path where we store unfinished session. FIXME: change to better name 
+char *mm_score_path = NULL;  ///< score.txt file path
+char *mm_store_path = NULL;  ///< store.data file path where we store unfinished
+/// session. FIXME: change to better name
 
 mm_conf_t mm_confs[] = { // FIXME: fix clang-format style
 	[MM_POS_GUESSES] = {.nbre = {.name = "guesses",
@@ -42,18 +43,14 @@ mm_conf_t mm_confs[] = { // FIXME: fix clang-format style
 				   .val = MM_HOLES,
 				   .min = 2,
 				   .max = MM_HOLES_MAX}},
-	[MM_POS_REMISE] = {.bool = {.type = MM_CONF_BOOL,
-				    .name = "remise",
-				    .val = 0}},
-	[MM_POS_ACCOUNT] = {.str = {.type = MM_CONF_STR,
-				    .name = "account",
-				    .val = "default"}},
-	[MM_POS_SAVE_EXIT] = {.bool = {.type = MM_CONF_BOOL,
-				       .name = "save_on_exit",
-				       .val = 0}},
-	[MM_POS_SAVE_PLAY] = {.bool = {.type = MM_CONF_BOOL,
-				       .name = "save_on_play",
-				       .val = 0}},
+	[MM_POS_REMISE] = {
+	    .bool = {.type = MM_CONF_BOOL, .name = "remise", .val = 0}},
+	[MM_POS_ACCOUNT] = {
+	    .str = {.type = MM_CONF_STR, .name = "account", .val = "default"}},
+	[MM_POS_SAVE_EXIT] = {
+	    .bool = {.type = MM_CONF_BOOL, .name = "save_on_exit", .val = 0}},
+	[MM_POS_SAVE_PLAY] = {
+	    .bool = {.type = MM_CONF_BOOL, .name = "save_on_play", .val = 0}},
 };
 /*! create new mastermind session and initialize viables && config
  * @return	new session object
@@ -72,19 +69,20 @@ mm_session *mm_session_new()
 }
 /*! load global config from config file and save on mm_confs array
  * \note	config file is a list of <name> and <value> pairs. e.g:
- 				<name1> <value1>
- 				<name2> <value2>
- 			<name> is 40 max chars and <value> is 20 max chars
- 			if <value> is type string, " is not needed and it will be readed as part of value.
- 			comments are not supported on config file
+				<name1> <value1>
+				<name2> <value2>
+			<name> is 40 max chars and <value> is 20 max chars
+			if <value> is type string, " is not needed and it will
+ be readed as part of value.
+			comments are not supported on config file
  */
 void mm_config_load()
 {
 	// TODO: use mm_config_set on mm_config_load but without mm_config_save
 	mm_conf_t *conf;
 	char *n, // option <name>
-		*v, // option <value>
-		*t; // error checking when converting string to int
+	    *v,  // option <value>
+	    *t;  // error checking when converting string to int
 	FILE *f;
 	int i;
 	if (!mm_config_path)
@@ -94,7 +92,8 @@ void mm_config_load()
 		v = (char *)malloc(sizeof(char) * 20);
 		while (fscanf(f, "%40s %20s", n, v) != EOF) {
 			conf = mm_confs;
-			// search configuration option on mm_confs with same name as n (<name>)
+			// search configuration option on mm_confs with same
+			// name as n (<name>)
 			while (conf < mm_confs + LEN(mm_confs) &&
 			       strcmp(n, conf->str.name) != 0)
 				conf++;
@@ -109,8 +108,11 @@ void mm_config_load()
 			errno = 0;
 			switch (conf->type) {
 			case MM_CONF_INT: // config option is type integer
-				i = strtol(v, &t, 10); // convert v (<value>) to long int (i)
-				// if there is no error when converting to int, save i to conf option struct
+				i = strtol(
+				    v, &t,
+				    10); // convert v (<value>) to long int (i)
+				// if there is no error when converting to int,
+				// save i to conf option struct
 				if (t != NULL && errno != ERANGE &&
 				    i >= conf->nbre.min && i <= conf->nbre.max)
 					conf->nbre.val = i;
@@ -122,7 +124,8 @@ void mm_config_load()
 					conf->bool.val = (uint8_t)i;
 				break;
 			case MM_CONF_STR: // config option is type string
-				conf->str.val = strdup(v); // just copy v (<value>)
+				conf->str.val =
+				    strdup(v); // just copy v (<value>)
 				break;
 			}
 		}
@@ -130,7 +133,8 @@ void mm_config_load()
 		free(v);
 		fclose(f);
 	}
-	// colors option value should be greater than holes option value if remise option is enabled (=1)
+	// colors option value should be greater than holes option value if
+	// remise option is enabled (=1)
 	if (mm_confs[MM_POS_REMISE].nbre.val &&
 	    mm_confs[MM_POS_COLORS].nbre.val <
 		mm_confs[MM_POS_HOLES].nbre.val) {
@@ -374,10 +378,9 @@ long unsigned mm_score(mm_session *session)
 	// for each played guess, 1 time minus on secret but on wrong place and
 	// 2 time minus not on scecret at all
 	for (i = 0; i < session->guessed; i++)
-		score -=
-		    (session->config->holes * 2) -
-		    (session->panel[i].right_pos * 2
-		    	+ session->panel[i].wrong_pos);
+		score -= (session->config->holes * 2) -
+			 (session->panel[i].right_pos * 2 +
+			  session->panel[i].wrong_pos);
 	// -%25 for remise mode
 	if (session->config->remise)
 		score *= 0.75;
@@ -579,7 +582,8 @@ mm_session *mm_session_restore()
 		    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
 		if (!fread(session->panel[i].combination, sizeof(uint8_t),
 			   session->config->holes, f) ||
-		    !fread(&session->panel[i].right_pos, sizeof(uint8_t), 1, f) ||
+		    !fread(&session->panel[i].right_pos, sizeof(uint8_t), 1,
+			   f) ||
 		    !fread(&session->panel[i].wrong_pos, sizeof(uint8_t), 1, f))
 			goto guess_err;
 	}

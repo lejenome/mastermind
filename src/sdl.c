@@ -37,7 +37,8 @@ int SCREEN_WIDTH = 480;
 int SCREEN_HEIGHT_MIN = 420;
 int SCREEN_WIDTH_MIN = 360;
 /// table struct that contains table dimensions
-typedef struct {
+typedef struct
+{
 	unsigned x;    ///< x position of table
 	unsigned y;    ///< y position of table
 	unsigned w;    ///< width of table
@@ -129,12 +130,13 @@ void clean()
  */
 unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 {
-	SDL_Texture *tex; 
+	SDL_Texture *tex;
 	SDL_Rect rect;
 	SDL_Color default_color = (SDL_Color)fg_color;
 	// create surface from text and font
 	SDL_Surface *surf = TTF_RenderUTF8_Solid(
-	    font, s, (color == NULL) ? default_color : *color); // create surface from font
+	    font, s, (color == NULL) ? default_color
+				     : *color); // create surface from font
 	if (surf == NULL) {
 		SDL_Log("Unable to render font! Error: %s\n", TTF_GetError());
 		clean();
@@ -164,7 +166,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	}
 	// copy texture to the renderer in the rigth position
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
-	SDL_FreeSurface(surf); 
+	SDL_FreeSurface(surf);
 	SDL_DestroyTexture(tex);
 	return rect.w;
 }
