@@ -8,16 +8,18 @@
  */
 
 /// cmds return values
-#define MM_CMD_SUCCESS 0x00     ///< cmd succeded
-#define MM_CMD_ERROR 0x01       ///< their was an error
-#define MM_CMD_NEW_SESSION 0x02 ///< new session needed
-#define MM_CMD_REDESIGN 0x04    ///< redesign the panel is needed
-#define MM_CMD_OPT_EXIT                                                        \
-	0x08 ///< just exit the program if cmd executed from option
+enum { MM_CMD_SUCCESS = 0,	    ///< cmd succeded
+       MM_CMD_ERROR = (1 << 0),       ///< their was an error
+       MM_CMD_NEW_SESSION = (1 << 1), ///< new session needed
+       MM_CMD_REDESIGN = (1 << 2),    ///< redesign the panel is needed
+       MM_CMD_OPT_EXIT =
+	   (1 << 3) ///< just exit the program if cmd executed from option
+};
 /// mode cmds are executed on (to modify the output style)
-#define MM_CMD_MODE_OPT 0 ///< command executed on option mode
-#define MM_CMD_MODE_CLI 1 ///< command executed on interactive cli mode
-#define MM_CMD_MODE_GUI 2 ///< command executed on GUI interface mode
+enum { MM_CMD_MODE_OPT, ///< command executed on option mode
+       MM_CMD_MODE_CLI, ///< command executed on interactive cli mode
+       MM_CMD_MODE_GUI  ///< command executed on GUI interface mode
+};
 // set this var to current exec mode (default: MM_CMD_MODE_OPT)
 uint8_t mm_cmd_mode;
 /// command object containing its name, its function and args
