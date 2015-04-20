@@ -8,7 +8,7 @@
 #include <readline/history.h>
 #endif // DISABLE_READLINE
 
-#include "lib.h"
+#include "util.h"
 #include "cli-cmd.h"
 #include "core.h"
 

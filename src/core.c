@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include <errno.h>
-#include "lib.h"
+#include "util.h"
 #include "core.h"
 #ifdef POSIX
 #include <unistd.h>

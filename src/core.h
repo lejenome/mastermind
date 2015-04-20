@@ -68,33 +68,33 @@ typedef struct {
 	unsigned len;  ///< current number of top scores stores
 } mm_scores_t;
 
-/// configuration option of type integer (conf.nbre.*)
+/// mastermind configuration option of type integer (conf.nbre.*)
 typedef struct {
-	uint8_t type; ///< configuration type: MM_CONF_INT
+	unsigned type; ///< configuration type: MM_CONF_INT
 	char *name;   ///< configuration name
 	int val;      ///< configuration value
 	int min;      ///< minimal integer value configuration value acceptes
 	int max;      ///< maximal integer value configuration value acceptes
 } mm_conf_int_t;
 
-/// configuration option of type string (conf.str.*)
+/// mastermind configuration option of type string (conf.str.*)
 typedef struct {
-	uint8_t type; ///< configuration typr: MM_CONF_STR
+	unsigned type; ///< configuration typr: MM_CONF_STR
 	char *name;   ///< configuration type
 	char *val;    ///< configuration value
 	uint8_t len;  ///< length of string in value
 } mm_conf_str_t;
 
-/// configuration option od type boolean (conf.bool.*)
+/// mastermind configuration option od type boolean (conf.bool.*)
 typedef struct {
-	uint8_t type; ///< configuration type: MM_CONF_BOOL
+	unsigned type; ///< configuration type: MM_CONF_BOOL
 	char *name;   ///< configuration name
 	uint8_t val;  ///< 0 or 1
 } mm_conf_bool_t;
 
-/// general configuration type
+/// mastermind general configuration type
 typedef union {
-	uint8_t type; ///< configuration type, share with all configurations
+	unsigned type; ///< configuration type, share with all configurations
 	mm_conf_str_t str;   ///< string configuration data
 	mm_conf_bool_t bool; ///< boolean configration data
 	mm_conf_int_t nbre;  ///< integer configuration data
