@@ -11,7 +11,7 @@
 // Detect POSIX systems:
 // http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system
 #if !defined(_WIN32) && (defined(__unix__) || defined(__unix) ||               \
-			 (defined(__APPLE__) && defined(__MACH__)))
+                         (defined(__APPLE__) && defined(__MACH__)))
 #define POSIX
 #elif defined(_WIN32)
 #define WINDOWS
