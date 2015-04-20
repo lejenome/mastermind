@@ -16,7 +16,7 @@ enum { MM_NEW,     ///< just created session and didn't play any guess yet
        MM_FAIL     ///< session ended with failure (user didn't find the secret)
 };
 
-/// supported types of conffigration options
+/// supported types of configuration options
 enum { MM_CONF_INT, ///< configuration value is an integer
        MM_CONF_STR, ///< configuration value is a string
        MM_CONF_BOOL ///< configuration value is boolean (0 or 1)
@@ -33,15 +33,15 @@ typedef struct {
 /// the guess object, containing the combination by the user and its score
 typedef struct {
 	uint8_t *combination; ///< given combination (guess)
-	uint8_t inplace;      ///< nbre of items on right place
-	uint8_t insecret;     ///< nbre of items on secret but not inplace
+	uint8_t right_pos;      ///< nbre of items on right place
+	uint8_t wrong_pos;     ///< nbre of items on wrong place
 } mm_guess;
 
 /// contains the secret generated at the beginning of session and the freq of
 /// its colors.
 typedef struct {
-	uint8_t *val;  ///< len: config->holes
-	uint8_t *freq; ///< len: config->colors
+	uint8_t *val;  ///< secret combination (len: config->holes)
+	uint8_t *freq; ///< colors freq (len: config->colors)
 } mm_secret;
 
 /// the session object containing the secret object, the inputed guesses,
@@ -52,12 +52,12 @@ typedef struct {
 	char *account;     ///< account name or NULL for default account
 	mm_secret *secret; ///< secret combination to guess
 	mm_config *config; ///< session config
-	mm_guess *panel;   ///< session panel
+	mm_guess *panel;   ///< session panel. FIXME: update doc
 } mm_session;
 
 /// session score, containing score value and account name
 typedef struct {
-	long unsigned score; ///< score value
+	long unsigned score; ///< score value. TODO: do we need long unsigned ??
 	char *account;       ///< account name
 } mm_score_t;
 
