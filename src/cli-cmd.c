@@ -95,7 +95,7 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 	case 1:
 		if (mm_cmd_mode != MM_CMD_MODE_OPT)
 			printf(_("Global configs:\n"));
-		for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++)
+		for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++)
 			switch (conf->type) {
 			case MM_CONF_INT:
 				printf("%s%s = %d\n",
@@ -128,10 +128,10 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 		break;
 	case 2:
 		conf = mm_confs;
-		while (conf < mm_confs + LEN(mm_confs) &&
+		while (conf < mm_confs + MM_POS_LEN &&
 		       strcmp(conf->str.name, argv[1]) != 0)
 			conf++;
-		if (conf < mm_confs + LEN(mm_confs))
+		if (conf < mm_confs + MM_POS_LEN)
 			switch (conf->type) {
 			case MM_CONF_INT:
 				printf("%s = %d\n", conf->nbre.name,

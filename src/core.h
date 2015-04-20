@@ -100,7 +100,19 @@ typedef union {
 	mm_conf_int_t nbre;  ///< integer configuration data
 } mm_conf_t;
 
-extern mm_conf_t mm_confs[7];
+/// config options indexes on mm_confs
+enum { MM_POS_GUESSES,
+       MM_POS_COLORS,
+       MM_POS_HOLES,
+       MM_POS_REMISE,
+       MM_POS_ACCOUNT,
+       MM_POS_SAVE_EXIT,
+       MM_POS_SAVE_PLAY,
+       MM_POS_LEN ///< length of mm_confs arrays
+};
+
+/// config options arrays
+extern mm_conf_t mm_confs[];
 
 mm_session *mm_session_new();
 mm_session *mm_session_restore();

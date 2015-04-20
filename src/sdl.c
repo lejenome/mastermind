@@ -395,7 +395,7 @@ void redraw_settings()
 	char str[3];
 	mm_conf_t *conf;
 	SDL_Table button;
-	for (conf = mm_confs; conf < mm_confs + LEN(mm_confs); conf++) {
+	for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++) {
 		sdl_print_left(conf->str.name, x, y, NULL);
 		switch (conf->type) {
 		case MM_CONF_BOOL:
@@ -490,7 +490,7 @@ int onMouseUp(SDL_MouseButtonEvent e)
 			redraw();
 		} else if (e.x > SCREEN_WIDTH - case_w * 3 &&
 			   e.x < SCREEN_WIDTH - case_w && e.y > case_h * 0.5 &&
-			   e.y < case_h * LEN(mm_confs) + case_h * 0.5) {
+			   e.y < case_h * MM_POS_LEN + case_h * 0.5) {
 			i = (unsigned)(e.y - case_h * 0.5) / case_h;
 			if (e.y < case_h * (i + 0.75) &&
 			    e.y > case_h * (i + 1.25))
