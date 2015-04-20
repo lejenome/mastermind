@@ -27,8 +27,10 @@
 #define sdl_print_center(s, x, y, color) sdl_print(s, x, y, color, 0)
 /// print string with left align of coord x,y
 #define sdl_print_left(s, x, y, color) sdl_print(s, x, y, color, -1)
-/// window available tabs
-enum { TAB_GAME, TAB_SETTINGS };
+/// window available tabs to draw
+enum { TAB_GAME,    ///< we will draw the game tab
+       TAB_SETTINGS ///< we will draw the settings tab
+};
 // default window size and minimal size
 int SCREEN_HEIGHT = 640;
 int SCREEN_WIDTH = 480;
