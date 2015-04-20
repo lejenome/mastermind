@@ -124,11 +124,11 @@ void clean()
  */
 unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 {
-	SDL_Texture *tex;
+	SDL_Texture *tex; 
 	SDL_Rect rect;
 	SDL_Color default_color = (SDL_Color)fg_color;
 	SDL_Surface *surf = TTF_RenderUTF8_Solid(
-	    font, s, (color == NULL) ? default_color : *color);
+	    font, s, (color == NULL) ? default_color : *color); // create surface from font
 	if (surf == NULL) {
 		SDL_Log("Unable to render font! Error: %s\n", TTF_GetError());
 		clean();
@@ -155,8 +155,9 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 		rect.x = x - surf->w;
 		break;
 	}
+	// copy texture to the renderer in the rigth position
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
-	SDL_FreeSurface(surf);
+	SDL_FreeSurface(surf); 
 	SDL_DestroyTexture(tex);
 	return rect.w;
 }
