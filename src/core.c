@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include <errno.h>
-#include "lib.h"
+#include "util.h"
 #include "core.h"
 #ifdef POSIX
 #include <unistd.h>
@@ -20,12 +20,14 @@
  * \brief mastermind core funtions and types definition
  */
 
+/// top 20 scores struct where to load score.txt file content
 mm_scores_t mm_scores = {.T = NULL, .max = 20, .len = 0};
-char *mm_config_path = NULL;
-char *mm_score_path = NULL;
-char *mm_store_path = NULL;
+char *mm_config_path = NULL; ///< config file path
+char *mm_score_path = NULL;  ///< score.txt file path
+char *mm_store_path = NULL;  ///< store.data file path where we store unfinished
+/// session. FIXME: change to better name
 
-mm_conf_t mm_confs[] = {
+mm_conf_t mm_confs[] = { // FIXME: fix clang-format style
 	[MM_POS_GUESSES] = {.nbre = {.name = "guesses",
 				     .type = MM_CONF_INT,
 				     .val = MM_GUESSES,
@@ -41,18 +43,14 @@ mm_conf_t mm_confs[] = {
 				   .val = MM_HOLES,
 				   .min = 2,
 				   .max = MM_HOLES_MAX}},
-	[MM_POS_REMISE] = {.bool = {.type = MM_CONF_BOOL,
-				    .name = "remise",
-				    .val = 0}},
-	[MM_POS_ACCOUNT] = {.str = {.type = MM_CONF_STR,
-				    .name = "account",
-				    .val = "default"}},
-	[MM_POS_SAVE_EXIT] = {.bool = {.type = MM_CONF_BOOL,
-				       .name = "save_on_exit",
-				       .val = 0}},
-	[MM_POS_SAVE_PLAY] = {.bool = {.type = MM_CONF_BOOL,
-				       .name = "save_on_play",
-				       .val = 0}},
+	[MM_POS_REMISE] = {
+	    .bool = {.type = MM_CONF_BOOL, .name = "remise", .val = 0}},
+	[MM_POS_ACCOUNT] = {
+	    .str = {.type = MM_CONF_STR, .name = "account", .val = "default"}},
+	[MM_POS_SAVE_EXIT] = {
+	    .bool = {.type = MM_CONF_BOOL, .name = "save_on_exit", .val = 0}},
+	[MM_POS_SAVE_PLAY] = {
+	    .bool = {.type = MM_CONF_BOOL, .name = "save_on_play", .val = 0}},
 };
 /*! create new mastermind session and initialize viables && config
  * @return	new session object
@@ -69,14 +67,22 @@ mm_session *mm_session_new()
 	    (mm_guess *)malloc(sizeof(mm_guess) * session->config->guesses);
 	return session;
 }
-/*! load global config from config file and create new session config based
- * on global config
- * @return	new session config object
+/*! load global config from config file and save on mm_confs array
+ * \note	config file is a list of <name> and <value> pairs. e.g:
+				<name1> <value1>
+				<name2> <value2>
+			<name> is 40 max chars and <value> is 20 max chars
+			if <value> is type string, " is not needed and it will
+ be readed as part of value.
+			comments are not supported on config file
  */
 void mm_config_load()
 {
+	// TODO: use mm_config_set on mm_config_load but without mm_config_save
 	mm_conf_t *conf;
-	char *n, *v, *t;
+	char *n, // option <name>
+	    *v,  // option <value>
+	    *t;  // error checking when converting string to int
 	FILE *f;
 	int i;
 	if (!mm_config_path)
@@ -84,8 +90,10 @@ void mm_config_load()
 	if ((f = fopen(mm_config_path, "r"))) {
 		n = (char *)malloc(sizeof(char) * 40);
 		v = (char *)malloc(sizeof(char) * 20);
-		while (fscanf(f, "%s %20s", n, v) != EOF) {
+		while (fscanf(f, "%40s %20s", n, v) != EOF) {
 			conf = mm_confs;
+			// search configuration option on mm_confs with same
+			// name as n (<name>)
 			while (conf < mm_confs + LEN(mm_confs) &&
 			       strcmp(n, conf->str.name) != 0)
 				conf++;
@@ -99,20 +107,25 @@ void mm_config_load()
 			}
 			errno = 0;
 			switch (conf->type) {
-			case MM_CONF_INT:
-				i = strtol(v, &t, 10);
+			case MM_CONF_INT: // config option is type integer
+				i = strtol(
+				    v, &t,
+				    10); // convert v (<value>) to long int (i)
+				// if there is no error when converting to int,
+				// save i to conf option struct
 				if (t != NULL && errno != ERANGE &&
 				    i >= conf->nbre.min && i <= conf->nbre.max)
 					conf->nbre.val = i;
 				break;
-			case MM_CONF_BOOL:
+			case MM_CONF_BOOL: // config option is type bool
 				i = strtol(v, &t, 10);
 				if (t != NULL && errno != ERANGE &&
 				    (i == 1 || i == 0))
 					conf->bool.val = (uint8_t)i;
 				break;
-			case MM_CONF_STR:
-				conf->str.val = strdup(v);
+			case MM_CONF_STR: // config option is type string
+				conf->str.val =
+				    strdup(v); // just copy v (<value>)
 				break;
 			}
 		}
@@ -120,10 +133,12 @@ void mm_config_load()
 		free(v);
 		fclose(f);
 	}
+	// colors option value should be greater than holes option value if
+	// remise option is enabled (=1)
 	if (mm_confs[MM_POS_REMISE].nbre.val &&
 	    mm_confs[MM_POS_COLORS].nbre.val <
 		mm_confs[MM_POS_HOLES].nbre.val) {
-		// ensure colors are no less then holes on remise mode
+		// else set colors option value to holes option value
 		mm_confs[MM_POS_COLORS].nbre.val =
 		    mm_confs[MM_POS_HOLES].nbre.val;
 	}
@@ -316,8 +331,8 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 	for (i = 0; i < session->config->colors; i++)
 		freq[i] = 0;
 	G->combination = T;
-	G->inplace = 0;
-	G->insecret = 0;
+	G->right_pos = 0;
+	G->wrong_pos = 0;
 	for (i = 0; i < session->config->holes; i++) {
 		if (T[i] >= session->config->colors ||
 		    (session->config->remise && freq[T[i]] > 0)) {
@@ -326,20 +341,24 @@ unsigned mm_play(mm_session *session, uint8_t *T)
 		}
 		freq[T[i]]++;
 		if (freq[T[i]] <= session->secret->freq[T[i]])
-			G->insecret++;
+			G->wrong_pos++;
 		if (session->secret->val[i] == T[i])
-			G->inplace++;
+			G->right_pos++;
 	}
+	G->wrong_pos -= G->right_pos;
 	session->guessed++;
-	if (G->inplace == session->config->holes)
+	// update session state
+	if (G->right_pos == session->config->holes)
 		session->state = MM_SUCCESS;
 	else if (session->guessed == session->config->guesses)
 		session->state = MM_FAIL;
 	else
 		session->state = MM_PLAYING;
 	free(freq);
+	// save session if save_on_play option is enabled
 	if (mm_confs[MM_POS_SAVE_PLAY].bool.val == 1)
 		mm_session_save(session);
+	// save score on success
 	if (session->state == MM_SUCCESS)
 		mm_scores_save(session);
 	return 0;
@@ -359,9 +378,9 @@ long unsigned mm_score(mm_session *session)
 	// for each played guess, 1 time minus on secret but on wrong place and
 	// 2 time minus not on scecret at all
 	for (i = 0; i < session->guessed; i++)
-		score -=
-		    (session->config->holes * 2) -
-		    (session->panel[i].inplace + session->panel[i].insecret);
+		score -= (session->config->holes * 2) -
+			 (session->panel[i].right_pos * 2 +
+			  session->panel[i].wrong_pos);
 	// -%25 for remise mode
 	if (session->config->remise)
 		score *= 0.75;
@@ -388,6 +407,7 @@ void mm_init(const char *data_dir)
 	mm_score_path = (char *)malloc(sizeof(char) * 2000);
 	mm_config_path = (char *)malloc(sizeof(char) * 2000);
 	mm_store_path = (char *)malloc(sizeof(char) * 2000);
+	// init random generator for use on mm_secret_new
 	srandom(time(NULL));
 	if (data_dir
 #ifdef POSIX
@@ -489,18 +509,18 @@ void mm_session_exit(mm_session *session)
  */
 unsigned int mm_session_save(mm_session *session)
 {
-	/* [----------- 8 bits -----------]
-	 * [ mm_session->guessed          ]
-	 * [ mm_session->state            ]
-	 * [ mm_config->guesses           ]
-	 * [ mm_config->colors            ]
-	 * [ mm_config->holes             ]
-	 * [ mm_config->remise            ]
+	/* [------------ 8 bits ------------]
+	 * [ mm_session->guessed            ]
+	 * [ mm_session->state              ]
+	 * [ mm_config->guesses             ]
+	 * [ mm_config->colors              ]
+	 * [ mm_config->holes               ]
+	 * [ mm_config->remise              ]
 	 * [............mm_secret->val.............] // 8 bits x config.holes
 	 * [............mm_secret->freq............] // 8 bits x config.colors
 	 * [...mm_session->panel[0].combination....] // 8 bits x config.holes
-	 * [ mm_session->panel[0].inplace ]
-	 * [ mm_session->panel[0].secret  ]
+	 * [ mm_session->panel[0].right_pos ]
+	 * [ mm_session->panel[0].wrong_pos ]
 	 * [ ............ ] // panel[0] ... panel[session.guessed - 1]
 	 * [ mm_session->account                 ] // [0..18] bits + '\n'
 	 */
@@ -518,8 +538,8 @@ unsigned int mm_session_save(mm_session *session)
 	for (i = 0; i < session->guessed; i++) {
 		fwrite(session->panel[i].combination, sizeof(uint8_t),
 		       session->config->holes, f);
-		fwrite(&session->panel[i].inplace, sizeof(uint8_t), 1, f);
-		fwrite(&session->panel[i].insecret, sizeof(uint8_t), 1, f);
+		fwrite(&session->panel[i].right_pos, sizeof(uint8_t), 1, f);
+		fwrite(&session->panel[i].wrong_pos, sizeof(uint8_t), 1, f);
 	}
 	fprintf(f, "%20s\n", session->account);
 	fclose(f);
@@ -562,8 +582,9 @@ mm_session *mm_session_restore()
 		    (uint8_t *)malloc(sizeof(uint8_t) * session->config->holes);
 		if (!fread(session->panel[i].combination, sizeof(uint8_t),
 			   session->config->holes, f) ||
-		    !fread(&session->panel[i].inplace, sizeof(uint8_t), 1, f) ||
-		    !fread(&session->panel[i].insecret, sizeof(uint8_t), 1, f))
+		    !fread(&session->panel[i].right_pos, sizeof(uint8_t), 1,
+			   f) ||
+		    !fread(&session->panel[i].wrong_pos, sizeof(uint8_t), 1, f))
 			goto guess_err;
 	}
 	session->account = (char *)malloc(sizeof(char) * 20);
