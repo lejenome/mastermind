@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <string.h>
-#include "lib.h"
+#include "util.h"
 #include "core.h"
 #ifdef POSIX
 #include <unistd.h>
@@ -37,7 +37,8 @@ int SCREEN_WIDTH = 480;
 int SCREEN_HEIGHT_MIN = 420;
 int SCREEN_WIDTH_MIN = 360;
 /// table struct that contains table dimensions
-typedef struct {
+typedef struct
+{
 	unsigned x;    ///< x position of table
 	unsigned y;    ///< y position of table
 	unsigned w;    ///< width of table
@@ -134,7 +135,9 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	SDL_Color default_color = (SDL_Color)fg_color;
 	// create surface from text and font
 	SDL_Surface *surf = TTF_RenderUTF8_Solid(
-	    font, s, (color == NULL) ? default_color : *color);
+	    font, s,
+	    (color == NULL) ? default_color
+			    : *color); // create surface from font
 	if (surf == NULL) {
 		SDL_Log("Unable to render font! Error: %s\n", TTF_GetError());
 		clean();
@@ -162,7 +165,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 		rect.x = x - surf->w;
 		break;
 	}
-	// copy texture to renderer on right position
+	// copy texture to the renderer in the rigth position
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
 	SDL_FreeSurface(surf);
 	SDL_DestroyTexture(tex);
@@ -360,11 +363,10 @@ void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 	}
 	if (drawState) {
 		char s[2];
-		sprintf(s, "%d", session->panel[p].inplace);
+		sprintf(s, "%d", session->panel[p].right_pos);
 		sdl_print_center(s, state.x + state.w / 4, rect.y + rect.h / 3,
 				 &green);
-		sprintf(s, "%d",
-			session->panel[p].insecret - session->panel[p].inplace);
+		sprintf(s, "%d", session->panel[p].wrong_pos);
 		sdl_print_center(s, state.x + (state.w / 4) * 3,
 				 rect.y + rect.h / 3, &yellow);
 	}
@@ -445,7 +447,8 @@ void redraw_game()
 	sdl_print_icon(0xF05A, control.x + button_w * 0.5,
 		       control.y + case_h / 2, NULL);
 	sdl_print_icon(0xF085, control.x + button_w * 1.5,
-		       control.y + case_h / 2, NULL); // 0xF013
+		       control.y + case_h / 2,
+		       NULL); // 0xF013
 	sdl_print_icon(0xF097, control.x + button_w * 2.5,
 		       control.y + case_h / 2, NULL);
 	sdl_print_center(_("rest"), play.x + button_w, play.y + case_h / 2,

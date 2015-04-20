@@ -23,7 +23,8 @@ enum { MM_CMD_MODE_OPT, ///< command executed on option mode
 // set this var to current exec mode (default: MM_CMD_MODE_OPT)
 uint8_t mm_cmd_mode;
 /// command object containing its name, its function and args
-typedef struct {
+typedef struct
+{
 	char *n; ///< name of command
 	int (*e)(const char, const char **,
 		 mm_session *); ///< function to excute

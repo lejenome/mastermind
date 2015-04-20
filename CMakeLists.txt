@@ -5,9 +5,9 @@ Project(MasterMind VERSION 0.1.0 LANGUAGES C)
 set(PROJECT_WEBSITE "https://github.com/lejenome/mastermind")
 
 #if(NOT ANDROID AND NOT EMSCRIPTEN AND NOT IPHONEOS)
-	add_executable(mastermindcli src/lib.c src/core.c src/cli-cmd.c src/cli.c)
+	add_executable(mastermindcli src/util.c src/core.c src/cli-cmd.c src/cli.c)
 #endif(NOT ANDROID AND NOT EMSCRIPTEN AND NOT IPHONEOS)
-add_executable(mastermindsdl WIN32 src/lib.c src/core.c src/sdl.c)
+add_executable(mastermindsdl WIN32 src/util.c src/core.c src/sdl.c)
 
 if(MINGW)
 	LIST(APPEND CMAKE_INCLUDE_PATH
