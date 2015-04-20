@@ -360,11 +360,10 @@ void drawCombination(uint8_t *G, unsigned p, unsigned drawState)
 	}
 	if (drawState) {
 		char s[2];
-		sprintf(s, "%d", session->panel[p].inplace);
+		sprintf(s, "%d", session->panel[p].right_pos);
 		sdl_print_center(s, state.x + state.w / 4, rect.y + rect.h / 3,
 				 &green);
-		sprintf(s, "%d",
-			session->panel[p].insecret - session->panel[p].inplace);
+		sprintf(s, "%d", session->panel[p].wrong_pos);
 		sdl_print_center(s, state.x + (state.w / 4) * 3,
 				 rect.y + rect.h / 3, &yellow);
 	}

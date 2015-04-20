@@ -18,6 +18,7 @@
  */
 
 mm_session *session;
+// TODO: add .h element to show command help msg
 cmd_t cmds[] = {
     {.n = "quit", .e = cmd_quit, .s = 0},
     {.n = "set", .e = cmd_set, .s = 's', .a = 2},
@@ -27,7 +28,7 @@ cmd_t cmds[] = {
     {.n = "help", .e = cmd_help, .s = 'h', .a = 1},
     {.n = "account", .e = cmd_account, .s = 'a', .a = 1},
     {.n = "version", .e = cmd_version, .s = 'v', .a = 0},
-}; // "connect", "server", "disconnect"
+}; // TODO: "connect", "server", "disconnect"
 /// draw session panel
 void printPanel()
 {
@@ -46,11 +47,11 @@ void printPanel()
 		if (i < session->guessed)
 			printf(_("  | Y%2d | A%2d | N%2d |\n"),
 
-			       session->panel[i].inplace,
-			       session->panel[i].insecret -
-				   session->panel[i].inplace,
+			       session->panel[i].right_pos,
+			       session->panel[i].wrong_pos,
 			       session->config->holes -
-				   session->panel[i].insecret);
+				   session->panel[i].right_pos -
+				   session->panel[i].wrong_pos);
 		else
 			printf("  |     |     |     |\n");
 	}
