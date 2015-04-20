@@ -111,7 +111,7 @@ enum { MM_POS_GUESSES,
        MM_POS_LEN ///< length of mm_confs arrays
 };
 
-/// config options arrays
+/// config options arrays of length MM_POS_LEN
 extern mm_conf_t mm_confs[];
 
 mm_session *mm_session_new();
