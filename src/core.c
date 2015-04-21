@@ -27,7 +27,8 @@ char *mm_score_path = NULL;  ///< score.txt file path
 char *mm_store_path = NULL;  ///< store.data file path where we store unfinished
 /// session. FIXME: change to better name
 
-mm_conf_t mm_confs[] = { // FIXME: fix clang-format style
+mm_conf_t mm_confs[] = {
+	// FIXME: fix clang-format style
 	[MM_POS_GUESSES] = {.nbre = {.name = "guesses",
 				     .type = MM_CONF_INT,
 				     .val = MM_GUESSES,
@@ -43,14 +44,18 @@ mm_conf_t mm_confs[] = { // FIXME: fix clang-format style
 				   .val = MM_HOLES,
 				   .min = 2,
 				   .max = MM_HOLES_MAX}},
-	[MM_POS_REMISE] = {
-	    .bool = {.type = MM_CONF_BOOL, .name = "remise", .val = 0}},
-	[MM_POS_ACCOUNT] = {
-	    .str = {.type = MM_CONF_STR, .name = "account", .val = "default"}},
-	[MM_POS_SAVE_EXIT] = {
-	    .bool = {.type = MM_CONF_BOOL, .name = "save_on_exit", .val = 0}},
-	[MM_POS_SAVE_PLAY] = {
-	    .bool = {.type = MM_CONF_BOOL, .name = "save_on_play", .val = 0}},
+	[MM_POS_REMISE] = {.bool = {.type = MM_CONF_BOOL,
+				    .name = "remise",
+				    .val = 0}},
+	[MM_POS_ACCOUNT] = {.str = {.type = MM_CONF_STR,
+				    .name = "account",
+				    .val = "default"}},
+	[MM_POS_SAVE_EXIT] = {.bool = {.type = MM_CONF_BOOL,
+				       .name = "save_on_exit",
+				       .val = 0}},
+	[MM_POS_SAVE_PLAY] = {.bool = {.type = MM_CONF_BOOL,
+				       .name = "save_on_play",
+				       .val = 0}},
 };
 /*! create new mastermind session and initialize viables && config
  * @return	new session object

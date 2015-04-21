@@ -158,7 +158,7 @@ configure_file (
 find_package(Clangformat)
 if(CLANG_FORMAT_FOUND)
 	message("clang-format found: ${CLANG_FORMAT_EXECUTABLE}")
-	add_custom_target(format ALL
+	add_custom_target(format
 		${CLANG_FORMAT_EXECUTABLE} -style=file -i config.h.in src/*.c src/*.h colorscheme/*.h
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif(CLANG_FORMAT_FOUND)

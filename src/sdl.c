@@ -37,8 +37,7 @@ int SCREEN_WIDTH = 480;
 int SCREEN_HEIGHT_MIN = 420;
 int SCREEN_WIDTH_MIN = 360;
 /// table struct that contains table dimensions
-typedef struct
-{
+typedef struct {
 	unsigned x;    ///< x position of table
 	unsigned y;    ///< y position of table
 	unsigned w;    ///< width of table
