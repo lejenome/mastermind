@@ -44,10 +44,11 @@ presentation about Mastermind developement process.
 @chapter Project Presentation
 
 @cindex chapter, first
-This is the first chapter.
+This is the first @anchor{x-chap}chapter.
 @cindex index entry, another
 
 Numbered list.
+@xref{x-chap, the Cahpter}.
 
 @enumerate
 @item
