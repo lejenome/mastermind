@@ -34,8 +34,8 @@ enum { TAB_GAME,    ///< we will draw the game tab
 // default window size and minimal size
 int SCREEN_HEIGHT = 640;
 int SCREEN_WIDTH = 480;
-int SCREEN_HEIGHT_MIN = 420;
-int SCREEN_WIDTH_MIN = 360;
+int SCREEN_HEIGHT_MIN = 320;
+int SCREEN_WIDTH_MIN = 240;
 /// table struct that contains table dimensions
 typedef struct {
 	unsigned x;    ///< x position of table

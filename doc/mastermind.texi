@@ -1,0 +1,64 @@
+\input texinfo  @c -*-textinfo-*-
+@c %**start of header
+@setfilename manual.info
+@settitle Mastermind Manual
+@c @firstparagraphindent insert
+@c %**end of header
+
+@copying
+This manual is part of mastermind project.
+
+Copyright @copyright{} 2015 - Dev2Space team and contributors.
+Licence GPLv3
+@end copying
+
+@titlepage
+@title Mastermind Manual
+@subtitle Mastermind developement process description
+@author Moez Bouhlel
+
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@ifplaintext
+@insertcopying
+@end ifplaintext
+
+@contents
+
+@ifnottex
+@node Top
+@top Welcome to Mastermind manual
+This manual is part of Mastermind project. Its main focus is to give a short
+presentation about Mastermind developement process.
+@end ifnottex
+
+@menu
+* First Chapter::	Getting started
+* Index::		index list
+@end menu
+
+@node First Chapter
+@chapter Project Presentation
+
+@cindex chapter, first
+This is the first chapter.
+@cindex index entry, another
+
+Numbered list.
+
+@enumerate
+@item
+first item
+@item
+second item
+@end enumerate
+
+@node Index
+@unnumbered Index
+@printindex cp
+
+
+@bye
