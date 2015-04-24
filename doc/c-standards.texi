@@ -1,0 +1,71 @@
+@node C Standards
+@chapter C Standards
+
+While writing the code, we used some C standards, mainly C89 and C99 standards.
+
+@enumerate
+@item
+enum
+@item
+struct
+@item
+union
+@item
+Table static avec index predefinit de chaque element
+@end enumerate
+
+Also, we used some standared C APIs.
+
+C89/C99 APIs:
+@enumerate
+@item
+stdio.h (FILE, fopen, fclose, printf, fprintf, scanf, fscanf)
+@item
+time.h (time)
+@item
+stdlib.h (malloc, free, rand, srand, getenv, strtol)
+@item
+string.h (strcmp, strlen,...)
+@item
+errno.h (errno)
+@item
+stdin.h (uint8_t)
+@item
+assert.h (assert)
+@end enumerate
+
+POSIX APIs:
+@enumerate
+@item
+unistd.h (mkdir)
+@item
+sys/stat.h (access)
+@item
+sys/utsname.h (uname)
+@item
+string.h (strndup)
+@item
+stdlib.h (random, srandom)
+@end enumerate
+
+WINDOWS APIs:
+@enumerate
+@item
+windows.h (CreateDirectory)
+@end enumerate
+
+List of C types and syntax used:
+@enumerate
+@item
+struct: ensemble des variables avec relation
+@item
+enum: ensemble de constants avec relation
+@item
+union: different type of variables only one to use
+@item
+#deffine: standalone constants
+@item
+macro: small deined functions
+@item
+goto <LABEL>: diviser la fonction a partis reutilisables
+@end enumerate

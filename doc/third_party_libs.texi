@@ -1,0 +1,62 @@
+@node Les Bibliotheques externes
+@chapter Les Bibliotheques externes
+
+
+Pour ameliorer les functions du mastermind et la portablilite du code, on a utlisé
+quelques Bibliotheques externes.
+
+*** CLI:
+-readline
+-gettext
+-getopt
+*** GUI:
+-gettext
+-SDL2
+
+
+
+** SDL:
+Il existe beaucoup du biblotheques externes avec diferents buts et technologies.
+Le processus de choisir de la biblotheque est:
+- eliminer tous les biblotheques commercials ou les bibliotheque dependent
+  d'une seule specifique platforms (cocoa pour Mac OSX, win32 pour Windows).
+- eliminter les bibliotheques de types widget toolkits (GTK, Qt):
+  + simple
+  + types de objets pre-definies
+  - beaucoup des options unnessacaires
+  - n'est pas bien compatibles avec les mobiles/tables (touchs, different
+    tailes)
+- elimnier les bibliotheques de types game engine:
+  + simple
+  + types objets graphic predefinits
+  + efects graphics tres deinits
+  + multi platform et bien integres avec les tables/mobiles
+  - des options unnessaicaires
+  - lents et temps de demarrage tres long pour une simple jeux
+  - moins code c et plus code de longuague plus hot niveau (lua, python,...)
+- on a preferer les bibliotheques de types context/window toolkits
+  + presque juste que nous on besoin
+  + fournirs des fonctions independents du platforms
+
+il existe de types de context/window tootkits:
+- 3D (openGL based toolkits: GLFW)
+  + toute la puissance de 3D
+  - c'est une simple jeux et le 3D est beaucoup plus pour un simple jeux
+  - c + GLSL (language de scripting)
+- 2D (les meilleurs bibliotheques 2D on c: SDL, cairo)
+- SDL2
+  + support presque touts les platformes ( windows, linux, mac, iOS, Android, web, blackberry, BSDs,....)
+  + est tres extensibles (net, font, input, music,...)
+  + le standards des jeux on UNIX systems
+  + c'est le base des beaucoup games engines
+- Cairo
+  + api de design 2D tres avances et simples
+  + API stable et facile
+  + il y a un duscusion de la standariser pour C++17 meme elle est en c
+  + elle a un grande nombre de backends (openGl, PNG, PDF,...)
+  + la base de beaucoup de Bibliothuqes et application (firefox, chrome, GTK+, PDF readers,...)
+  - c'est une juste api de designs 2D (pas management de evenements or fenetres)
+
+on peut utliser et integrer cairo (pour 2D drawing), openGl (pour 3D effets), SDL (pour events and windowins,...) on meme application pour avoir la meilleur experience possible.
+Mais, pour une simple application, on un choisir SDL2, qui integrate tous nous besion.
+
