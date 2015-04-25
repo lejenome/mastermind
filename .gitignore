@@ -7,6 +7,8 @@
 /config.h
 *.gmo
 /doc/manual*
+/doc/mastermind.*
+!/doc/mastermind.texi
 
 # swaps
 .*.swp*
