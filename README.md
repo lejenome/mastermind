@@ -18,8 +18,15 @@ Unstable builds are available but may be not up to date and unusable.
 
 # Configuration
 
-configuration options are documented on [config.md](doc/config.md) file and
-man mastermindcli(1).
+Runtime Configuration options are documented on [config.md](doc/config.md) file
+and man mastermindcli(1).
+
+# Documentation
+
+We provide booth type of documentation:
+- Code documentation: [HTML](http://lejenome.me/tests/MasterMind-html),
+  [PDF](http://lejenome.me/tests/Mastermind.pdf)
+- Project Manual: [HTML](http://lejenome.me/tests/manual-mastermind), [PDF](http://lejenome.me/tests/manual-mastermind.pdf), [TXT](http://lejenome.me/tests/manual-mastermind.txt)
 
 # License
 
