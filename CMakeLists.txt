@@ -176,11 +176,12 @@ configure_file(res/fonts/ProFont_r400-29.pcf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/
 configure_file(res/fonts/fontawesome-webfont.ttf ${CMAKE_INSTALL_DATAROOTDIR}/fonts/fontawesome-webfont.ttf COPYONLY)
 configure_file(res/icons/icon.bmp ${CMAKE_INSTALL_DATAROOTDIR}/icons/mastermind.bmp COPYONLY)
 if(EMSCRIPTEN)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --preload-file ${CMAKE_INSTALL_DATAROOTDIR}/fonts/ProFont_r400-29.pcf --preload-file ${CMAKE_INSTALL_DATAROOTDIR}/fonts/fontawesome-webfont.ttf --preload-file  ${CMAKE_INSTALL_DATAROOTDIR}/icons/mastermind.bmp")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --preload-file ${CMAKE_INSTALL_DATAROOTDIR}/fonts/ProFont_r400-29.pcf
+	--preload-file ${CMAKE_INSTALL_DATAROOTDIR}/fonts/fontawesome-webfont.ttf --preload-file  ${CMAKE_INSTALL_DATAROOTDIR}/icons/mastermind.bmp")
 endif(EMSCRIPTEN)
 
 INCLUDE(sdl2_android)
-include(doxygen)
+include(mm_docs)
 
 install(TARGETS mastermindcli DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(TARGETS mastermindsdl DESTINATION ${CMAKE_INSTALL_BINDIR})
