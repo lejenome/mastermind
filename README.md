@@ -25,7 +25,7 @@ and man mastermindcli(1).
 
 We provide booth type of documentation:
 - Code documentation: [HTML](http://lejenome.me/tests/MasterMind-html),
-  [PDF](http://lejenome.me/tests/Mastermind.pdf)
+  [PDF](http://lejenome.me/tests/MasterMind.pdf)
 - Project Manual: [HTML](http://lejenome.me/tests/manual-mastermind), [PDF](http://lejenome.me/tests/manual-mastermind.pdf), [TXT](http://lejenome.me/tests/manual-mastermind.txt)
 
 # License
