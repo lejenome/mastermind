@@ -4,11 +4,12 @@
 While developing the code, we used serval tools.
 
 
+@cindex Git
 @section Git
 
 Git is the most used version control system.
-It support distributed development which mean that the developer does not need a network access to the remote repository to access to its history or commit changes.
-It allows many developers to change works on the same code easily.
+It supports distributed development which means that developers do not need a network access to the remote repository to access to its history or commit changes.
+It allows many developers to make changes (patchs) on the same code easily.
 
 A demo of commands to change current direcotry to a repository and commit current changes.
 
@@ -18,20 +19,23 @@ git add --all
 git commit -m "First commit"
 @end example
 
-To host our repository online, we use the popular git repository hosting service Github.
+@cindex Github
+To host our repository online, we used the popular git repository hosting service Github.
 
+@cindex Build System
 @section Build System
 
 There are many build systems for C based projects:
 
-
+@cindex Makefiles
 @subsection Makefiles
-Makefile is part of POSIX standard. It's a text file containing a list of commands (rules) to execute. It's based on depencedy tree model where every rule has it's depencedy and it's generated targget.
-Developing on Makefiles is easy but not perect when targeting many different platforms.
+Makefile is part of POSIX standard. It's a text file containing a list of commands (rules) to execute. It's based on depencedy tree model where every rule has it's depencedies and it's generated target.
+Developing on Makefiles is easy but not perfect when targeting many different platforms.
 
+@cindex Unix configure script
 @subsection Unix configure script
-An alternative solution is to use Unix Configur scripts. It's an executable shell script designed to aid in developing a program to be run on a wide number of different computers. It generate needed Makefile to build the software on the target platorm.
-It's the standard way to build softwares on Unix systems and it's well documentated. The draw back is that windows systems does not support shell scripts natively and a third party tools are needed to add unix shell support.
+An alternative solution is to use Unix Configur scripts. It's an executable shell script designed to aid in developing a program to be run on a wide number of different computers. It generates needed Makefiles to build the software on the target platform.
+It's the standard way to build softwares on Unix systems and it's well documentated. The draw back is that MS Windows system does not support shell scripts natively and third party tools are needed to add Unix shell support.
 To build a project using Unix configure script:
 
 @example
@@ -40,10 +44,12 @@ make
 sudo make install
 @end example
 
+@cindex CMake
 @subsection CMake
-CMake is a cross-platform build system. It is a family of tools designed to build, test and package software.
+CMake is a cross-platform build system. It is a family of tools designed to build, test and package softwares.
 It's one of top used build systems including Makefiles and Unix Configure script.
-CMake is our Unix configure alternative choose. It support windows out the box without any third party tool. It also allow generating workspace/project files to many target IDEs including Visual Studio, eclipse and Xcode. The draw back of using CMake is the need to learn its scripting language and it lack of support of Android and iOS as targets.
+CMake is our Unix configure alternative choose on Mastermind project.
+It supports windows out the box without any third party tool. It also allows generating workspace/project files to many target IDEs including Visual Studio, eclipse and Xcode. The draw back of using CMake is the need to learn its scripting language and it lack of support of Android and iOS as targets.
 To build a project using CMake:
 
 @example
@@ -52,12 +58,14 @@ cmake ..
 cmake --build .
 @end example
 
+@cindex Doxygen
 @section Doxygen
 
 Doxygen is the de facto standard tool for generating internal documentation from annotated C++ sources. It also supports many other languages out of the box including C, Java, Python,...
-It can generate documentation from the code comments on many formats including HTML based documentation, PDF document, simple Plain Text file, Unix man pages, RTF, XML, Devbook,...
+It can generate documentation from the code comments on many formats including HTML based documentation, PDF documents, simple Plain Text files, Unix man pages, RTF, XML, Devbook,...
 Developers just need to well document their code on a standard way, either using javadoc style or Qt style.
 
+@cindex Unix man page
 @section Unix man page
 Man page is the standard way to document programs and standards on Unix systems.
 Man page manuals are split into serval numbered sections, mainly:
@@ -75,75 +83,84 @@ Man page manuals are split into serval numbered sections, mainly:
 8 - system administration commands and daemons.
 @end itemize
 
-Man pages use its own syntax. Each Man page contains serval sections: name, synopsis, description,...
-We used Man page to documentated the command line version of the project and its configuration file options.
+Man page uses its own syntax. Each Man page contains serval sections: NAME, SYNOPSIS, DESCRIPTION,...
+We used Man page to document the command line version of the project and its configuration file options.
 
+@cindex Texinfo
 @section Texinfo
 
-Texino is a the prefered way to generate projects manuals on Gnu systems.
+Texino is a the prefered way to generate projects manuals on GNU systems.
 Its sytax language is based on Latex sytax.
-It allow to generate documentation on many formats including HTML pages, PDF, DVI, Info, Plain Text,...
+It allows to generate documentation on many formats including HTML pages, PDF, DVI, Info, Plain Text,...
 
-
-@section Gnu Standards
-Our developement repository struct is based on Gnu Standards recommanded struct with some modifications:
+@cindex GNU Standards
+@section GNU Standards
+Our developement repository struct is based on GNU Standards recommanded struct with some modifications:
 @itemize @bullet
 @item
-src/ direcotry containing the code source.
+@file{src/} directory containing the code source.
 @item
-po/ direcotry containing the tansalations.
+@file{po/} directory containing the tansalations.
 @item
-ide/ direcotry containing IDEs specific files.
+@file{ide/} directory containing IDEs specific files.
 @item
-doc/ direcotry containing documentation files (we also included man page file here)
+@file{doc/} directory containing documentation files (we also included man page file here)
 @item
-res/ directory containing resources needed on runtime.
+@file{res/} directory containing resources needed on runtime (icons, fonts,...).
 @item
-ext/ direcotry containing third party files needed on build process on some platform (compiled libraries for windows, iOS and emscripten, build files for android based on SDL2 android project files).
+@file{ext/} direcotry containing third party files needed on build process on some platform (compiled libraries for MS Windows, iOS and emscripten, build files for android based on SDL2 android project files).
 @item
-CMake/ directory containing cmake files.
+@file{CMake/} directory containing cmake files.
 @item
-configure.h.in file to easily change build time configuration options.
+@file{configure.h.in} file to easily change build time configuration options.
 @end itemize
 
 The generated linux build is also based on Linux filesystem hierarchy specification.
 @itemize @bullet
 @item
-bin/ direcotry containing the excutable binairies.
+@file{bin/} directory containing the excutable binairies.
 @item
-share/applications containing the desktop file
+@file{share/applications} containing the desktop file
 @item
-share/man/ containing the man page file.
+@file{share/man/} containing the man page file.
 @item
-share/icons containing the project icons on diferent sizes.
+@file{share/icons} containing the project icons on diferent sizes.
 @item
-share/info containing Info files.
+@file{share/info} containing Info files.
 @item
-share/fonts containing needed fonts
+@file{share/fonts} containing needed fonts
 @item
-share/locale/ containing the localization files.
+@file{share/locale/} containing the localization files.
 @item
-share/doc/mastermind direcotry containing extra documentation files
+@file{share/doc/mastermind} directory containing extra documentation files.
 @item
-share/bash-completion containing the bash completion file
+@file{share/bash-completion} containing the bash completion file.
 @item
-share/zsh/site-functions containing zsh completion script
+@file{share/zsh/site-functions} containing zsh completion script.
 @end itemize
 
+@cindex XDG Standard
 On Linux systems, runtime variable files path are choosen based on XDG standard.
-configure file direcotry: $XDG_CONFIG_HOME/mastermind/
-score and store files direcotry : $XDG_DATA_HOME/mastermind/
-When XDG based directories are not found or not accessible, we use the unix preferred way (~/.mastermind/ direcotry to store all files).
+@itemize @bullet
+@item
+Configure file direcotry: @file{$XDG_CONFIG_HOME/mastermind/}
+@item
+Score and store files direcotry: @file{$XDG_DATA_HOME/mastermind/}
+@end itemize
+When XDG based directories are not found or not accessible, we use the Unix preferred way (@file{~/.mastermind/} directory to store all files).
 
-
+@cindex Bash Completion
+@cindex Zsh Completion
 @section Bash and Zsh completions
 
 Shell completion is a very powerful feature on Unix systems. We wanted to support shell completion for the two main shell implementations on Unix systems.
 Bash completion provide all needed arguments and configuration options completion.
 Zsh completion system is more powerful than bash own completion system. We supported Zsh extra features to provide a more clean and better documentated completion.
 
-@section Code formating
+@cindex Code Formating
+@section Code Formating
 Code formating is a very important part to proide a cleaner and easy to read code.
-Many projects have its own code styling specifications. Most popular code styling standards are: Google, GNU, Visaul Studio and Linux standards.
-We prefered Linux code standards because it provide a very clean code on its huge code base.
+Many projects have their own code styling specifications. Most popular code styling standards are: Google, GNU, Visaul Studio and Linux standards.
+We prefered Linux code standards because it provides a very clean code on its huge code base.
+@cindex clang-format
 We used a LLVM clang-format formating tool to help fixing styles issues.

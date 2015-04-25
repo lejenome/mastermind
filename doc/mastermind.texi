@@ -16,6 +16,7 @@ Licence GPLv3
 @title Mastermind Manual
 @subtitle Mastermind developement process description
 @author Moez Bouhlel
+@author Firas Chaaben
 
 @page
 @vskip 0pt plus 1filll
@@ -46,19 +47,30 @@ presentation about Mastermind developement process.
 @node General Presentation
 @chapter Project Presentation
 
-@cindex chapter, first
-This is the first @anchor{x-chap}chapter.
-@cindex index entry, another
+This project is open source Mastermind Game implementation on C. It's customizable with mutli-platform support.
+Currently, support for changing number of holes, colors and guesses is supported. Support for enabling/disabling remise is available.
+Mutli use support is limited to changing session account name and saving each score with its account name.
+Top 20 scores are saved. Support for saving and restoring the session is included.
 
-Numbered list.
-@xref{x-chap, the Cahpter}.
+Booth command line interface and graphical user infterface are implemented.
+Various configuration options are implemnted on booth build time and runtime.
+Build time options are available on @file{config.h.in} and @file{CMakeList.txt} files.
+Runtime options are descripted on @file{doc/config.md} file and man:mastermincli(1).
+The command line interface support internationalization, booth short and long options and internal command auto-completion.
 
-@enumerate
+The graphical interface is based on SDL2.
+
+
+Multi platorm support is implemented as follow:
+
+@cindex Multi platform support
+@itemize @bullet
 @item
-first item
+CLI: Linux, Windows, Mac OS X
 @item
-second item
-@end enumerate
+GUI: Linux, Windows, Mac OS X, iOS, Android, Web
+@end itemize
+
 
 @include c-standards.texi
 @include third_party_libs.texi

@@ -2,40 +2,45 @@
 @chapter Third party libraries
 
 
-To improve software fonctionality and protablity, we use fow third party libraries on booth mastermind user interface backends implementations.
+To improve software fonctionality and protablity, we used third party libraries on booth mastermind user interface front-ends implementations.
 
 @section Command line interface
 
-Command line interface applications are very common on Unix systems. Most of cli applications use a common libraries (booth standards and third party libraries) to provide a minumal level of usability. We used the most common libraries.
+Command line interface applications are very common on Unix systems. Most of cli applications use a set of common libraries (booth standards and third party libraries) to provide a minumal level of usability. We made use of the most common libraries.
 
+@cindex Readline
+@subsection Readline
 
-@subsection readline
+Readline is part of the bash project. It provides a system independent powerful command line auto-completion system.
+We used Readline library to provide command completion on mastermindcli internel command line implementation.
+By using the Readline library, we got more extra features like bash based shortcuts (ctrl + w to remove laste word, ctrl + l to clean screen,...).
 
-Readline is part of bash project. It provide a system independent powerful command line completion system.
-We used Readline library to provide command completion on mastermindcli internel commands.
-By using Readline library, we got more extra features like bash based shortcuts (ctrl + w to remove laste word, ctrl + l to clean screen,...)
+@cindex Gettext
+@subsection Gettext
 
-@subsection gettext
+Gettext is the GNU implemetation of POSIX localization standard and it's available on all Unix systems. It provdes an easy solution to support internationalization.
+Gettext GNU implementation comes with a set of command line tools to extract strings from source files, generate/update translation files and compile them.
 
-Gettext is GNU implemetation of POSIX localization standard and it's available on all Unix system. It provde an easy solution to support internationalization.
-Gettext GNU impletation come with a set of command line tools to extract string from source, generate/update translation files and compile them.
-
-@subsection getopt
+@cindex Getopt
+@subsection Getopt
 
 Getopt Library is a POSIX standard to provide a common solution to implement command line based arguments.
-POSIX standard only support short options, we used GNU implementation to support long options too.
+POSIX standard only supports short options, we used GNU implementation to support long options too.
 
 @section Graphical user interface
 
+@cindex SDL2
 @subsection SDL2
 
-There is many third party GUI libraries with different goals and technologies.
+There are many third party GUI libraries with different goals and technologies:
 
+@cindex Widget Toolkits
 @subsubsection Widget Toolkits
 
-They are the common choose or desktop applcations. they came with a set of desktop-oriented widget (menu, buttons, text input,...)
-Mobile and Tablets based platform have their own implementations too.
-examples: GTK, QT, Win32, Cocoa
+They are the common choose for desktop applcations. They came with a set of desktop-oriented widgets (menu, buttons, text input,...).
+Mobile and Tablets based platforms have their own implementations too.
+
+Examples: GTK, QT, Win32, Cocoa
 
 Benefits:
 
@@ -57,6 +62,7 @@ platform dependent
 does not work well on mobile/tablet platforms
 @end itemize
 
+@cindex Game Engines
 @subsubsection Game Engnies
 
 Game engines reduce the need to write a lot of code and remove the need to use platform specific APIs.
@@ -87,13 +93,15 @@ long execution time
 less C, more higher level scripting languages (Lua, python, C#, ...)
 @end itemize
 
-@subsubsection Context/Window toolkits
+@cindex Context/Window Toolkits
+@subsubsection Context/Window Toolkits
 
 Context toolkits are a set of APIs to provide a drawing surface and drawing functions.
 Context/window toolkits provide a set of APIs to open windows and handle events too.
 Many third party libraries provide a 2D and 3D drawing APIs.
 
-OpenGl is the standard API for multi-platform 3D drawing. 3D contexts/window toolkits provide an OpenGl implementation with system integration (e.g: GLFW)
+@cindex OpenGL
+OpenGL is the standard API for multi-platform 3D drawing. 3D contexts/window toolkits provide an OpenGL implementation with system integration (e.g: GLFW)
 
 Benefits:
 
@@ -108,12 +116,13 @@ Disadvantages:
 @item
 3D is much more than we need or a simple game
 @item
-C + GLSL (OpenGl Shader Language:a scripting language for 3D drawing)
+C + GLSL (OpenGL Shader Language: a scripting language for 3D drawing)
 @end itemize
 
 Most common multi-platform 2D drawing APIs are SDL and Cairo.
 
-Cairo is a very powerful 2D library, it's used on many applications (firefox, gooogle chrome) and as a backend for many toolkits (GTK, PDF libraries,...).
+@cindex Cairo
+Cairo is a very powerful 2D library, it's used on many applications (Firefox, Google Chrome) and as a backend for many toolkits (GTK, PDF libraries,...).
 
 Benefits:
 
@@ -123,7 +132,7 @@ powerful 2D design API plus font support
 @item
 clean and stable API
 @item
-it has many backend: openGl, PNG, PDF, X11, ...
+it has many backend: OpenGL, PNG, PDF, X11, ...
 @item
 It may be included as C++17 standard API even it's written on C.
 @end itemize
@@ -135,7 +144,7 @@ Disadvantages:
 It's just a Context toolkit, it has neither event handling support nor window management support
 @end itemize
 
-SDL2 is a 2D context/window toolkit. It's the de facto standard on game developement on Unix systems. And it's use by many popular Game engines.
+SDL2 is a 2D context/window toolkit. It's the de facto standard on game developement on Unix systems. And it's used by many popular Game engines.
 
 Benefits:
 
@@ -152,8 +161,8 @@ Disadvantages:
 
 Well nothing for our simple use case.
 
-We choosed to use SDL2 for mastermind GUI backend.
+We choosed SDL2 as Mastermind GUI backend.
 
-@subsection gettext
+@subsection Gettext
 
 We used gettext library on GUI version too to support localization.

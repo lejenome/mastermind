@@ -1,71 +1,98 @@
 @node C Standards
 @chapter C Standards
 
-While writing the code, we used some C standards, mainly C89 and C99 standards.
+While writing the code, we used C standard API and syntax to easily support multi compilers and platforms and to simplify the code.
+Currently, mastermind code base compiles well on the five main compilers
+(Visual Studio C compiler, GCC, Clang, AppleClang, Intel Compiler) with at least six offical supported platforms.
 
-@enumerate
-@item
-enum
-@item
-struct
-@item
-union
-@item
-Table static avec index predefinit de chaque element
-@end enumerate
+@section Standard API
 
-Also, we used some standared C APIs.
+We made use of C89 and C99 standard API on first class with some use of POSIX standard APIs and fallback to MS Windows specific functions when no standard alternative is provided on Windows.
 
-C89/C99 APIs:
-@enumerate
-@item
-stdio.h (FILE, fopen, fclose, printf, fprintf, scanf, fscanf)
-@item
-time.h (time)
-@item
-stdlib.h (malloc, free, rand, srand, getenv, strtol)
-@item
-string.h (strcmp, strlen,...)
-@item
-errno.h (errno)
-@item
-stdin.h (uint8_t)
-@item
-assert.h (assert)
-@end enumerate
+@cindex C89/C99 APIs
+@subsection C89/C99 APIs
 
-POSIX APIs:
-@enumerate
+@itemize @bullet
 @item
-unistd.h (mkdir)
+stdio.h: fopen, fclose, printf, fprintf, scanf, fscanf, FILE, ...
 @item
-sys/stat.h (access)
+time.h: time
 @item
-sys/utsname.h (uname)
-@item
-string.h (strndup)
-@item
-stdlib.h (random, srandom)
-@end enumerate
+stdlib.h: malloc, free, rand, srand, ...
 
-WINDOWS APIs:
-@enumerate
+@itemize @minus
 @item
-windows.h (CreateDirectory)
-@end enumerate
+getenv: get environement variable
+@item
+strtol: convert string to long int
+@end itemize
 
-List of C types and syntax used:
-@enumerate
 @item
-struct: ensemble des variables avec relation
+string.h: strcmp, strlen, ...
 @item
-enum: ensemble de constants avec relation
+errno.h: errno (last system call error value)
 @item
-union: different type of variables only one to use
+stdin.h: uint8_t (force variable memory size to be 8 bits)
 @item
-#deffine: standalone constants
+assert.h: assert
+@end itemize
+
+@cindex POSIX APIs
+@subsection POSIX APIs
+
+@itemize @bullet
 @item
-macro: small deined functions
+unistd.h: mkdir (make directory with specified permission)
 @item
-goto <LABEL>: diviser la fonction a partis reutilisables
-@end enumerate
+sys/stat.h: access (check application access permission to specified path)
+@item
+sys/utsname.h:
+
+@itemize @minus
+@item
+uname: get system uname value
+@item
+struct utsname: system uname representation struct
+@end itemize
+
+@item
+string.h: strndup (deplicate string on new malloced memory with n char at most)
+@item
+stdlib.h: srandom, random (POSIX rand more secure rand alternative)
+@end itemize
+
+@cindex Windows APIs
+@subsection WINDOWS APIs
+
+@itemize @bullet
+@item
+windows.h: CreateDirectory (create direcotry)
+@end itemize
+
+@cindex Syntax and Types
+@section Syntax and Types
+
+@itemize @bullet
+@item
+enum: when defining several related constants.
+@item
+struct: when defining several related variables.
+@item
+union: when defining several related types and only one to use.
+@item
+#define
+
+@itemize @minus
+@item
+define a standalone constant
+@item
+define a macro (inlined function without call overhead)
+@item
+Include Guards to not include header file more than once
+@end itemize
+
+@item
+Conditionals (build time conditions to only include code needed on target platform or selected features)
+@item
+Bitwise operators (flags support to pass more than a state on same variable)
+@end itemize
