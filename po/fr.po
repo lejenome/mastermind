@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mastermind\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-18 16:47+0100\n"
+"POT-Creation-Date: 2015-04-25 05:01+0100\n"
 "PO-Revision-Date: 2015-03-04 22:58+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: ../src/cli.c:86
+#: ../src/cli.c:87
 #, c-format
 msgid ""
 "\n"
@@ -26,16 +26,16 @@ msgstr ""
 "\n"
 "Erreur: caractere invalide dans la commande '%c'\n"
 
-#: ../src/cli.c:47
+#: ../src/cli.c:48
 #, c-format
 msgid "  | Y%2d | A%2d | N%2d |\n"
 msgstr "  | Y%2d | A%2d | N%2d |\n"
 
-#: ../src/sdl.c:526
+#: ../src/sdl.c:538
 msgid ": Simple mastermind implemetation"
 msgstr ": implementation simple de mastermind"
 
-#: ../src/sdl.c:421
+#: ../src/sdl.c:432
 msgid "< back"
 msgstr "< retour"
 
@@ -83,7 +83,7 @@ msgstr ""
 msgid "Enter you guesse: (%d of [0..%d] nbre) > "
 msgstr "Donner votre essai: (%d nbre de [0..%d]) > "
 
-#: ../src/core.c:101
+#: ../src/core.c:107
 #, c-format
 msgid "Error: config option not supported: %s\n"
 msgstr "Configuration globale non supportee: %s\n"
@@ -103,7 +103,7 @@ msgstr "Configuration globale non supportee!!\n"
 msgid "Global configs:\n"
 msgstr "Configuration global:\n"
 
-#: ../src/sdl.c:525
+#: ../src/sdl.c:537
 msgid "Help"
 msgstr "Aide"
 
@@ -112,11 +112,11 @@ msgstr "Aide"
 msgid "Illigal char on you guesse!!\n"
 msgstr "Charactere invalide dans votre essai!!\n"
 
-#: ../src/sdl.c:644
+#: ../src/sdl.c:656
 msgid "Invalid Guess"
 msgstr "Essai invalid"
 
-#: ../src/cli-cmd.c:185 ../src/sdl.c:536
+#: ../src/cli-cmd.c:185 ../src/sdl.c:548
 #, c-format
 msgid "No score yet!\n"
 msgstr "Pas encore de score!\n"
@@ -131,7 +131,7 @@ msgstr "Ouvrir ancienne session\n"
 msgid "Saving session\n"
 msgstr "Enregistrement de session\n"
 
-#: ../src/sdl.c:545
+#: ../src/sdl.c:557
 msgid "Scores"
 msgstr "Scores"
 
@@ -149,7 +149,7 @@ msgstr "Configurations du session:\n"
 msgid "You Failed :("
 msgstr "Tu as perdu :("
 
-#: ../src/sdl.c:645
+#: ../src/sdl.c:657
 msgid "You Guess is invalid"
 msgstr "Votre essai est invalide"
 
@@ -172,11 +172,11 @@ msgstr "Ton score est: %ld\n"
 msgid "current account: %s\n"
 msgstr "compte courent: %s\n"
 
-#: ../src/sdl.c:443
+#: ../src/sdl.c:455
 msgid "play"
 msgstr "jouer"
 
-#: ../src/sdl.c:441
+#: ../src/sdl.c:453
 msgid "rest"
 msgstr "rejouer"
 

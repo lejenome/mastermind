@@ -36,13 +36,14 @@ presentation about Mastermind developement process.
 @end ifnottex
 
 @menu
-* First Chapter::		Getting started
-* Standards C utilisés::	Standards C
-* Les Bibliotheques externes::	Les Bibliotheques externes utlises on mastermind
-* Index::			index list
+* General Presentation::	Genaral presentation
+* C Standards::			Used C Standards
+* Third party libraries::	Third party libraries used on mastermind
+* Developement Tools::		Tools use on developement proccess
+* Index::			Index list
 @end menu
 
-@node First Chapter
+@node General Presentation
 @chapter Project Presentation
 
 @cindex chapter, first
@@ -61,6 +62,7 @@ second item
 
 @include c-standards.texi
 @include third_party_libs.texi
+@include dev_tools.texi
 
 @node Index
 @unnumbered Index

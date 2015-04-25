@@ -1,62 +1,159 @@
-@node Les Bibliotheques externes
-@chapter Les Bibliotheques externes
+@node Third party libraries
+@chapter Third party libraries
 
 
-Pour ameliorer les functions du mastermind et la portablilite du code, on a utlisé
-quelques Bibliotheques externes.
+To improve software fonctionality and protablity, we use fow third party libraries on booth mastermind user interface backends implementations.
 
-*** CLI:
--readline
--gettext
--getopt
-*** GUI:
--gettext
--SDL2
+@section Command line interface
+
+Command line interface applications are very common on Unix systems. Most of cli applications use a common libraries (booth standards and third party libraries) to provide a minumal level of usability. We used the most common libraries.
 
 
+@subsection readline
 
-** SDL:
-Il existe beaucoup du biblotheques externes avec diferents buts et technologies.
-Le processus de choisir de la biblotheque est:
-- eliminer tous les biblotheques commercials ou les bibliotheque dependent
-  d'une seule specifique platforms (cocoa pour Mac OSX, win32 pour Windows).
-- eliminter les bibliotheques de types widget toolkits (GTK, Qt):
-  + simple
-  + types de objets pre-definies
-  - beaucoup des options unnessacaires
-  - n'est pas bien compatibles avec les mobiles/tables (touchs, different
-    tailes)
-- elimnier les bibliotheques de types game engine:
-  + simple
-  + types objets graphic predefinits
-  + efects graphics tres deinits
-  + multi platform et bien integres avec les tables/mobiles
-  - des options unnessaicaires
-  - lents et temps de demarrage tres long pour une simple jeux
-  - moins code c et plus code de longuague plus hot niveau (lua, python,...)
-- on a preferer les bibliotheques de types context/window toolkits
-  + presque juste que nous on besoin
-  + fournirs des fonctions independents du platforms
+Readline is part of bash project. It provide a system independent powerful command line completion system.
+We used Readline library to provide command completion on mastermindcli internel commands.
+By using Readline library, we got more extra features like bash based shortcuts (ctrl + w to remove laste word, ctrl + l to clean screen,...)
 
-il existe de types de context/window tootkits:
-- 3D (openGL based toolkits: GLFW)
-  + toute la puissance de 3D
-  - c'est une simple jeux et le 3D est beaucoup plus pour un simple jeux
-  - c + GLSL (language de scripting)
-- 2D (les meilleurs bibliotheques 2D on c: SDL, cairo)
-- SDL2
-  + support presque touts les platformes ( windows, linux, mac, iOS, Android, web, blackberry, BSDs,....)
-  + est tres extensibles (net, font, input, music,...)
-  + le standards des jeux on UNIX systems
-  + c'est le base des beaucoup games engines
-- Cairo
-  + api de design 2D tres avances et simples
-  + API stable et facile
-  + il y a un duscusion de la standariser pour C++17 meme elle est en c
-  + elle a un grande nombre de backends (openGl, PNG, PDF,...)
-  + la base de beaucoup de Bibliothuqes et application (firefox, chrome, GTK+, PDF readers,...)
-  - c'est une juste api de designs 2D (pas management de evenements or fenetres)
+@subsection gettext
 
-on peut utliser et integrer cairo (pour 2D drawing), openGl (pour 3D effets), SDL (pour events and windowins,...) on meme application pour avoir la meilleur experience possible.
-Mais, pour une simple application, on un choisir SDL2, qui integrate tous nous besion.
+Gettext is GNU implemetation of POSIX localization standard and it's available on all Unix system. It provde an easy solution to support internationalization.
+Gettext GNU impletation come with a set of command line tools to extract string from source, generate/update translation files and compile them.
 
+@subsection getopt
+
+Getopt Library is a POSIX standard to provide a common solution to implement command line based arguments.
+POSIX standard only support short options, we used GNU implementation to support long options too.
+
+@section Graphical user interface
+
+@subsection SDL2
+
+There is many third party GUI libraries with different goals and technologies.
+
+@subsubsection Widget Toolkits
+
+They are the common choose or desktop applcations. they came with a set of desktop-oriented widget (menu, buttons, text input,...)
+Mobile and Tablets based platform have their own implementations too.
+examples: GTK, QT, Win32, Cocoa
+
+Benefits:
+
+@itemize @bullet
+@item
+simple
+@item
+many predefined widget
+@end itemize
+
+Disadvantages:
+
+@itemize @bullet
+@item
+lot of unneeded features
+@item
+platform dependent
+@item
+does not work well on mobile/tablet platforms
+@end itemize
+
+@subsubsection Game Engnies
+
+Game engines reduce the need to write a lot of code and remove the need to use platform specific APIs.
+
+Benefits:
+
+@itemize @bullet
+@item
+a lot simpler
+@item
+predefined graphical object
+@item
+a lot of visual effects
+@item
+multi-platform support
+@end itemize
+
+Disadvantages:
+
+@itemize @bullet
+@item
+even more unneeded features
+@item
+very slow
+@item
+long execution time
+@item
+less C, more higher level scripting languages (Lua, python, C#, ...)
+@end itemize
+
+@subsubsection Context/Window toolkits
+
+Context toolkits are a set of APIs to provide a drawing surface and drawing functions.
+Context/window toolkits provide a set of APIs to open windows and handle events too.
+Many third party libraries provide a 2D and 3D drawing APIs.
+
+OpenGl is the standard API for multi-platform 3D drawing. 3D contexts/window toolkits provide an OpenGl implementation with system integration (e.g: GLFW)
+
+Benefits:
+
+@itemize @bullet
+@item
+all the power of 3D
+@end itemize
+
+Disadvantages:
+
+@itemize @bullet
+@item
+3D is much more than we need or a simple game
+@item
+C + GLSL (OpenGl Shader Language:a scripting language for 3D drawing)
+@end itemize
+
+Most common multi-platform 2D drawing APIs are SDL and Cairo.
+
+Cairo is a very powerful 2D library, it's used on many applications (firefox, gooogle chrome) and as a backend for many toolkits (GTK, PDF libraries,...).
+
+Benefits:
+
+@itemize @bullet
+@item
+powerful 2D design API plus font support
+@item
+clean and stable API
+@item
+it has many backend: openGl, PNG, PDF, X11, ...
+@item
+It may be included as C++17 standard API even it's written on C.
+@end itemize
+
+Disadvantages:
+
+@itemize @bullet
+@item
+It's just a Context toolkit, it has neither event handling support nor window management support
+@end itemize
+
+SDL2 is a 2D context/window toolkit. It's the de facto standard on game developement on Unix systems. And it's use by many popular Game engines.
+
+Benefits:
+
+@itemize @bullet
+@item
+Support almost every platform (win32, Linuw, Mac, iOS, Android, Blackberry, Web, BSDs, ...)
+@item
+has many extensions to provide different functions (net, font, music, ...)
+@item
+support tablets/mobile platform out the box
+@end itemize
+
+Disadvantages:
+
+Well nothing for our simple use case.
+
+We choosed to use SDL2 for mastermind GUI backend.
+
+@subsection gettext
+
+We used gettext library on GUI version too to support localization.
