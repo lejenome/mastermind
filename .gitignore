@@ -61,7 +61,3 @@ _CPack_Packages
 *.i*86
 *.x86_64
 *.hex
-
-!/win32/**
-!/msvc/**
-!/mingw/**
