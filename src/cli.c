@@ -229,7 +229,6 @@ int parseInput(uint8_t *T)
 	while (i < session->config->holes && input[j] != '\0') {
 		if (input[j] >= '0' && input[j] <= '9') {
 			T[i++] = input[j] - '0';
-			printf("+ %d\n", T[i - 1]);
 		} else if (strchr(IFS, input[j]) == NULL) {
 			printf(_("Illigal char on you guesse!!\n"));
 			goto parse_err;
