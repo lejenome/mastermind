@@ -4,16 +4,16 @@
 #include "util.h"
 #include "core.h"
 #include "cli-cmd.h"
-#ifndef DISABLE_GETOPT
+#ifdef MM_GETOPT
 #include <getopt.h>
-#endif
-/*!
- * \file cli-cmd.c
- * \brief commands unctions handlers
- */
+#endif // MM_GETOPT
+       /*!
+	* \file cli-cmd.c
+	* \brief commands unctions handlers
+	*/
 
 uint8_t mm_cmd_mode = MM_CMD_MODE_OPT;
-#ifndef DISABLE_GETOPT
+#ifdef MM_GETOPT
 /*! parse and exec command line arguments
  * @param argc	main function argc param
  * @param argv	main function argv param
@@ -73,7 +73,7 @@ int execArgs(int argc, char *argv[], cmd_t *cmds, size_t len,
 	free(ops);
 	return ret;
 }
-#endif // DISABLE_GETOPT
+#endif // MM_GETOPT
 int cmd_quit(const char argc, const char **argv, mm_session *session)
 {
 	mm_session_exit(session);

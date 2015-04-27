@@ -672,11 +672,11 @@ void iter()
 }
 int main(int argc, char *argv[])
 {
-#ifndef DISABLE_LOCALE
+#ifdef MM_LOCALE
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
-#endif // DISABLE_LOCALE
+#endif // MM_LOCALE
 #ifdef DEBUG
 #ifdef POSIX
 	char pwd[2000];

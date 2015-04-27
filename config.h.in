@@ -36,6 +36,14 @@
 
 #define IFS " \t\n," ///< Internal Field Separator
 
+// build features/options
+
+#cmakedefine MM_READLINE
+#cmakedefine MM_GETOPT
+#cmakedefine MM_LOCALE
+
+// system direcotries settings
+
 #ifdef __ANDROID__
 #define FONTSDIR "fonts/"
 #define ICONSDIR "icons/"

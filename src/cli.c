@@ -3,14 +3,14 @@
 #include <string.h>
 #include <stdint.h>
 
-#ifndef DISABLE_READLINE
-#include <readline/readline.h>
-#include <readline/history.h>
-#endif // DISABLE_READLINE
-
 #include "util.h"
 #include "cli-cmd.h"
 #include "core.h"
+
+#ifdef MM_READLINE
+#include <readline/readline.h>
+#include <readline/history.h>
+#endif // MM_READLINE
 
 /*!
  * \file cli.c
@@ -61,7 +61,7 @@ void printPanel()
 	printf("  +-----+-----+-----+");
 	putchar('\n');
 }
-#ifndef DISABLE_READLINE
+#ifdef MM_READLINE
 /*! Tab button click handler
  * @param txt	current buffer
  * @param start	buffer start position
@@ -172,7 +172,7 @@ no_more:
 	free(args);
 	return T;
 }
-#endif // DISABLE_READLINE
+#endif // MM_READLINE
 
 /*! get guessed combination and handle input buffer commands
  * @return
@@ -190,7 +190,7 @@ int parseInput(uint8_t *T)
 	cmd_t *cmd;
 	snprintf(prmpt, 200, _("Enter you guesse: (%d of [0..%d] nbre) > "),
 		 session->config->holes, session->config->colors - 1);
-#ifndef DISABLE_READLINE
+#ifdef MM_READLINE
 	rl_attempted_completion_function = completeInput;
 	do {
 		input = readline(prmpt);
@@ -199,7 +199,7 @@ int parseInput(uint8_t *T)
 	printf("%s", prmpt);
 	input = (char *)malloc(sizeof(char) * 4096);
 	fgets(input, 4095, stdin);
-#endif // DISABLE_READLINE
+#endif // MM_READLINE
 	args = parseBuf(input, &argc);
 	if (argc == 0)
 		goto input_err;
@@ -211,9 +211,9 @@ int parseInput(uint8_t *T)
 			cmd++;
 		if (cmd < cmds + LEN(cmds)) {
 			ret = cmd->e(argc, (const char **)args, session);
-#ifndef DISABLE_READLINE
+#ifdef MM_READLINE
 			add_history(strdup(input));
-#endif // DISABLE_READLINE
+#endif // MM_READLINE
 			if (ret & MM_CMD_NEW_SESSION)
 				session = mm_session_new();
 			ret = (ret & MM_CMD_REDESIGN) ? 2 : 1;
@@ -236,11 +236,11 @@ int parseInput(uint8_t *T)
 		}
 		j++;
 	}
-#ifndef DISABLE_READLINE
+#ifdef MM_READLINE
 	if (T)
 		add_history(input);
 	else
-#endif // DISABLE_READLINE
+#endif // MM_READLINE
 		free(input);
 	while (argc--)
 		free(args[argc]);
@@ -259,17 +259,17 @@ int main(int argc, char *argv[])
 {
 	uint8_t *T = NULL, c;
 	unsigned ret;
-#ifndef DISABLE_LOCALE
+#ifdef MM_LOCALE
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
-#endif // DISABLE_LOCALE
+#endif // MM_LOCALE
 	session = mm_session_restore();
 	if (session == NULL)
 		session = mm_session_new();
 	else
 		printf(_("Restoring old session\n"));
-#ifndef DISABLE_GETOPT
+#ifdef MM_GETOPT
 	ret = execArgs(argc, argv, cmds, LEN(cmds), session);
 	if (ret & MM_CMD_ERROR)
 		exit(EXIT_FAILURE);
@@ -277,7 +277,7 @@ int main(int argc, char *argv[])
 		goto quit;
 	if (ret & MM_CMD_NEW_SESSION)
 		session = mm_session_new();
-#endif // DISABLE_GETOPT
+#endif // MM_GETOPT
 	mm_cmd_mode = MM_CMD_MODE_CLI;
 	do {
 		printf(_("Current Config:\n\tguesses: %d\n\tcolors: "
