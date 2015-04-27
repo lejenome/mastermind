@@ -25,8 +25,8 @@ Supported platforms:
 - [Emscripten](#emscripten)
 
 Documentation and manual:
-- [Generate Docs](#generate_docs)
-- [Generate Manual](#generate_manual)
+- [Generate Docs](#generate-docs)
+- [Generate Manual](#generate-manual)
 
 LINUX
 ---

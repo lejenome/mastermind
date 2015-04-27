@@ -22,7 +22,7 @@
 // get static array size
 #define LEN(a) (sizeof(a) / sizeof(a[0]))
 
-char **parseBuf(char*, unsigned *);
+char **parseBuf(char *, unsigned *);
 
 #ifndef POSIX
 char *strndup(const char *buf, size_t len);
