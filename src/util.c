@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "util.h"
 
 /*!
@@ -21,3 +22,61 @@ char *strndup(const char *buf, size_t len)
 	return s;
 }
 #endif
+/*! parse buffer and get arguments from it
+ * @param buf	buffer to parse
+ * @param argc	poiter to where to store arguments count
+ * @return 	arguments array or NULL if buf is invalid
+ */
+char **parseBuf(char *buf, unsigned *argc)
+{
+	char *start = NULL;
+	char **args, *c;
+	unsigned i = 0;
+	c = buf;
+	// get argc
+	while (*c != '\0') {
+		if (*c == ' ' || *c == '\t' || *c == ',' || *c == '\n') {
+			if (start) {
+				i++;
+				start = NULL;
+			}
+		} else if ((*c >= '0' && *c <= '9') ||
+			   (*c >= 'a' && *c <= 'z') || *c == '_') {
+			if (start == NULL)
+				start = c;
+		} else {
+			printf(_("\nError: illegal charater on the command "
+				 "'%c'\n"),
+			       *c);
+			i = 0;
+			start = NULL;
+			break;
+		}
+		c++;
+	}
+	if (start)
+		i++;
+	*argc = i;
+	// get args
+	if (*argc == 0)
+		return (char **)NULL;
+	args = (char **)malloc(sizeof(char *) * (*argc));
+	i = 0;
+	start = NULL;
+	while (*buf != '\0') {
+		if (*buf == ' ' || *buf == '\t' || *buf == ',' ||
+		    *buf == '\n') {
+			if (start) {
+				args[i++] = strndup(start, buf - start);
+				start = NULL;
+			}
+		} else {
+			if (start == NULL)
+				start = buf;
+		}
+		buf++;
+	}
+	if (start)
+		args[i++] = strndup(start, buf - start);
+	return args;
+}
