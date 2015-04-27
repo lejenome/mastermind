@@ -28,6 +28,9 @@ We provide booth type of documentation:
   [PDF](http://lejenome.me/tests/MasterMind.pdf)
 - Project Manual: [HTML](http://lejenome.me/tests/manual-mastermind), [PDF](http://lejenome.me/tests/manual-mastermind.pdf), [TXT](http://lejenome.me/tests/manual-mastermind.txt)
 
+Instructions to generate an up to date version of booth documentation and manual
+are available on [INSTALL.md](INSTALL.md) file.
+
 # License
 
 Copyright (c) Dev2Space team and contributors. license: GPLv3.
