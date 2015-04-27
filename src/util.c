@@ -35,7 +35,7 @@ char **parseBuf(char *buf, unsigned *argc)
 	c = buf;
 	// get argc
 	while (*c != '\0') {
-		if (*c == ' ' || *c == '\t' || *c == ',' || *c == '\n') {
+		if (strchr(IFS, *c)) {
 			if (start) {
 				i++;
 				start = NULL;
@@ -64,8 +64,7 @@ char **parseBuf(char *buf, unsigned *argc)
 	i = 0;
 	start = NULL;
 	while (*buf != '\0') {
-		if (*buf == ' ' || *buf == '\t' || *buf == ',' ||
-		    *buf == '\n') {
+		if (strchr(IFS, *buf)) {
 			if (start) {
 				args[i++] = strndup(start, buf - start);
 				start = NULL;

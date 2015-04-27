@@ -95,9 +95,7 @@ static char **completeInput(const char *txt, int start, int end)
 			if (rl_line_buffer[i] >= '0' &&
 			    rl_line_buffer[i] < '0' + session->config->colors)
 				j++;
-			else if (rl_line_buffer[i] != ' ' &&
-				 rl_line_buffer[i] != '\t' &&
-				 rl_line_buffer[i] != ',')
+			else if (strchr(IFS, rl_line_buffer[i]) == NULL)
 				goto no_more;
 		if (j >= session->config->holes)
 			goto no_more;
@@ -188,8 +186,7 @@ int parseInput(uint8_t *T)
 {
 	unsigned ret = -1;
 	char prmpt[200], *input, **args;
-	unsigned i = 0, j = 0, k, argc;
-	uint8_t c;
+	unsigned i, j, argc;
 	cmd_t *cmd;
 	snprintf(prmpt, 200, _("Enter you guesse: (%d of [0..%d] nbre) > "),
 		 session->config->holes, session->config->colors - 1);
@@ -228,16 +225,16 @@ int parseInput(uint8_t *T)
 	}
 	i = 0;
 	j = 0;
-	k = 0;
-	while ((i < session->config->holes) &&
-	       (args[j][k] != '\0' || (++j < argc && !(k = 0)))) {
-		c = args[j][k++];
-		if (c >= '0' && c <= '9') {
-			T[i++] = c - '0';
-		} else {
+	// get combination from input buffer
+	while (i < session->config->holes && input[j] != '\0') {
+		if (input[j] >= '0' && input[j] <= '9') {
+			T[i++] = input[j] - '0';
+			printf("+ %d\n", T[i - 1]);
+		} else if (strchr(IFS, input[j]) == NULL) {
 			printf(_("Illigal char on you guesse!!\n"));
 			goto parse_err;
 		}
+		j++;
 	}
 #ifndef DISABLE_READLINE
 	if (T)
@@ -295,7 +292,7 @@ int main(int argc, char *argv[])
 			       (ret == 0 && mm_play(session, T) != 0)) {
 				if (ret == 0) {
 					printf(
-					    _("You Guesse is not valid!!\n"));
+					    _("Your Guess is not valid!!\n"));
 				}
 			}
 			if (ret != 0)
