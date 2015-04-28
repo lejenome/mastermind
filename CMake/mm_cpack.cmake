@@ -64,7 +64,7 @@ else()
 endif()
 
 # DEB & RPM
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libncurses5, libsdl2-2.0") # libsdl2-dev libncurses5-dev # FIXME
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libncurses5, libsdl2-2.0-0") # libsdl2-dev libncurses5-dev # FIXME
 set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
 set(CPACK_RPM_PACKAGE_GROUP "Amusements/Games")
 set(CPACK_RPM_PACKAGE_REQUIRES "libncurses5, SDL2") # FIXME
