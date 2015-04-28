@@ -18,17 +18,6 @@
  */
 
 mm_session *session;
-// TODO: add .h element to show command help msg
-cmd_t cmds[] = {
-    {.n = "quit", .e = cmd_quit, .s = 0},
-    {.n = "set", .e = cmd_set, .s = 's', .a = 2},
-    {.n = "restart", .e = cmd_restart, .s = 0},
-    {.n = "savegame", .e = cmd_savegame, .s = 0},
-    {.n = "score", .e = cmd_score, .s = 'c', .a = 0},
-    {.n = "help", .e = cmd_help, .s = 'h', .a = 1},
-    {.n = "account", .e = cmd_account, .s = 'a', .a = 1},
-    {.n = "version", .e = cmd_version, .s = 'v', .a = 0},
-}; // TODO: "connect", "server", "disconnect"
 /// draw session panel
 void printPanel()
 {
@@ -77,13 +66,15 @@ static char **completeInput(const char *txt, int start, int end)
 	char **args;	 // input buffer arguments
 	cmd_t *cmd, *cmpltCmd = NULL;
 	mm_conf_t *conf, *cmpltCnf = NULL;
+	// get cmds array length (without counting NULL element)
+	for(i=0; cmds[i].e != NULL; i++) {};
 	// array of completion strings
 	char **T = (char **)malloc(sizeof(char *) *
-				   (LEN(cmds) + session->config->colors + 2));
+				   (i + session->config->colors + 2));
 	T[l++] = strdup("");
 	args = parseBuf(rl_line_buffer, &argc);
 	if (argc == 0) // if not args on buffer, add all commands to T
-		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++, l++)
+		for (cmd = cmds; cmd->n != NULL; cmd++, l++)
 			T[l] = strdup(cmd->n);
 	// if no args on buffer or first arg first char is number, add all
 	// possible numbers
@@ -108,7 +99,7 @@ static char **completeInput(const char *txt, int start, int end)
 	// if only one arg is in the input buffer and it's a command
 	if (argc == 1 && args[0][0] >= 'a' && args[0][0] <= 'z') {
 		j = l;
-		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++) {
+		for (cmd = cmds; cmd->n != NULL; cmd++) {
 			if (strstr(cmd->n, args[0]) == cmd->n) {
 				if (strcmp(cmd->n, args[0]) == 0)
 					cmpltCmd = cmd;
@@ -121,18 +112,19 @@ static char **completeInput(const char *txt, int start, int end)
 	}
 	if (cmpltCmd && strcmp(cmpltCmd->n, "set") == 0) {
 		for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++, l++)
-			T[l] = strdup(conf->str.name);
+			T[l] = strdup(conf->common.name);
 	}
 	if (cmpltCmd && strcmp(cmpltCmd->n, "account") == 0)
 		output = strdup(session->account);
 	if (argc == 2 && strcmp(args[0], "set") == 0) {
 		j = l;
 		for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++) {
-			if (strstr(conf->str.name, args[1]) == conf->str.name) {
-				if (strcmp(conf->str.name, args[1]) == 0)
+			if (strstr(conf->common.name, args[1]) ==
+			    conf->common.name) {
+				if (strcmp(conf->common.name, args[1]) == 0)
 					cmpltCnf = conf;
 				else
-					T[l++] = strdup(conf->str.name);
+					T[l++] = strdup(conf->common.name);
 			}
 		}
 		if (l == j + 1)
@@ -206,10 +198,10 @@ int parseInput(uint8_t *T)
 	if (args[0][0] >= 'a' && args[0][0] <= 'z') {
 		// find first command matching the first argument, and excute it
 		cmd = cmds;
-		while (cmd < cmds + LEN(cmds) &&
+		while (cmd->n != NULL &&
 		       strstr(cmd->n, args[0]) != cmd->n)
 			cmd++;
-		if (cmd < cmds + LEN(cmds)) {
+		if (cmd->n != NULL) {
 			ret = cmd->e(argc, (const char **)args, session);
 #ifdef MM_READLINE
 			add_history(strdup(input));
@@ -269,7 +261,7 @@ int main(int argc, char *argv[])
 	else
 		printf(_("Restoring old session\n"));
 #ifdef MM_GETOPT
-	ret = execArgs(argc, argv, cmds, LEN(cmds), session);
+	ret = execArgs(argc, argv, session);
 	if (ret & MM_CMD_ERROR)
 		exit(EXIT_FAILURE);
 	else if (ret & MM_CMD_OPT_EXIT)

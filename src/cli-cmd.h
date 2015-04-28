@@ -29,8 +29,10 @@ typedef struct {
 		 mm_session *); ///< function to excute
 	char s;			///< short arg name else 0
 	char *l;		///< long arg name or NULL
+	char *h;		///< command help message
 	uint8_t a;		///< nbre of max options args accpeted
 } cmd_t;
+cmd_t cmds[];
 int cmd_quit(const char, const char **, mm_session *);
 int cmd_savegame(const char, const char **, mm_session *);
 int cmd_set(const char, const char **, mm_session *);
@@ -40,6 +42,6 @@ int cmd_help(const char, const char **, mm_session *);
 int cmd_account(const char, const char **, mm_session *);
 int cmd_version(const char, const char **, mm_session *);
 #ifdef MM_GETOPT
-int execArgs(int argc, char *argv[], cmd_t *cmds, size_t len, mm_session *);
+int execArgs(int argc, char *argv[], mm_session *);
 #endif // MM_GETOPT
 #endif // __MM_CLI_CMD_H

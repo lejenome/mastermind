@@ -64,7 +64,7 @@ else()
 endif()
 
 # DEB & RPM
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libncurses5, libsdl2-2.0") # libsdl2-dev libncurses5-dev # FIXME
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libncurses5, libsdl2-2.0-0") # libsdl2-dev libncurses5-dev # FIXME
 set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
 set(CPACK_RPM_PACKAGE_GROUP "Amusements/Games")
 set(CPACK_RPM_PACKAGE_REQUIRES "libncurses5, SDL2") # FIXME
@@ -80,7 +80,7 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 	install(FILES doc/mastermindcli.1 DESTINATION share/man/man1/)
 	install(FILES doc/config.md DESTINATION share/doc/mastermind/)
 	install(FILES LICENSE DESTINATION share/licenses)
-	install(FILES res/completion/mastermindcli.zsh DESTINATION share/zsh/site-functions/ RENAME _mastermindcli) #PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE)
+	install(FILES res/completion/mastermindcli.zsh DESTINATION share/zsh/functions/Completion/Unix/ RENAME _mastermindcli) #PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE)
 	install(FILES res/completion/mastermindcli.bash DESTINATION share/bash-completion/completions/ RENAME mastermindcli)
 else("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 	install(FILES res/icons/logo.png DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/ RENAME mastermind.png)

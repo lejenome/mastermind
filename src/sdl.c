@@ -62,6 +62,7 @@ unsigned curTab = TAB_GAME;	    ///< Current tab being drawed
 void init_sdl()
 {
 	SDL_Surface *icon;
+	int H, W;
 	// init SDL subsystems
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
@@ -86,8 +87,12 @@ void init_sdl()
 					 TTF_GetError(), NULL);
 		exit(EXIT_FAILURE);
 	}
-	font = TTF_OpenFont(FONTSDIR "ProFont_r400-29.pcf", 28);
-	icons = TTF_OpenFont(FONTSDIR "fontawesome-webfont.ttf", 31);
+	SDL_GetWindowSize(win, &W, &H);
+	W /= 11; // get width of a button, and insure font width is less than it
+	font =
+	    TTF_OpenFont(FONTSDIR "ProFont_r400-29.pcf", (W > 28 ? 28 : W - 4));
+	icons =
+	    TTF_OpenFont(FONTSDIR "fontawesome-webfont.ttf", (W > 31 ? 31 : W));
 	if (font == NULL || icons == NULL) {
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
 					 "Failed to load font", TTF_GetError(),
@@ -129,7 +134,7 @@ void clean()
  */
 unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 {
-	SDL_Texture *tex;
+	SDL_Texture *tex; 
 	SDL_Rect rect;
 	SDL_Color default_color = (SDL_Color)fg_color;
 	// create surface from text and font
@@ -166,7 +171,7 @@ unsigned sdl_print(char *s, int x, int y, SDL_Color *color, int align)
 	}
 	// copy texture to the renderer in the rigth position
 	SDL_RenderCopyEx(rend, tex, NULL, &rect, 0, 0, 0);
-	SDL_FreeSurface(surf);
+	SDL_FreeSurface(surf); 
 	SDL_DestroyTexture(tex);
 	return rect.w;
 }
@@ -397,7 +402,7 @@ void redraw_settings()
 	mm_conf_t *conf;
 	SDL_Table button;
 	for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++) {
-		sdl_print_left(conf->str.name, x, y, NULL);
+		sdl_print_left(conf->common.name, x, y, NULL);
 		switch (conf->type) {
 		case MM_CONF_BOOL:
 			sdl_print_icon((conf->bool.val == 0 ? 0xF204 : 0xF205),

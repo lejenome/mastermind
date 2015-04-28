@@ -100,7 +100,7 @@ void mm_config_load()
 			// search configuration option on mm_confs with same
 			// name as n (<name>)
 			while (conf < mm_confs + LEN(mm_confs) &&
-			       strcmp(n, conf->str.name) != 0)
+			       strcmp(n, conf->common.name) != 0)
 				conf++;
 			if (conf == mm_confs + LEN(mm_confs)) {
 #ifdef DEBUG
@@ -198,7 +198,7 @@ unsigned mm_config_set(const char *name, const char *value)
 	char *t;
 	mm_conf_t *conf = mm_confs;
 	while (conf < mm_confs + LEN(mm_confs) &&
-	       strcmp(conf->str.name, name) != 0)
+	       strcmp(conf->common.name, name) != 0)
 		conf++;
 	if (conf == mm_confs + LEN(mm_confs))
 		return 1;
