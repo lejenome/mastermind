@@ -121,18 +121,19 @@ static char **completeInput(const char *txt, int start, int end)
 	}
 	if (cmpltCmd && strcmp(cmpltCmd->n, "set") == 0) {
 		for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++, l++)
-			T[l] = strdup(conf->str.name);
+			T[l] = strdup(conf->common.name);
 	}
 	if (cmpltCmd && strcmp(cmpltCmd->n, "account") == 0)
 		output = strdup(session->account);
 	if (argc == 2 && strcmp(args[0], "set") == 0) {
 		j = l;
 		for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++) {
-			if (strstr(conf->str.name, args[1]) == conf->str.name) {
-				if (strcmp(conf->str.name, args[1]) == 0)
+			if (strstr(conf->common.name, args[1]) ==
+			    conf->common.name) {
+				if (strcmp(conf->common.name, args[1]) == 0)
 					cmpltCnf = conf;
 				else
-					T[l++] = strdup(conf->str.name);
+					T[l++] = strdup(conf->common.name);
 			}
 		}
 		if (l == j + 1)

@@ -129,7 +129,7 @@ int cmd_set(const char argc, const char **argv, mm_session *session)
 	case 2:
 		conf = mm_confs;
 		while (conf < mm_confs + MM_POS_LEN &&
-		       strcmp(conf->str.name, argv[1]) != 0)
+		       strcmp(conf->common.name, argv[1]) != 0)
 			conf++;
 		if (conf < mm_confs + MM_POS_LEN)
 			switch (conf->type) {
