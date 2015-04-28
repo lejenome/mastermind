@@ -102,9 +102,9 @@ typedef struct {
 typedef union {
 	unsigned type; ///< configuration type, share with all configurations
 	mm_conf_common_t common; ///< common configuration data
-	mm_conf_str_t str;   ///< string configuration data
-	mm_conf_bool_t bool; ///< boolean configration data
-	mm_conf_int_t nbre;  ///< integer configuration data
+	mm_conf_str_t str;       ///< string configuration data
+	mm_conf_bool_t bool;     ///< boolean configration data
+	mm_conf_int_t nbre;      ///< integer configuration data
 } mm_conf_t;
 
 /// config options indexes on mm_confs

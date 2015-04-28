@@ -67,10 +67,11 @@ static char **completeInput(const char *txt, int start, int end)
 	cmd_t *cmd, *cmpltCmd = NULL;
 	mm_conf_t *conf, *cmpltCnf = NULL;
 	// get cmds array length (without counting NULL element)
-	for(i=0; cmds[i].e != NULL; i++) {};
+	for (i = 0; cmds[i].e != NULL; i++) {
+	};
 	// array of completion strings
-	char **T = (char **)malloc(sizeof(char *) *
-				   (i + session->config->colors + 2));
+	char **T =
+	    (char **)malloc(sizeof(char *) * (i + session->config->colors + 2));
 	T[l++] = strdup("");
 	args = parseBuf(rl_line_buffer, &argc);
 	if (argc == 0) // if not args on buffer, add all commands to T
@@ -198,8 +199,7 @@ int parseInput(uint8_t *T)
 	if (args[0][0] >= 'a' && args[0][0] <= 'z') {
 		// find first command matching the first argument, and excute it
 		cmd = cmds;
-		while (cmd->n != NULL &&
-		       strstr(cmd->n, args[0]) != cmd->n)
+		while (cmd->n != NULL && strstr(cmd->n, args[0]) != cmd->n)
 			cmd++;
 		if (cmd->n != NULL) {
 			ret = cmd->e(argc, (const char **)args, session);

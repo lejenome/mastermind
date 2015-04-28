@@ -187,8 +187,8 @@ int cmd_help(const char argc, const char **argv, mm_session *session)
 		 "RTFM: "
 		 "http://en.wikipedia.org/wiki/"
 		 "Mastermind_%%28board_game%%29#Gameplay_and_rules\n"));
-	for(cmd = cmds; cmd->e != NULL; cmd++) {
-		if(mm_cmd_mode == MM_CMD_MODE_CLI)
+	for (cmd = cmds; cmd->e != NULL; cmd++) {
+		if (mm_cmd_mode == MM_CMD_MODE_CLI)
 			printf("%s\t-\t%s\n", cmd->n, cmd->h);
 		else if (mm_cmd_mode == MM_CMD_MODE_OPT && cmd->s)
 			printf("\t-%c, --%s\t%s\n", cmd->s, cmd->n, cmd->h);
