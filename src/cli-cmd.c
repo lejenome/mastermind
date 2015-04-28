@@ -13,6 +13,18 @@
 	*/
 
 uint8_t mm_cmd_mode = MM_CMD_MODE_OPT;
+cmd_t cmds[] = {
+    {.n = "quit", .e = cmd_quit, .s = 0, .h = "quit game"},
+    {.n = "set", .e = cmd_set, .s = 's', .a = 2, .h = "show/change options"},
+    {.n = "restart", .e = cmd_restart, .s = 0, .h = "start new session"},
+    {.n = "savegame", .e = cmd_savegame, .s = 0, .h = "save current session"},
+    {.n = "score", .e = cmd_score, .s = 'c', .a = 0, .h = "show top scores"},
+    {.n = "help", .e = cmd_help, .s = 'h', .a = 1, .h = "show help message"},
+    {.n = "account", .e = cmd_account, .s = 'a', .a = 1, .h = "change account"},
+    {.n = "version", .e = cmd_version, .s = 'v', .a = 0, .h = "print version"},
+    {.n = NULL},
+}; // TODO: "connect", "server", "disconnect"
+
 #ifdef MM_GETOPT
 /*! parse and exec command line arguments
  * @param argc	main function argc param
@@ -21,8 +33,7 @@ uint8_t mm_cmd_mode = MM_CMD_MODE_OPT;
  * @param len	length of cmds array
  * @return	excuted commands return values
 */
-int execArgs(int argc, char *argv[], cmd_t *cmds, size_t len,
-	     mm_session *session)
+int execArgs(int argc, char *argv[], mm_session *session)
 {
 	if (argc == 1)
 		return MM_CMD_SUCCESS;
@@ -31,9 +42,9 @@ int execArgs(int argc, char *argv[], cmd_t *cmds, size_t len,
 	unsigned i = 0, j, ret = MM_CMD_SUCCESS;
 	cmd_t *cmd;
 	mm_cmd_mode = MM_CMD_MODE_OPT;
-	args = (char *)malloc(sizeof(char) * (len * 3 + 1));
-	ops = (struct option *)malloc(sizeof(struct option) * (len + 1));
-	for (cmd = cmds; cmd < cmds + len; cmd++) {
+	args = (char *)malloc(sizeof(char) * (LEN(cmds) * 3));
+	ops = (struct option *)malloc(sizeof(struct option) * LEN(cmds));
+	for (cmd = cmds; cmd->n != NULL; cmd++) {
 		if (cmd->s == 0)
 			continue;
 		args[i * 3] = cmd->s;
@@ -51,10 +62,10 @@ int execArgs(int argc, char *argv[], cmd_t *cmds, size_t len,
 		cmd = cmds;
 		if (c == '?' || c == ':')
 			return MM_CMD_ERROR;
-		while (cmd < cmds + len && c != cmd->s) {
+		while (cmd->e != NULL && c != cmd->s) {
 			cmd++;
 		}
-		if (cmd == cmds + len)
+		if (cmd->e == NULL)
 			return MM_CMD_ERROR;
 		i = 1;
 		const char **a =
@@ -167,6 +178,7 @@ int cmd_restart(const char argc, const char **argv, mm_session *session)
 }
 int cmd_help(const char argc, const char **argv, mm_session *session)
 {
+	cmd_t *cmd;
 	printf(_("About " PROGRAM_NAME
 		 ": \nIs a two players logical game(encoder,decoder)"
 		 "encoder chose one combination compose from four to six color"
@@ -175,6 +187,12 @@ int cmd_help(const char argc, const char **argv, mm_session *session)
 		 "RTFM: "
 		 "http://en.wikipedia.org/wiki/"
 		 "Mastermind_%%28board_game%%29#Gameplay_and_rules\n"));
+	for(cmd = cmds; cmd->e != NULL; cmd++) {
+		if(mm_cmd_mode == MM_CMD_MODE_CLI)
+			printf("%s\t-\t%s\n", cmd->n, cmd->h);
+		else if (mm_cmd_mode == MM_CMD_MODE_OPT && cmd->s)
+			printf("\t-%c, --%s\t%s\n", cmd->s, cmd->n, cmd->h);
+	}
 	return MM_CMD_SUCCESS | MM_CMD_OPT_EXIT;
 }
 int cmd_score(const char argc, const char **argv, mm_session *session)
