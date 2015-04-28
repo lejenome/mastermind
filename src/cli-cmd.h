@@ -29,6 +29,7 @@ typedef struct {
 		 mm_session *); ///< function to excute
 	char s;			///< short arg name else 0
 	char *l;		///< long arg name or NULL
+	char *h;		///< command help message
 	uint8_t a;		///< nbre of max options args accpeted
 } cmd_t;
 int cmd_quit(const char, const char **, mm_session *);
