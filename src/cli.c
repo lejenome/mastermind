@@ -3,14 +3,14 @@
 #include <string.h>
 #include <stdint.h>
 
-#ifndef DISABLE_READLINE
-#include <readline/readline.h>
-#include <readline/history.h>
-#endif // DISABLE_READLINE
-
 #include "util.h"
 #include "cli-cmd.h"
 #include "core.h"
+
+#ifdef MM_READLINE
+#include <readline/readline.h>
+#include <readline/history.h>
+#endif // MM_READLINE
 
 /*!
  * \file cli.c
@@ -61,104 +61,51 @@ void printPanel()
 	printf("  +-----+-----+-----+");
 	putchar('\n');
 }
-/*! parse buffer and get arguments from it
- * @param buf	buffer to parse
- * @param argc	poiter to where to store arguments count
- * @return 	arguments array or NULL if buf is invalid
- */
-char **parseBuf(char *buf, unsigned *argc)
-{
-	char *start = NULL;
-	char **args, *c;
-	unsigned i = 0;
-	c = buf;
-	// get argc
-	while (*c != '\0') {
-		if (*c == ' ' || *c == '\t' || *c == ',' || *c == '\n') {
-			if (start) {
-				i++;
-				start = NULL;
-			}
-		} else if ((*c >= '0' && *c <= '9') ||
-			   (*c >= 'a' && *c <= 'z') || *c == '_') {
-			if (start == NULL)
-				start = c;
-		} else {
-			printf(_("\nError: illegal charater on the command "
-				 "'%c'\n"),
-			       *c);
-			i = 0;
-			start = NULL;
-			break;
-		}
-		c++;
-	}
-	if (start)
-		i++;
-	*argc = i;
-	// get args
-	if (*argc == 0)
-		return (char **)NULL;
-	args = (char **)malloc(sizeof(char *) * (*argc));
-	i = 0;
-	start = NULL;
-	while (*buf != '\0') {
-		if (*buf == ' ' || *buf == '\t' || *buf == ',' ||
-		    *buf == '\n') {
-			if (start) {
-				args[i++] = strndup(start, buf - start);
-				start = NULL;
-			}
-		} else {
-			if (start == NULL)
-				start = buf;
-		}
-		buf++;
-	}
-	if (start)
-		args[i++] = strndup(start, buf - start);
-	return args;
-}
-#ifndef DISABLE_READLINE
+#ifdef MM_READLINE
 /*! Tab button click handler
  * @param txt	current buffer
  * @param start	buffer start position
  * @param end	bufffer end postion
  * @return	array of guessed completions
  */
-static char **completeCombination(const char *txt, int start, int end)
+static char **completeInput(const char *txt, int start, int end)
 {
-	if (rl_point != rl_end)
+	if (rl_point != rl_end) // we support completing only the last argument
 		return (char **)NULL;
 	unsigned l = 0, j, i, argc;
-	char *output = NULL, **args;
+	char *output = NULL; // value of the only string to complete else NULL
+	char **args;	 // input buffer arguments
 	cmd_t *cmd, *cmpltCmd = NULL;
 	mm_conf_t *conf, *cmpltCnf = NULL;
+	// array of completion strings
 	char **T = (char **)malloc(sizeof(char *) *
 				   (LEN(cmds) + session->config->colors + 2));
 	T[l++] = strdup("");
 	args = parseBuf(rl_line_buffer, &argc);
-	if (argc == 0)
+	if (argc == 0) // if not args on buffer, add all commands to T
 		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++, l++)
 			T[l] = strdup(cmd->n);
+	// if no args on buffer or first arg first char is number, add all
+	// possible numbers
 	if (argc == 0 || (args[0][0] >= '0' &&
 			  args[0][0] < ('0' + session->config->colors))) {
 		j = 0;
+		// check if input buffer only contains valid numbers
 		for (i = 0; i < strlen(rl_line_buffer); i++)
 			if (rl_line_buffer[i] >= '0' &&
 			    rl_line_buffer[i] < '0' + session->config->colors)
 				j++;
-			else if (rl_line_buffer[i] != ' ' &&
-				 rl_line_buffer[i] != '\t' &&
-				 rl_line_buffer[i] != ',')
+			else if (strchr(IFS, rl_line_buffer[i]) == NULL)
 				goto no_more;
 		if (j >= session->config->holes)
 			goto no_more;
+		// add all possible valid numbers to the completion array
 		for (j = 0; j < session->config->colors; j++, l++) {
 			T[l] = (char *)malloc(sizeof(char) * 2);
 			sprintf(T[l], "%u", j);
 		}
 	}
+	// if only one arg is in the input buffer and it's a command
 	if (argc == 1 && args[0][0] >= 'a' && args[0][0] <= 'z') {
 		j = l;
 		for (cmd = cmds; cmd < cmds + LEN(cmds); cmd++) {
@@ -174,16 +121,19 @@ static char **completeCombination(const char *txt, int start, int end)
 	}
 	if (cmpltCmd && strcmp(cmpltCmd->n, "set") == 0) {
 		for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++, l++)
-			T[l] = strdup(conf->str.name);
+			T[l] = strdup(conf->common.name);
 	}
+	if (cmpltCmd && strcmp(cmpltCmd->n, "account") == 0)
+		output = strdup(session->account);
 	if (argc == 2 && strcmp(args[0], "set") == 0) {
 		j = l;
 		for (conf = mm_confs; conf < mm_confs + MM_POS_LEN; conf++) {
-			if (strstr(conf->str.name, args[1]) == conf->str.name) {
-				if (strcmp(conf->str.name, args[1]) == 0)
+			if (strstr(conf->common.name, args[1]) ==
+			    conf->common.name) {
+				if (strcmp(conf->common.name, args[1]) == 0)
 					cmpltCnf = conf;
 				else
-					T[l++] = strdup(conf->str.name);
+					T[l++] = strdup(conf->common.name);
 			}
 		}
 		if (l == j + 1)
@@ -223,7 +173,7 @@ no_more:
 	free(args);
 	return T;
 }
-#endif // DISABLE_READLINE
+#endif // MM_READLINE
 
 /*! get guessed combination and handle input buffer commands
  * @return
@@ -233,37 +183,38 @@ no_more:
  * 	1  : cmd input, redo (do not redo table)
  * 	2  : cmd input, next (redraw table)
  */
-int getCombination(uint8_t *T)
+int parseInput(uint8_t *T)
 {
 	unsigned ret = -1;
 	char prmpt[200], *input, **args;
-	unsigned i = 0, j = 0, k, argc;
-	uint8_t c;
+	unsigned i, j, argc;
 	cmd_t *cmd;
 	snprintf(prmpt, 200, _("Enter you guesse: (%d of [0..%d] nbre) > "),
 		 session->config->holes, session->config->colors - 1);
-#ifndef DISABLE_READLINE
-	rl_attempted_completion_function = completeCombination;
-	while ((input = readline(prmpt)) == NULL) {
-	};
+#ifdef MM_READLINE
+	rl_attempted_completion_function = completeInput;
+	do {
+		input = readline(prmpt);
+	} while (input == NULL);
 #else
 	printf("%s", prmpt);
 	input = (char *)malloc(sizeof(char) * 4096);
 	fgets(input, 4095, stdin);
-#endif // DISABLE_READLINE
+#endif // MM_READLINE
 	args = parseBuf(input, &argc);
 	if (argc == 0)
 		goto input_err;
 	if (args[0][0] >= 'a' && args[0][0] <= 'z') {
+		// find first command matching the first argument, and excute it
 		cmd = cmds;
 		while (cmd < cmds + LEN(cmds) &&
 		       strstr(cmd->n, args[0]) != cmd->n)
 			cmd++;
 		if (cmd < cmds + LEN(cmds)) {
 			ret = cmd->e(argc, (const char **)args, session);
-#ifndef DISABLE_READLINE
+#ifdef MM_READLINE
 			add_history(strdup(input));
-#endif // DISABLE_READLINE
+#endif // MM_READLINE
 			if (ret & MM_CMD_NEW_SESSION)
 				session = mm_session_new();
 			ret = (ret & MM_CMD_REDESIGN) ? 2 : 1;
@@ -275,24 +226,21 @@ int getCombination(uint8_t *T)
 	}
 	i = 0;
 	j = 0;
-	k = 0;
-	while ((i < session->config->holes) &&
-	       (args[j][k] != '\0' || (++j < argc && !(k = 0)))) {
-		c = args[j][k++];
-		if (c >= '0' && c <= '9') {
-			T[i++] = c - '0';
-		} else if (c == ' ' || c == ',' || c == ';' || c == '\n') {
-			continue;
-		} else {
+	// get combination from input buffer
+	while (i < session->config->holes && input[j] != '\0') {
+		if (input[j] >= '0' && input[j] <= '9') {
+			T[i++] = input[j] - '0';
+		} else if (strchr(IFS, input[j]) == NULL) {
 			printf(_("Illigal char on you guesse!!\n"));
 			goto parse_err;
 		}
+		j++;
 	}
-#ifndef DISABLE_READLINE
+#ifdef MM_READLINE
 	if (T)
 		add_history(input);
 	else
-#endif // DISABLE_READLINE
+#endif // MM_READLINE
 		free(input);
 	while (argc--)
 		free(args[argc]);
@@ -311,17 +259,17 @@ int main(int argc, char *argv[])
 {
 	uint8_t *T = NULL, c;
 	unsigned ret;
-#ifndef DISABLE_LOCALE
+#ifdef MM_LOCALE
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
-#endif // DISABLE_LOCALE
+#endif // MM_LOCALE
 	session = mm_session_restore();
 	if (session == NULL)
 		session = mm_session_new();
 	else
 		printf(_("Restoring old session\n"));
-#ifndef DISABLE_GETOPT
+#ifdef MM_GETOPT
 	ret = execArgs(argc, argv, cmds, LEN(cmds), session);
 	if (ret & MM_CMD_ERROR)
 		exit(EXIT_FAILURE);
@@ -329,7 +277,7 @@ int main(int argc, char *argv[])
 		goto quit;
 	if (ret & MM_CMD_NEW_SESSION)
 		session = mm_session_new();
-#endif // DISABLE_GETOPT
+#endif // MM_GETOPT
 	mm_cmd_mode = MM_CMD_MODE_CLI;
 	do {
 		printf(_("Current Config:\n\tguesses: %d\n\tcolors: "
@@ -340,11 +288,11 @@ int main(int argc, char *argv[])
 			printPanel();
 			T = (uint8_t *)malloc(sizeof(uint8_t) *
 					      session->config->holes);
-			while ((ret = getCombination(T)) == -1 || ret == 1 ||
+			while ((ret = parseInput(T)) == -1 || ret == 1 ||
 			       (ret == 0 && mm_play(session, T) != 0)) {
 				if (ret == 0) {
 					printf(
-					    _("You Guesse is not valid!!\n"));
+					    _("Your Guess is not valid!!\n"));
 				}
 			}
 			if (ret != 0)

@@ -22,6 +22,8 @@
 // get static array size
 #define LEN(a) (sizeof(a) / sizeof(a[0]))
 
+char **parseBuf(char *, unsigned *);
+
 #ifndef POSIX
 char *strndup(const char *buf, size_t len);
 #define srandom(var) srand(var)
@@ -30,13 +32,13 @@ char *strndup(const char *buf, size_t len);
 #endif
 
 // Global defines
-#ifndef DISABLE_LOCALE
+#ifdef MM_LOCALE
 #include <locale.h>
 #include <libintl.h>
 #define _(str) gettext(str)
 
 #else
 #define _(str) (char *) str
-#endif // DISABLE_LOCALE
+#endif // MM_LOCALE
 
 #endif //__MASTERMIN_LIB_H

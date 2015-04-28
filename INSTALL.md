@@ -15,12 +15,18 @@ cd build
 ~~~~~~~~~
 And assume that the building direcotry is clean and you didn't run cmake on it
 before or you need to clean it.
+
+Supported platforms:
 - [Linux](#linux)
 - [OS X](#os-x)
 - [Windows](#windows)
 - [Android](#android)
 - [iOS](#ios)
 - [Emscripten](#emscripten)
+
+Documentation and manual:
+- [Generate Docs](#generate-docs)
+- [Generate Manual](#generate-manual)
 
 LINUX
 ---
@@ -147,3 +153,31 @@ emmake make
 ~~~~~~~~~
 Runtime generated files are `mastermindsdl.js`, `mastermindsdl.html`,
 `mastermindsdl.data` and `favicon.png`.
+
+Generate Docs
+---
+You need to install Doxygen and Texlive to generate docs.
+
+To generate all internal code docs on all supported formats:
+~~~~~~~~~{.sh}
+make doc
+~~~~~~~~~
+You can generate docs on only one format:
+~~~~~~~~~{.sh}
+make html
+make pdf
+~~~~~~~~~
+Generated docs are available on build direcotry as `Mastermind.pdf`, `html/` and
+`man/`.
+
+Generate Manual
+---
+You need to install Texinfo and Texlive (including texlive plainextra
+extension) to generate manual.
+
+To generate manual:
+~~~~~~~~~{.sh}
+make manual
+~~~~~~~~~
+The output manual is available on build direcotry on 3 formats as follow
+`manual.pdf`, `manual/` and `manual.txt`.

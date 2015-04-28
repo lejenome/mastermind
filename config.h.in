@@ -22,14 +22,27 @@
 #define MM_COLORS_MAX 12  ///< max number of colors mastermind can accepts
 #define MM_GUESSES_MAX 20 ///< max number of guesses mastermind can accepts
 
-// sdl version color scheme definition
+// mastermindsdl settings
 
+// color scheme definition to use
 #include "colorscheme/solarized_light.h"
 //#include "colorscheme/solarized_dark.h"
 //#include "colorscheme/jellybeans.h"
 //#include "colorscheme/rainbow_simple.h"
 //#include "colorscheme/rcg_term.h"
 //#include "colorscheme/4bit.h"
+
+// mastermindcli settings
+
+#define IFS " \t\n," ///< Internal Field Separator
+
+// build features/options
+
+#cmakedefine MM_READLINE
+#cmakedefine MM_GETOPT
+#cmakedefine MM_LOCALE
+
+// system direcotries settings
 
 #ifdef __ANDROID__
 #define FONTSDIR "fonts/"
