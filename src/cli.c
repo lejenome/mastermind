@@ -20,14 +20,14 @@
 mm_session *session;
 // TODO: add .h element to show command help msg
 cmd_t cmds[] = {
-    {.n = "quit", .e = cmd_quit, .s = 0},
-    {.n = "set", .e = cmd_set, .s = 's', .a = 2},
-    {.n = "restart", .e = cmd_restart, .s = 0},
-    {.n = "savegame", .e = cmd_savegame, .s = 0},
-    {.n = "score", .e = cmd_score, .s = 'c', .a = 0},
-    {.n = "help", .e = cmd_help, .s = 'h', .a = 1},
-    {.n = "account", .e = cmd_account, .s = 'a', .a = 1},
-    {.n = "version", .e = cmd_version, .s = 'v', .a = 0},
+    {.n = "quit", .e = cmd_quit, .s = 0, .h = "quit game"},
+    {.n = "set", .e = cmd_set, .s = 's', .a = 2, .h = "show/change options"},
+    {.n = "restart", .e = cmd_restart, .s = 0, .h = "start new session"},
+    {.n = "savegame", .e = cmd_savegame, .s = 0, .h = "save current session"},
+    {.n = "score", .e = cmd_score, .s = 'c', .a = 0, .h = "show top scores"},
+    {.n = "help", .e = cmd_help, .s = 'h', .a = 1, .h = "show help message"},
+    {.n = "account", .e = cmd_account, .s = 'a', .a = 1, .h = "change account"},
+    {.n = "version", .e = cmd_version, .s = 'v', .a = 0, .h = "print version"},
 }; // TODO: "connect", "server", "disconnect"
 /// draw session panel
 void printPanel()
