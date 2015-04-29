@@ -525,11 +525,12 @@ int onMouseUp(SDL_MouseButtonEvent e)
 	    e.y < panel.y + case_h * (session->guessed + 2)) {
 		i = (e.x - panel.x) / case_w;
 		if (e.y < panel.y + case_h * (session->guessed + 1)) {
-			if (curGuess[i] < session->config->colors - 1)
-				curGuess[i]++;
+			curGuess[i] =
+			    (curGuess[i] + 1) % session->config->colors;
 		} else {
-			if (curGuess[i] > 0)
-				curGuess[i]--;
+			curGuess[i] =
+			    ((curGuess[i] - 1) + session->config->colors) %
+			    session->config->colors;
 		}
 		redraw();
 	} else if (e.x > play.x && e.x < play.x + play.w && e.y > play.y &&
