@@ -29,18 +29,31 @@ void printPanel()
 		printf("  +-----+-----+-----+\n|");
 		for (j = 0; j < session->config->holes; j++)
 			if (i < session->guessed)
-				printf(" %d |",
-				       session->panel[i].combination[j]);
+				printf(
+#ifdef POSIX
+				    " \e[2;3%dm%d\e[m |",
+				    session->panel[i].combination[j] + 1,
+#else
+				    " %d |",
+#endif
+				    session->panel[i].combination[j]);
 			else
 				printf("   |");
 		if (i < session->guessed)
-			printf(_("  | Y%2d | A%2d | N%2d |\n"),
+			printf(
+#ifdef POSIX
+			    _("  | Y\e[1;32m\e[5;32m%2d\e[m | "
+			      "A\e[1;33m\e[5;33m%2d\e[m | "
+			      "N\e[1;31m\e[5;31m%2d\e[m |\n"),
+#else
+			    _("  | Y%2d | A%2d | N%2d |\n"),
+#endif
 
-			       session->panel[i].right_pos,
-			       session->panel[i].wrong_pos,
-			       session->config->holes -
-				   session->panel[i].right_pos -
-				   session->panel[i].wrong_pos);
+			    session->panel[i].right_pos,
+			    session->panel[i].wrong_pos,
+			    session->config->holes -
+				session->panel[i].right_pos -
+				session->panel[i].wrong_pos);
 		else
 			printf("  |     |     |     |\n");
 	}
