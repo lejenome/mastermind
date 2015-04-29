@@ -67,7 +67,7 @@ static char **completeInput(const char *txt, int start, int end)
 	cmd_t *cmd, *cmpltCmd = NULL;
 	mm_conf_t *conf, *cmpltCnf = NULL;
 	// get cmds array length (without counting NULL element)
-	for (i = 0; cmds[i].e != NULL; i++) {
+	for (i = 0; cmds[i].n != NULL; i++) {
 	};
 	// array of completion strings
 	char **T =
@@ -93,8 +93,8 @@ static char **completeInput(const char *txt, int start, int end)
 			goto no_more;
 		// add all possible valid numbers to the completion array
 		for (j = 0; j < session->config->colors; j++, l++) {
-			T[l] = (char *)malloc(sizeof(char) * 2);
-			sprintf(T[l], "%u", j);
+			T[l] = (char *)malloc(sizeof(char) * 3);
+			snprintf(T[l], 3, "%u", j);
 		}
 	}
 	// if only one arg is in the input buffer and it's a command
@@ -134,10 +134,10 @@ static char **completeInput(const char *txt, int start, int end)
 			output = (char *)malloc(sizeof(char) * 20);
 			switch (cmpltCnf->type) {
 			case MM_CONF_INT:
-				sprintf(output, "%d", cmpltCnf->nbre.val);
+				snprintf(output, 20, "%d", cmpltCnf->nbre.val);
 				break;
 			case MM_CONF_BOOL:
-				sprintf(output, "%u", cmpltCnf->bool.val);
+				snprintf(output, 20, "%u", cmpltCnf->bool.val);
 				break;
 			case MM_CONF_STR:
 				strcpy(output, cmpltCnf->str.val);
@@ -147,6 +147,7 @@ static char **completeInput(const char *txt, int start, int end)
 	}
 no_more:
 	if (output) {
+		free(T[0]);
 		T[0] = strdup(output);
 		for (i = 1; i < l; i++)
 			free(T[i]);

@@ -14,13 +14,13 @@
 
 uint8_t mm_cmd_mode = MM_CMD_MODE_OPT;
 cmd_t cmds[] = {
-    {.n = "quit", .e = cmd_quit, .s = 0, .h = "quit game"},
+    {.n = "score", .e = cmd_score, .s = 'c', .a = 0, .h = "show top scores"},
+    {.n = "account", .e = cmd_account, .s = 'a', .a = 1, .h = "change account"},
     {.n = "set", .e = cmd_set, .s = 's', .a = 2, .h = "show/change options"},
     {.n = "restart", .e = cmd_restart, .s = 0, .h = "start new session"},
     {.n = "savegame", .e = cmd_savegame, .s = 0, .h = "save current session"},
-    {.n = "score", .e = cmd_score, .s = 'c', .a = 0, .h = "show top scores"},
+    {.n = "quit", .e = cmd_quit, .s = 0, .h = "quit game"},
     {.n = "help", .e = cmd_help, .s = 'h', .a = 1, .h = "show help message"},
-    {.n = "account", .e = cmd_account, .s = 'a', .a = 1, .h = "change account"},
     {.n = "version", .e = cmd_version, .s = 'v', .a = 0, .h = "print version"},
     {.n = NULL},
 }; // TODO: "connect", "server", "disconnect"
