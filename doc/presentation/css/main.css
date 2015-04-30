@@ -389,3 +389,25 @@ code, pre {
     height: 0px;
     line-height: 5;
 }
+#slide11 ul {
+    margin-top: 50px;
+    list-style: url;
+    text-align: left;
+}
+#slide11 > ul li ul {
+    margin-top: 10px;
+    list-style: inside;
+    margin-left: 30px;
+}
+#slide22 ul {
+    margin-top: 50px;
+}
+#slide23 > ul {
+    display: inline-block;
+    margin-left: 0;
+    margin-right: 0;
+    width: 48%;
+    margin-top: 20px;
+    vertical-align: text-top;
+    list-style: inside;
+}

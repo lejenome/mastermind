@@ -112,7 +112,7 @@ Our developement repository struct is based on GNU Standards recommanded struct 
 @item
 @file{CMake/} directory containing cmake files.
 @item
-@file{configure.h.in} file to easily change build time configuration options.
+@file{config.h.in} file to easily change build time configuration options.
 @end itemize
 
 The generated linux build is also based on Linux filesystem hierarchy specification.
