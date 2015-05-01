@@ -36,5 +36,4 @@ cp build-emscripten/mastermindsdl.* release/web
 cp release/web/{mastermindsdl,index}.html
 
 cp -r build-linux/manual{,.pdf,.txt} release/
-cp build-linux/Mastermind.pdf release/documentation.pdf
-cp -r build-linux/html release/documentation/
+cp -r build-linux/documentation{,.pdf} release/
