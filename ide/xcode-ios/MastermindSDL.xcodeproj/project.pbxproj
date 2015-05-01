@@ -12,9 +12,9 @@
 		28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
 		426FD3B11ADCB576005B4AAD /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = 426FD3AE1ADCB576005B4AAD /* core.c */; };
-		426FD3B21ADCB576005B4AAD /* lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 426FD3AF1ADCB576005B4AAD /* lib.c */; };
 		426FD3B31ADCB576005B4AAD /* sdl.c in Sources */ = {isa = PBXBuildFile; fileRef = 426FD3B01ADCB576005B4AAD /* sdl.c */; };
 		42967CD31ADD1A8B00B4185F /* logo-256x256.png in Resources */ = {isa = PBXBuildFile; fileRef = 42967CD21ADD1A8B00B4185F /* logo-256x256.png */; };
+		42C01C991AF1BF3A00DAA9C0 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 42C01C981AF1BF3A00DAA9C0 /* util.c */; };
 		42EE09BA1ADCB81E002FEC0E /* libSDL2_ttf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42EE09B81ADCB81E002FEC0E /* libSDL2_ttf.a */; };
 		42EE09BB1ADCB81E002FEC0E /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42EE09B91ADCB81E002FEC0E /* libSDL2.a */; };
 		42EE09C21ADCBCE3002FEC0E /* fontawesome-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42EE09C01ADCBCE3002FEC0E /* fontawesome-webfont.ttf */; };
@@ -27,14 +27,14 @@
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* MastermindSDL.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MastermindSDL.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* MastermindSDL.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MastermindSDL.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		28FD14FF0DC6FC520079059D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		28FD15070DC6FC5B0079059D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		426FD3AE1ADCB576005B4AAD /* core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = core.c; path = ../../src/core.c; sourceTree = "<group>"; };
-		426FD3AF1ADCB576005B4AAD /* lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lib.c; path = ../../src/lib.c; sourceTree = "<group>"; };
 		426FD3B01ADCB576005B4AAD /* sdl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sdl.c; path = ../../src/sdl.c; sourceTree = "<group>"; };
 		42967CD21ADD1A8B00B4185F /* logo-256x256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "logo-256x256.png"; path = "../../res/icons/logo-256x256.png"; sourceTree = "<group>"; };
+		42C01C981AF1BF3A00DAA9C0 /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = util.c; path = ../../src/util.c; sourceTree = "<group>"; };
 		42EE09B81ADCB81E002FEC0E /* libSDL2_ttf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2_ttf.a; path = "../../ext/ios/libs/Debug-iphonesimulator/libSDL2_ttf.a"; sourceTree = "<group>"; };
 		42EE09B91ADCB81E002FEC0E /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = "../../ext/ios/libs/Debug-iphonesimulator/libSDL2.a"; sourceTree = "<group>"; };
 		42EE09C01ADCBCE3002FEC0E /* fontawesome-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fontawesome-webfont.ttf"; sourceTree = "<group>"; };
@@ -88,8 +88,8 @@
 		29B97315FDCFA39411CA2CEA /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				42C01C981AF1BF3A00DAA9C0 /* util.c */,
 				426FD3AE1ADCB576005B4AAD /* core.c */,
-				426FD3AF1ADCB576005B4AAD /* lib.c */,
 				426FD3B01ADCB576005B4AAD /* sdl.c */,
 			);
 			name = Sources;
@@ -147,8 +147,8 @@
 			);
 			dependencies = (
 			);
-			name = "MastermindSDL";
-			productName = "MastermindSDL";
+			name = MastermindSDL;
+			productName = MastermindSDL;
 			productReference = 1D6058910D05DD3D006BFB54 /* MastermindSDL.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -199,7 +199,7 @@
 			files = (
 				426FD3B31ADCB576005B4AAD /* sdl.c in Sources */,
 				426FD3B11ADCB576005B4AAD /* core.c in Sources */,
-				426FD3B21ADCB576005B4AAD /* lib.c in Sources */,
+				42C01C991AF1BF3A00DAA9C0 /* util.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,7 +226,7 @@
 					"$(inherited)",
 					"/Users/lejenome/Public/mastermind/ext/ios/libs/Debug-iphonesimulator",
 				);
-				PRODUCT_NAME = "MastermindSDL";
+				PRODUCT_NAME = MastermindSDL;
 			};
 			name = Debug;
 		};
@@ -248,7 +248,7 @@
 					"$(inherited)",
 					"/Users/lejenome/Public/mastermind/ext/ios/libs/Debug-iphonesimulator",
 				);
-				PRODUCT_NAME = "MastermindSDL";
+				PRODUCT_NAME = MastermindSDL;
 			};
 			name = Release;
 		};
