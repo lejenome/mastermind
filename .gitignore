@@ -8,7 +8,9 @@
 *.gmo
 /doc/manual*
 /doc/mastermind.*
+/release
 !/doc/mastermind.texi
+gource.mp4
 
 # swaps
 .*.swp*
