@@ -28,9 +28,11 @@ if(DOXYGEN_FOUND)
 		DEPENDS ${CMAKE_BINARY_DIR}/Mastermind.pdf
 	    	COMMENT "Building doxygen documentation"
 	)
-      	install(DIRECTORY ${CMAKE_BINARY_DIR}/html
-      		DESTINATION share/doc/mastermind/
-	)
+	if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+	      	install(DIRECTORY ${CMAKE_BINARY_DIR}/html
+	      		DESTINATION share/doc/mastermind/
+		)
+	endif("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 endif()
 
 add_custom_target(manual

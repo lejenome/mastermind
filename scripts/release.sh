@@ -17,6 +17,7 @@ CFLAGS="-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buff
 	LDFLAGS="-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4" \
 	x86_64-w64-mingw32-cmake -DCMAKE_BUILD_TYPE=Release ..
 make
+cpack
 cd ..
 
 docker run -it -v ${PWD}:/mastermind -w /mastermind/build-android \
