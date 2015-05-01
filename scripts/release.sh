@@ -19,9 +19,8 @@ CFLAGS="-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buff
 make
 cd ..
 
-docker run -it -v ${PWD}:/mastermind mastermind_android \
-	-w /mastermind/build-android \
-	/mastermind/scripts/build-android.sh
+docker run -it -v ${PWD}:/mastermind -w /mastermind/build-android \
+       	mastermind_android /mastermind/scripts/build-android.sh
 
 cd build-emscripten
 emconfigure cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -35,6 +34,6 @@ mkdir release/web
 cp build-emscripten/mastermindsdl.* release/web
 cp release/web/{mastermindsdl,index}.html
 
-cp build-linux/manual{,.pdf,.txt} release/
+cp -r build-linux/manual{,.pdf,.txt} release/
 cp build-linux/Mastermind.pdf release/documentation.pdf
-cp build-linux/html release/documentation/
+cp -r build-linux/html release/documentation/
