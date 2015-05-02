@@ -107,7 +107,7 @@ Download SDL2, SDL2_ttf and FreeType lastest sources archives and extract them.
 
 then run:
 ~~~~~~~~~{.sh}
-cmake ..
+cmake -DANDROID=ON ..
 ln -s <PATH_TO_SDL2_SOURCE_DIR> jni/SDL
 ln -s <PATH_TO_SDL2_ttf_SOURCE_DIR> jni/SDL_ttf
 ln -s <PATH_TO_FreeType_SOURCE_DIR> jni/SDL_ttf/freetype
@@ -167,8 +167,8 @@ You can generate docs on only one format:
 make html
 make pdf
 ~~~~~~~~~
-Generated docs are available on build direcotry as `Mastermind.pdf`, `html/` and
-`man/`.
+Generated docs are available on build direcotry as `documentation.pdf`,
+`documentation/`.
 
 Generate Manual
 ---

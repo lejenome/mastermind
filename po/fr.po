@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mastermind\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-28 17:37+0100\n"
+"POT-Creation-Date: 2015-04-30 13:25+0100\n"
 "PO-Revision-Date: 2015-03-04 22:58+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -26,12 +26,18 @@ msgstr ""
 "\n"
 "Erreur: caractere invalide dans la commande '%c'\n"
 
-#: ../src/cli.c:37
+#: ../src/cli.c:49
 #, c-format
 msgid "  | Y%2d | A%2d | N%2d |\n"
 msgstr "  | Y%2d | A%2d | N%2d |\n"
 
-#: ../src/sdl.c:543
+#: ../src/cli.c:45
+#, c-format
+msgid ""
+"  | Ye[1;32me[5;32m%2de[m | Ae[1;33me[5;33m%2de[m | Ne[1;31me[5;31m%2de[m |\n"
+msgstr ""
+
+#: ../src/sdl.c:544
 msgid ": Simple mastermind implemetation"
 msgstr ": implementation simple de mastermind"
 
@@ -58,12 +64,12 @@ msgstr ""
 "Erreur format du command!\n"
 "set [config_name [config_value]]\n"
 
-#: ../src/cli.c:213
+#: ../src/cli.c:227
 #, c-format
 msgid "Command unsupported '%s'\n"
 msgstr "Commande non supportee '%s'\n"
 
-#: ../src/cli.c:274
+#: ../src/cli.c:288
 #, c-format
 msgid ""
 "Current Config:\n"
@@ -78,7 +84,7 @@ msgstr ""
 "\tholes: %d\n"
 "\tremise: %d\n"
 
-#: ../src/cli.c:183
+#: ../src/cli.c:198
 #, c-format
 msgid "Enter you guesse: (%d of [0..%d] nbre) > "
 msgstr "Donner votre essai: (%d nbre de [0..%d]) > "
@@ -88,7 +94,7 @@ msgstr "Donner votre essai: (%d nbre de [0..%d]) > "
 msgid "Error: config option not supported: %s\n"
 msgstr "Configuration globale non supportee: %s\n"
 
-#: ../src/cli.c:293
+#: ../src/cli.c:307
 #, c-format
 msgid "Final State:\n"
 msgstr "Etat final:\n"
@@ -103,25 +109,25 @@ msgstr "Configuration globale non supportee!!\n"
 msgid "Global configs:\n"
 msgstr "Configuration global:\n"
 
-#: ../src/sdl.c:542
+#: ../src/sdl.c:543
 msgid "Help"
 msgstr "Aide"
 
-#: ../src/cli.c:225
+#: ../src/cli.c:239
 #, c-format
 msgid "Illigal char on you guesse!!\n"
 msgstr "Charactere invalide dans votre essai!!\n"
 
-#: ../src/sdl.c:661
+#: ../src/sdl.c:662
 msgid "Invalid Guess"
 msgstr "Essai invalid"
 
-#: ../src/cli-cmd.c:203 ../src/sdl.c:553
+#: ../src/cli-cmd.c:197 ../src/sdl.c:554
 #, c-format
 msgid "No score yet!\n"
 msgstr "Pas encore de score!\n"
 
-#: ../src/cli.c:262
+#: ../src/cli.c:276
 #, c-format
 msgid "Restoring old session\n"
 msgstr "Ouvrir ancienne session\n"
@@ -131,11 +137,11 @@ msgstr "Ouvrir ancienne session\n"
 msgid "Saving session\n"
 msgstr "Enregistrement de session\n"
 
-#: ../src/sdl.c:562
+#: ../src/sdl.c:563
 msgid "Scores"
 msgstr "Scores"
 
-#: ../src/cli.c:300
+#: ../src/cli.c:314
 #, c-format
 msgid "Secret Key is: "
 msgstr "Le mot secret est : "
@@ -145,29 +151,29 @@ msgstr "Le mot secret est : "
 msgid "Session configs:\n"
 msgstr "Configurations du session:\n"
 
-#: ../src/cli.c:297
+#: ../src/cli.c:311
 msgid "You Failed :("
 msgstr "Tu as perdu :("
 
-#: ../src/sdl.c:662
+#: ../src/sdl.c:663
 msgid "You Guess is invalid"
 msgstr "Votre essai est invalide"
 
-#: ../src/cli.c:296
+#: ../src/cli.c:310
 msgid "You successed :)"
 msgstr "Tu a gagne :)"
 
-#: ../src/cli.c:286
+#: ../src/cli.c:300
 #, fuzzy, c-format
 msgid "Your Guess is not valid!!\n"
 msgstr "Votre essai est invalide!!!!\n"
 
-#: ../src/cli.c:299
+#: ../src/cli.c:313
 #, c-format
 msgid "Your score is: %ld\n"
 msgstr "Ton score est: %ld\n"
 
-#: ../src/cli-cmd.c:212
+#: ../src/cli-cmd.c:206
 #, c-format
 msgid "current account: %s\n"
 msgstr "compte courent: %s\n"
@@ -180,7 +186,7 @@ msgstr "jouer"
 msgid "rest"
 msgstr "rejouer"
 
-#: ../src/cli.c:306
+#: ../src/cli.c:320
 #, c-format
 msgid "restart? (Y/N): "
 msgstr "rejouer? (Y/N): "

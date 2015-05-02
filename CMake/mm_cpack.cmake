@@ -53,14 +53,13 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
 endif()
 
 set(CPACK_PACKAGE_RELOCATABLE false) # FIXME
-set(CPACK_GENERATOR "TGZ;ZIP")
 set(PACKAGE_SOURCE_GENERATOR "TGZ;ZIP")
 if(WIN32)
-	list(APPEND CPACK_GENERATOR NSIS NSIS64) # CygwinBinairy
+	list(APPEND CPACK_GENERATOR NSIS NSIS64 ZIP) # CygwinBinairy
 elseif(APPLE)
 	list(APPEND CPACK_GENERATOR Bundle) # OSXX11 DragNDrop PackageMaker
 else()
-	list(APPEND CPACK_GENERATOR DEB RPM)
+	list(APPEND CPACK_GENERATOR DEB RPM TGZ)
 endif()
 
 # DEB & RPM
@@ -79,7 +78,7 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 	install(FILES res/icons/logo-256x256.png DESTINATION share/icons/hicolor/256x256/apps/ RENAME mastermindsdl.png)
 	install(FILES doc/mastermindcli.1 DESTINATION share/man/man1/)
 	install(FILES doc/config.md DESTINATION share/doc/mastermind/)
-	install(FILES LICENSE DESTINATION share/licenses)
+	install(FILES LICENSE DESTINATION share/licenses/mastermind/)
 	install(FILES res/completion/mastermindcli.zsh DESTINATION share/zsh/functions/Completion/Unix/ RENAME _mastermindcli) #PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE)
 	install(FILES res/completion/mastermindcli.bash DESTINATION share/bash-completion/completions/ RENAME mastermindcli)
 else("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
