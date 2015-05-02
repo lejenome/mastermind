@@ -4,6 +4,7 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           cmake 1.0
 
+github.setup        lejenome mastermind 0.1.2 v
 name                mastermind
 version             0.1.2
 categories          games
@@ -16,6 +17,9 @@ homepage            https://github.com/lejenome/mastermind
 
 
 #checksums               rmd160  7bbfce4fecc2a8e1ca081169e70c1a298ab1b75a
+checksums           rmd160  b158c32836abaf49fd8639a677369ca54bb27342 \
+                    sha256  10d4775b0467de0512a3e9a195b3653ec05dc524a10d5901f996005ec2af90c0
+
 depends_lib         port:cmake \
                     port:readline \
                     port:ncurses \
