@@ -1,0 +1,27 @@
+# Maintainer: Moez Bouhlel <bmoez.j@gmail.com>
+
+pkgname=mastermind
+pkgver=0.1
+pkgrel=1
+pkgdesc="Simple and customizable Mastermind game implementation"
+arch=('i686' 'x86_64')
+license=('GPL')
+url="https://github.com/lejenome/mastermind"
+depends=('ncurses' 'sdl2' 'sdl2_ttf')
+makedepends=('cmake' 'gettext')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/lejenome/${pkgname}/archive/v${pkgver}.tar.gz")
+md5sums=('SKIP')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  rm -rf build
+  mkdir build
+  cd build
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
+  make all translations
+}
+
+package() {
+  cd ${pkgname}-${pkgver}/build
+  make DESTDIR=${pkgdir} install
+}

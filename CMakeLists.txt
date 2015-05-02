@@ -85,6 +85,7 @@ endif(NOT EMSCRIPTEN AND NOT IPHONEOS)
 option(USE_READLINE "Enable readline autocompletetion featues" ON)
 option(USE_GETOPT "Enable getopt options parsing support" ON)
 option(USE_LOCALE "Enable internationalization support" ON)
+option(INCLUDE_DOCS "Include docs on install archive" OFF)
 
 if(ANDROID OR EMSCRIPTEN OR IPHONEOS)
 	set(USE_READLINE OFF)
@@ -184,7 +185,9 @@ if(EMSCRIPTEN)
 	--preload-file ${CMAKE_INSTALL_DATAROOTDIR}/fonts/fontawesome-webfont.ttf --preload-file  ${CMAKE_INSTALL_DATAROOTDIR}/icons/mastermind.bmp")
 endif(EMSCRIPTEN)
 
-INCLUDE(sdl2_android)
+if(ANDROID)
+	INCLUDE(sdl2_android)
+endif(ANDROID)
 include(mm_docs)
 
 install(TARGETS mastermindcli DESTINATION ${CMAKE_INSTALL_BINDIR})
