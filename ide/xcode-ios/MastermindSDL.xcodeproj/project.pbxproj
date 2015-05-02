@@ -222,11 +222,13 @@
 					../../ext/ios/include,
 				);
 				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/lejenome/Public/mastermind/ext/ios/libs/Debug-iphonesimulator",
 				);
 				PRODUCT_NAME = MastermindSDL;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -244,11 +246,13 @@
 					../../ext/ios/include,
 				);
 				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/lejenome/Public/mastermind/ext/ios/libs/Debug-iphonesimulator",
 				);
 				PRODUCT_NAME = MastermindSDL;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
