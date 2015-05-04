@@ -1,7 +1,7 @@
 require 'formula'
 
 class Mastermind < Formula
-  version "0.1.2"
+  version "0.1.3"
   url "https://github.com/lejenome/mastermind/archive/v#{version}.tar.gz"
   head "https://github.com/lejenome/mastermind.git", :using => :git
   homepage "https://github.com/lejenome/mastermind/"

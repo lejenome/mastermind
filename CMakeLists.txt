@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
 
-Project(MasterMind VERSION 0.1.2 LANGUAGES C)
+Project(MasterMind VERSION 0.1.3 LANGUAGES C)
 set(PROJECT_WEBSITE "https://github.com/lejenome/mastermind")
 
 #if(NOT ANDROID AND NOT EMSCRIPTEN AND NOT IPHONEOS)

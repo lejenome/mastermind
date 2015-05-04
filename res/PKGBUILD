@@ -1,7 +1,7 @@
 # Maintainer: Moez Bouhlel <bmoez.j@gmail.com>
 
 pkgname=mastermind
-pkgver=0.1.2
+pkgver=0.1.3
 pkgrel=1
 pkgdesc="Simple and customizable Mastermind game implementation"
 arch=('i686' 'x86_64')
