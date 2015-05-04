@@ -1,3 +1,5 @@
+require 'formula'
+
 class Mastermind < Formula
   version "0.1.2"
   url "https://github.com/lejenome/mastermind/archive/v#{version}.tar.gz"
@@ -12,9 +14,8 @@ class Mastermind < Formula
   depends_on "sdl2_ttf"
 
   def install
-    system "cmake", "-DCMAKE_INSTALL_PREFIX=#{HOMEBREW_PREFIX}", "-DCMAKE_BUILD_TYPE=Release", "."
+    system "cmake", "-DCMAKE_INSTALL_PREFIX=#{prefix}", "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON", "-DCMAKE_INSTALL_NAME_DIR=#{HOMEBREW_PREFIX}/lib", "."
 #   system "cmake", ".", *std_cmake_args
-    system "make", "all", "translations"
     system "make", "install"
   end
 end
