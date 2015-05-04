@@ -15,10 +15,8 @@ description         Simple Mastermind Implementation
 long_description    Simple and Customizable Mastermind Game Implemetation
 homepage            https://github.com/lejenome/mastermind
 
-
-#checksums               rmd160  7bbfce4fecc2a8e1ca081169e70c1a298ab1b75a
-checksums           rmd160  b158c32836abaf49fd8639a677369ca54bb27342 \
-                    sha256  10d4775b0467de0512a3e9a195b3653ec05dc524a10d5901f996005ec2af90c0
+checksums           rmd160  382b6042e990532486c829ac6b2e8c9010851185 \
+                    sha256  de60f3063e5661c88123e562571d7e0c2e81eee4a814dc53b41a50d0051fb08c
 
 depends_lib         port:cmake \
                     port:readline \
