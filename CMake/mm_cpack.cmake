@@ -69,7 +69,7 @@ set(CPACK_RPM_PACKAGE_GROUP "Amusements/Games")
 set(CPACK_RPM_PACKAGE_REQUIRES "libncurses5, SDL2") # FIXME
 set(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
 
-if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+if(UNIX AND NOT ANDROID AND NOT IPHONEOS AND NOT EMSCRIPTEN)
 	configure_file(res/mastermindsdl.desktop.in mastermindsdl.desktop)
 	install(FILES ${CMAKE_BINARY_DIR}/mastermindsdl.desktop DESTINATION share/applications/)
 	install(FILES res/icons/logo-16x16.png DESTINATION share/icons/hicolor/16x16/apps/ RENAME mastermindsdl.png)
@@ -81,9 +81,9 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 	install(FILES LICENSE DESTINATION share/licenses/mastermind/)
 	install(FILES res/completion/mastermindcli.zsh DESTINATION share/zsh/functions/Completion/Unix/ RENAME _mastermindcli) #PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE)
 	install(FILES res/completion/mastermindcli.bash DESTINATION share/bash-completion/completions/ RENAME mastermindcli)
-else("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+else(UNIX AND NOT ANDROID AND NOT IPHONEOS AND NOT EMSCRIPTEN)
 	install(FILES res/icons/logo.png DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/ RENAME mastermind.png)
-endif("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+endif(UNIX AND NOT ANDROID AND NOT IPHONEOS AND NOT EMSCRIPTEN)
 
 # BUNDLE
 set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
@@ -94,10 +94,10 @@ set(CPACK_BUNDLE_STARTUP_COMMAND mastermindsdl)
 
 # OSXX11
 if(APPLE)
-	install(FILES res/icons/logo.icns DESTINATION icons)
+	install(FILES res/icons/logo.icns DESTINATION share/icons)
 endif(APPLE)
 set(CPACK_APPLE_GUI_INFO_STRING ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
-set(CPACK_APPLE_GUI_ICON icons/logo.icns)
+set(CPACK_APPLE_GUI_ICON share/icons/logo.icns)
 set(CPACK_APPLE_GUI_IDENTIFIER com.${CPACK_PACKAGE_VENDOR}.${CPACK_PACKAGE_NAME})
 set(CPACK_APPLE_GUI_LONG_VERSION_STRING ${CPACK_PACKAGE_VERSION})
 set(CPACK_APPLE_GUI_BUNDLE_NAME ${CPACK_PACKAGE_NAME})
