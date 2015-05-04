@@ -190,6 +190,9 @@ if(ANDROID)
 endif(ANDROID)
 include(mm_docs)
 
+message("bin: ${CMAKE_INSTALL_FULL_BINDIR}")
+message("data root: ${CMAKE_INSTALL_FULL_DATAROOTDIR}")
+
 install(TARGETS mastermindcli DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(TARGETS mastermindsdl DESTINATION ${CMAKE_INSTALL_BINDIR})
 INCLUDE(mm_cpack)
