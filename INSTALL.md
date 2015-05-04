@@ -63,13 +63,15 @@ Install readline, libncurses, sdl2, sdl2_ttf, cmake from brew
 
 Next, to build:
 ~~~~~~~~~{.sh}
-cmake ..
+cmake -DCMAKE_INSTALL_PREFIX=. ..
 cmake --build .
 ~~~~~~~~~
 For packaging the build on bundle:
 ~~~~~~~~~{.sh}
 cpack
 ~~~~~~~~~
+
+Support for MacPorts and HomeBrew is available on `res/` folder.
 
 WINDOWS
 ---
